@@ -1,0 +1,20 @@
+version: "3.8"
+services:
+  scrypted:
+    container_name: Scrypted
+    image: koush/scrypted
+    network_mode: host
+    volumes:
+      - /home/config/.scrypted/volume:/server/volume
+    environment:
+      SCRYPTED_WEBHOOK_UPDATE_AUTHORIZATION: "${SCRYPTED_WEBHOOK_UPDATE_AUTHORIZATION}"
+      SCRYPTED_WEBHOOK_UPDATE: http://localhost:10444/v1/update
+    devices: [
+      "/dev/dri:/dev/dri",
+    ]
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "10"
+    restart: unless-stopped

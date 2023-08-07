@@ -1,0 +1,41 @@
+version: "3.8"
+services:
+  excalidraw:
+    container_name: Excalidraw
+    image: kiliandeca/excalidraw
+    healthcheck:
+      disable: true
+    ports:
+      - 14001:80
+    environment:
+      BACKEND_V2_GET_URL: http://localhost:14002/api/v2/scenes/
+      BACKEND_V2_POST_URL: http://localhost:14002/api/v2/scenes/
+      LIBRARY_URL: https://libraries.excalidraw.com
+      LIBRARY_BACKEND: https://us-central1-excalidraw-room-persistence.cloudfunctions.net/libraries
+      SOCKET_SERVER_URL: http://localhost:14003/
+      STORAGE_BACKEND: "http"
+      HTTP_STORAGE_BACKEND_URL: "http://localhost:14002/api/v2"
+    restart: unless-stopped
+
+  excalidraw-storage-backend:
+    container_name: Excalidraw-Storage
+    image: kiliandeca/excalidraw-storage-backend
+    ports:
+      - 14002:8080
+    environment:
+      STORAGE_URI: redis://redis:14004
+    restart: unless-stopped 
+
+  excalidraw-room:
+    container_name: Excalidraw-Room
+    image: excalidraw/excalidraw-room
+    ports:
+      - "14003:80"
+    restart: unless-stopped
+
+  excalidraw-redis:
+    container_name: Excalidraw-REDIS
+    image: redis
+    ports:
+      - "14004:6379"
+    restart: unless-stopped

@@ -1,0 +1,12 @@
+version: '3.8'
+services:
+  guacamole:
+    container_name: Guacamole
+    image: jasonbean/guacamole
+    volumes:
+    - /home/config/guacamole:/config
+    ports:
+    - 15001:8080
+    environment:
+      OPT_MYSQL: Y
+    restart: unless-stopped

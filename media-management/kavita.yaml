@@ -1,0 +1,11 @@
+version: "3.8"
+services:
+  kavita:
+    container_name: Kavita
+    image: kizaing/kavita:latest
+    volumes:
+      - /home/config/kavita:/kavita/config
+      - /mnt/nas1media/Comics:/books
+    ports:
+      - 10013:5000
+    restart: unless-stopped

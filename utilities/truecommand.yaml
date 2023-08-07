@@ -1,0 +1,13 @@
+version: '3.8'
+services:
+  truecommand:
+    container_name: TrueCommand
+    image: ixsystems/truecommand
+    volumes:
+      - /home/config/truecommand:/data
+    ports:
+      - 15004:80
+      - 15005:443
+    environment:
+      TZ: Europe/London
+    restart: unless-stopped

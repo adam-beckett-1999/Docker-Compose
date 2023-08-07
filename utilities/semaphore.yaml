@@ -1,0 +1,20 @@
+version: '3.8'
+services:
+  semaphore:
+    image: ghcr.io/imagegenius/semaphore:latest
+    container_name: Ansible-Semaphore
+    environment:
+      PUID: 1000
+      PGID: 1000
+      TZ: Europe/London
+      SEMAPHORE_DB_DIALECT: bolt
+      SEMAPHORE_ADMIN: "${ADMIN}"
+      SEMAPHORE_ADMIN_PASSWORD: "${PASSWORD}"
+      SEMAPHORE_ADMIN_NAME: "${NAME}"
+      SEMAPHORE_ADMIN_EMAIL: "${EMAIL}"
+      SEMAPHORE_ACCESS_KEY_ENCRYPTION: admin
+    volumes:
+      - /home/config/semaphore:/config
+    ports:
+      - 15002:3000
+    restart: unless-stopped

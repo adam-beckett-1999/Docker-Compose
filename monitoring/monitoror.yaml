@@ -1,0 +1,12 @@
+version: '3.8'
+services:
+  monitoror:
+    container_name: Monitoror
+    image: monitoror/monitoror
+    ports:
+      - 11001:8080
+    volumes:
+      - /home/config/monitoror:/configs
+    environment:
+      MO_CONFIG: /configs/config.json
+    restart: unless-stopped

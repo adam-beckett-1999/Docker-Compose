@@ -1,0 +1,29 @@
+version: "3.8"
+services:
+  petio:
+    container_name: Petio
+    image: ghcr.io/petio-team/petio
+    volumes:
+      - /home/config/petio:/config
+    ports:
+      - 10003:7777
+    environment:
+      PUID: 1000
+      PGID: 1000
+      UMASK: 002
+      TZ: Europe/London
+    restart: unless-stopped
+
+  petio-mongodb:
+    container_name: Petio-MongoDB
+    image: mongo:4.4.6
+    volumes:
+      - /home/config/petio/configdb:/data/configdb
+      - /home/config/petio/db:/data/db
+    ports:
+      - 27017:27017
+    environment:
+      PUID: 1000
+      PGID: 1000
+      TZ: Europe/London
+    restart: unless-stopped

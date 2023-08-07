@@ -1,0 +1,42 @@
+version: "3.8"
+services:
+  paperless-ngx:
+    container_name: Paperless-NGX
+    image: paperlessngx/paperless-ngx
+    ports:
+      - '14007:8000'
+    environment:
+      PUID: 1000
+      PGID: 1000
+      TZ: Europe/London
+      PAPERLESS_URL: https://docs.beckettcloud.com
+      PAPERLESS_REDIS: redis://192.168.0.243:14011
+      PAPERLESS_DBHOST: paperless-ngx-db
+      PAPERLESS_ADMIN_USER: "${ADMIN_USER}"
+      PAPERLESS_ADMIN_MAIL: "${ADMIN_EMAIL}"
+      PAPERLESS_ADMIN_PASSWORD: "${ADMIN_PASSWORD}"
+    volumes:
+      - /home/config/paperless-ngx/config:/config
+      - /home/config/paperless-ngx/data:/data
+    restart: unless-stopped
+    depends_on:
+      - paperless-ngx-redis
+      - paperless-ngx-db
+
+  paperless-ngx-redis:
+    container_name: Paperless-NGX-REDIS
+    image: redis
+    restart: unless-stopped
+    ports:
+      - '14011:6379'
+  
+  paperless-ngx-db:
+    container_name: Paperless-NGX-DB
+    image: docker.io/library/postgres:15
+    restart: unless-stopped
+    volumes:
+      - /home/config/paperless-ngx/pgdata:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: paperless
+      POSTGRES_USER: paperless
+      POSTGRES_PASSWORD: paperless

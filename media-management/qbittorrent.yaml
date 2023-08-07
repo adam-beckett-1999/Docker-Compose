@@ -1,0 +1,18 @@
+version: "3.8"
+services:
+  qbittorrent:
+    container_name: qBittorrent
+    image: lscr.io/linuxserver/qbittorrent
+    volumes:
+      - /home/config/qbittorrent:/config
+      - /mnt/nas1media/Downloads:/downloads
+    ports:
+      - 10005:10005
+      - 6881:6881
+      - 6881:6881/udp
+    environment:
+      PUID: 1000
+      PGID: 1000
+      TZ: Europe/London
+      WEBUI_PORT: 10005
+    restart: unless-stopped

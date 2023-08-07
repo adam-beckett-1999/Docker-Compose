@@ -1,0 +1,37 @@
+version: "3.8"
+services:
+  planka:
+    container_name: Planka
+    image: ghcr.io/plankanban/planka:latest
+    command: >
+      bash -c
+        "for i in `seq 1 30`; do
+          ./start.sh &&
+          s=$$? && break || s=$$?;
+          echo \"Tried $$i times. Waiting 5 seconds...\";
+          sleep 5;
+        done; (exit $$s)"
+    restart: unless-stopped
+    volumes:
+      - /home/config/planka/user-avatars:/app/public/user-avatars
+      - /home/config/planka/project-background-images:/app/public/project-background-images
+      - /home/config/planka/attachments:/app/private/attachments
+    ports:
+      - 14010:1337
+    environment:
+      BASE_URL: "${BASE_URL}"
+      TRUST_PROXY: 1
+      DATABASE_URL: postgresql://postgres@postgres/planka
+      SECRET_KEY: "${SECRET_KEY}"
+    depends_on:
+      - planka-db
+
+  planka-db:
+    container_name: Planka-DB
+    image: postgres:14-alpine
+    restart: unless-stopped
+    volumes:
+      - /home/config/planka/db-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: planka
+      POSTGRES_HOST_AUTH_METHOD: trust
