@@ -1,0 +1,10 @@
+version: "3.8"
+services:
+  plex-meta-manager:
+    container_name: Plex-Meta-Manager
+    image: meisnate12/plex-meta-manager
+    environment:
+      - TZ=Europe/London
+    volumes:
+      - /home/abeckett/config/plex-meta-manager:/config
+    restart: unless-stopped
