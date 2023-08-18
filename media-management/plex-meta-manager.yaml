@@ -6,5 +6,5 @@ services:
     environment:
       - TZ=Europe/London
     volumes:
-      - /home/abeckett/config/plex-meta-manager:/config
+      - /home/config/plex-meta-manager:/config
     restart: unless-stopped
