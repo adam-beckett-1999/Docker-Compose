@@ -1,0 +1,13 @@
+version: '3'
+services:
+  overseerr:
+    image: sctx/overseerr:latest
+    container_name: Overseerr
+    environment:
+      - LOG_LEVEL=debug
+      - TZ=Europe/London
+    ports:
+      - 10014:5055
+    volumes:
+      - /home/config/overseerr:/app/config
+    restart: unless-stopped
