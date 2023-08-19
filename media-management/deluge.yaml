@@ -1,0 +1,18 @@
+version: "3.8"
+services:
+  deluge:
+    image: lscr.io/linuxserver/deluge:latest
+    container_name: Deluge
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/London
+      - DELUGE_LOGLEVEL=error
+    volumes:
+      - /home/config/deluge:/config
+      - /mnt/nas1media/Downloads:/downloads
+    ports:
+      - 10015:8112
+      - 6882:6881
+      - 6882:6881/udp
+    restart: unless-stopped
