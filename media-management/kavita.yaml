@@ -7,5 +7,5 @@ services:
       - /home/config/kavita:/kavita/config
       - /mnt/nas1media/Comics:/books
     ports:
-      - 10013:5000
+      - 10002:5000
     restart: unless-stopped
