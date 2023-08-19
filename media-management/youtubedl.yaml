@@ -6,5 +6,5 @@ services:
     volumes:
       - /mnt/nas1media/Downloads/Youtube:/downloads
     ports:
-      - 10010:8081
+      - 10011:8081
     restart: unless-stopped
