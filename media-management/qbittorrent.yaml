@@ -7,12 +7,12 @@ services:
       - /home/config/qbittorrent:/config
       - /mnt/nas1media/Downloads:/downloads
     ports:
-      - 10005:10005
+      - 10006:10006
       - 6881:6881
       - 6881:6881/udp
     environment:
       PUID: 1000
       PGID: 1000
       TZ: Europe/London
-      WEBUI_PORT: 10005
+      WEBUI_PORT: 10006
     restart: unless-stopped
