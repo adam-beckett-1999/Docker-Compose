@@ -8,7 +8,7 @@ services:
       - /mnt/nas1media/TV Shows:/tv
       - /mnt/nas1media/Downloads:/downloads
     ports:
-      - 10008:8989
+      - 10009:8989
     environment:
       PUID: 1000
       PGID: 1000
