@@ -4,15 +4,13 @@ services:
     container_name: VSCode-Server
     image: lscr.io/linuxserver/code-server
     volumes:
-      - /home/config/vscode-server:/config
-      - /home/config/home-assistant:/home-assistant
+      - /mnt/gluster/containers/vscode-server:/config
+      - /mnt/gluster/containers:/containers
     ports:
-      - 13004:8443
+      - 9002:8443
     environment:
       PUID: 1000
       PGID: 1000
       TZ: Europe/London
-      PASSWORD: "${PASSWORD}"
-      SUDO_PASSWORD: "${SUDO_PASSWORD}"
-      DEFAULT_WORKSPACE: /home-assistant
+      DEFAULT_WORKSPACE: /containers
     restart: unless-stopped
