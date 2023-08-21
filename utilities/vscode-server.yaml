@@ -13,4 +13,9 @@ services:
       PGID: 1000
       TZ: Europe/London
       DEFAULT_WORKSPACE: /containers
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: [node.platform.os == linux]
     restart: unless-stopped
