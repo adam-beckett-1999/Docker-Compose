@@ -1,6 +1,7 @@
 version: '3.2'
 services:
   agent:
+    container_name: Portainer-Agent
     image: portainer/agent:2.18.4
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
@@ -12,6 +13,7 @@ services:
       placement:
         constraints: [node.platform.os == linux]
   portainer:
+    container_name: Portainer
     image: portainer/portainer-ce:2.18.4
     command: -H tcp://tasks.agent:9001 --tlsskipverify
     ports:
