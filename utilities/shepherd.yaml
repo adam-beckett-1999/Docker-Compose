@@ -1,0 +1,16 @@
+version: "3.8"
+services:
+  shepherd:
+    container_name: Shepherd
+    build: .
+    image: mazzolino/shepherd
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      TZ: 'Europe/London'
+      SLEEP_TIME: '5m'
+      VERBOSE: 'true'
+    deploy:
+      placement:
+        constraints:
+        - node.role == manager
