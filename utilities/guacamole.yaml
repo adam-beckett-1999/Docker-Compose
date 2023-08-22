@@ -4,9 +4,14 @@ services:
     container_name: Guacamole
     image: jasonbean/guacamole
     volumes:
-    - /home/config/guacamole:/config
+    - /mnt/gluster/containers/guacamole:/config
     ports:
-    - 15001:8080
+    - 10001:8080
     environment:
       OPT_MYSQL: Y
     restart: unless-stopped
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: [node.platform.os == linux]
