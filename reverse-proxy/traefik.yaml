@@ -24,6 +24,7 @@ services:
       - "traefik.http.middlewares.sslheader.headers.customrequestheaders.X-Forwarded-Proto=https"
       - "traefik.http.routers.traefik.service=api@internal"
       - "traefik.http.routers.api.middlewares=auth@file"
+      - "traefik.http.routers.authentik.ruleHost(`auth.hyvecloud.dev`) || HostRegexp(`{subdomain:[a-z0-9]+}.hyvecloud.dev`) && PathPrefix(`/outpost.goauthentik.io/`)"
 networks:
   proxy:
     external: true
