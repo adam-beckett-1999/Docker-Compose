@@ -2,17 +2,21 @@ version: '3.8'
 services:
   scrutiny:
     container_name: Scrutiny
-    image: ghcr.io/analogj/scrutiny:master-omnibus
+    image: lscr.io/linuxserver/scrutiny:latest
     cap_add:
       - SYS_RAWIO
+    environment:
+      PUID: "1000"
+      PGID: "1000"
+      TZ: "Europe/London"
+      SCRUTINY_API_ENDPOINT: "http://localhost:8080"
+      SCRUTINY_WEB: "true"
+      SCRUTINY_COLLECTOR: "true"
     ports:
-      - "9006:8080" # webapp
-      - "8086:8086" # influxDB admin
+      - "9006:8080"
     volumes:
       - /run/udev:/run/udev:ro
-      - /home/config/scrutiny:/opt/scrutiny/config
-      - /home/config/scrutiny/influxdb:/opt/scrutiny/influxdb
+      - /mnt/gluster/containers/scrutiny:/opt/scrutiny/config
     devices:
-      - "/dev/sda"
-      - "/dev/sdb"
-      - ...
+      - /dev:/dev
+    restart: unless-stopped
