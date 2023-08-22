@@ -1,6 +1,7 @@
 version: "3.4"
 services:
   authentik-postgresql:
+    container_name: Authentik-DB
     image: docker.io/library/postgres:12-alpine
     restart: unless-stopped
     healthcheck:
@@ -10,14 +11,17 @@ services:
       retries: 5
       timeout: 5s
     volumes:
-      - database:/var/lib/postgresql/data
+      - /mnt/gluster/containers/authentik/database:/var/lib/postgresql/data
     environment:
-      POSTGRES_PASSWORD: ${PG_PASS:?database password required}
+      POSTGRES_PASSWORD: ${PG_PASS}
       POSTGRES_USER: ${PG_USER:-authentik}
       POSTGRES_DB: ${PG_DB:-authentik}
     env_file:
       - .env
+    networks:
+      - proxy
   authentik-redis:
+    container_name: Authentik-REDIS
     image: docker.io/library/redis:alpine
     command: --save 60 1 --loglevel warning
     restart: unless-stopped
@@ -28,8 +32,11 @@ services:
       retries: 5
       timeout: 3s
     volumes:
-      - redis:/data
+      - /mnt/gluster/containers/authentik/redis:/data
+    networks:
+      - proxy
   authentik-server:
+    container_name: Authentik-Server
     image: ${AUTHENTIK_IMAGE:-ghcr.io/goauthentik/server}:${AUTHENTIK_TAG:-2023.6.1}
     restart: unless-stopped
     command: server
@@ -40,8 +47,8 @@ services:
       AUTHENTIK_POSTGRESQL__NAME: ${PG_DB:-authentik}
       AUTHENTIK_POSTGRESQL__PASSWORD: ${PG_PASS}
     volumes:
-      - ./media:/media
-      - ./custom-templates:/templates
+      - /mnt/gluster/containers/authentik/media:/media
+      - /mnt/gluster/containers/authentik/custom-templates:/templates
     env_file:
       - .env
     ports:
@@ -50,7 +57,14 @@ services:
     depends_on:
       - authentik-postgresql
       - authentik-redis
+    networks:
+      - proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.authentik.entryPoints=https"
+      - "traefik.http.routers.authentik.rule=Host(`auth.hyvecloud.dev`) || HostRegexp(`{subdomain:[A-Za-z0-9](?:[A-Za-z0-9\-]{0,61}[A-Za-z0-9])?}.hyvecloud.dev`) && PathPrefix(`/outpost.goauthentik.io/`)"
   authentik-worker:
+    container_name: Authentik-Worker
     image: ${AUTHENTIK_IMAGE:-ghcr.io/goauthentik/server}:${AUTHENTIK_TAG:-2023.6.1}
     restart: unless-stopped
     command: worker
@@ -60,25 +74,25 @@ services:
       AUTHENTIK_POSTGRESQL__USER: ${PG_USER:-authentik}
       AUTHENTIK_POSTGRESQL__NAME: ${PG_DB:-authentik}
       AUTHENTIK_POSTGRESQL__PASSWORD: ${PG_PASS}
-    # `user: root` and the docker socket volume are optional.
-    # See more for the docker socket integration here:
-    # https://goauthentik.io/docs/outposts/integrations/docker
-    # Removing `user: root` also prevents the worker from fixing the permissions
-    # on the mounted folders, so when removing this make sure the folders have the correct UID/GID
-    # (1000:1000 by default)
     user: root
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - ./media:/media
-      - ./certs:/certs
-      - ./custom-templates:/templates
+      - /mnt/gluster/containers/authentik/media:/media
+      - /mnt/gluster/containers/authentik/certs:/certs
+      - /mnt/gluster/containers/authentik/custom-templates:/templates
     env_file:
       - .env
     depends_on:
       - authentik-postgresql
       - authentik-redis
+    networks:
+      - proxy
 volumes:
   database:
     driver: local
   redis:
     driver: local
+networks:
+  proxy:
+    driver: bridge
+    external: true
