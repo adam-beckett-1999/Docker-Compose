@@ -4,7 +4,7 @@ services:
     container_name: TrueCommand
     image: ixsystems/truecommand
     volumes:
-      - /home/config/truecommand:/data
+      - /mnt/gluster/containers/truecommand:/data
     ports:
       - 9005:80
     environment:
@@ -21,7 +21,7 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.vscode-server.entrypoints=https"
       - "traefik.http.routers.vscode-server.tls=true"
-      - "traefik.http.routers.vscode-server.rule=Host(`true-command.hyvecloud.dev`)"
+      - "traefik.http.routers.vscode-server.rule=Host(`truecommand.hyvecloud.dev`)"
       - "traefik.http.routers.vscode-server.service=truecommand-truecommand@docker"
 networks:
   proxy:
