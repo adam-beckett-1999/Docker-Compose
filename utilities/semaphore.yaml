@@ -1,6 +1,6 @@
 version: '3.8'
 services:
-  semaphore:
+  ansible-semaphore:
     image: ghcr.io/imagegenius/semaphore:latest
     container_name: Ansible-Semaphore
     environment:
@@ -12,9 +12,14 @@ services:
       SEMAPHORE_ADMIN_PASSWORD: "${PASSWORD}"
       SEMAPHORE_ADMIN_NAME: "${NAME}"
       SEMAPHORE_ADMIN_EMAIL: "${EMAIL}"
-      SEMAPHORE_ACCESS_KEY_ENCRYPTION: admin
+      SEMAPHORE_ACCESS_KEY_ENCRYPTION: "${ENCRYPTION_KEY}"
     volumes:
       - /home/config/semaphore:/config
     ports:
-      - 15002:3000
+      - 9004:3000
     restart: unless-stopped
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: [node.platform.os == linux]
