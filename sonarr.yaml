@@ -3,14 +3,30 @@ services:
   sonarr:
     container_name: Sonarr
     image: lscr.io/linuxserver/sonarr
-    volumes:
-      - /home/config/sonarr:/config
-      - /mnt/nas1media/TV Shows:/tv
-      - /mnt/nas1media/Downloads:/downloads
-    ports:
-      - 8989:8989
+    restart: unless-stopped
     environment:
       PUID: 1000
       PGID: 1000
       TZ: Europe/London
-    restart: unless-stopped
+    volumes:
+      - /mnt/gluster/containers/sonarr:/config
+      - /mnt/nas1media/TV Shows:/tv
+      - /mnt/nas1media/Downloads:/downloads
+    ports:
+      - 8989:8989
+    networks:
+      - proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.sonarr.entrypoints=https"
+      - "traefik.http.routers.sonarr.tls=true"
+      - "traefik.http.routers.sonarr.rule=Host(`sonarr.hyvecloud.dev`)"
+      - "traefik.http.routers.sonarr.service=sonarr-sonarr@docker"   
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: [node.platform.os == linux]
+networks:
+  proxy:
+    external: true

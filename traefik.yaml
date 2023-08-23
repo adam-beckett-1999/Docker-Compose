@@ -24,6 +24,11 @@ services:
       - "traefik.http.middlewares.sslheader.headers.customrequestheaders.X-Forwarded-Proto=https"
       - "traefik.http.routers.traefik.service=api@internal"
       - "traefik.http.routers.api.middlewares=auth@file"
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: [node.platform.os == linux]
 networks:
   proxy:
     external: true

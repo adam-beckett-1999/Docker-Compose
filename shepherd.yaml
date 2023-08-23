@@ -2,14 +2,15 @@ version: "3.8"
 services:
   shepherd:
     container_name: Shepherd
-    build: .
     image: mazzolino/shepherd
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
+    build: .
+    restart: unless-stopped
     environment:
       TZ: "Europe/London"
       SLEEP_TIME: "5m"
       VERBOSE: "true"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
     deploy:
       placement:
         constraints:

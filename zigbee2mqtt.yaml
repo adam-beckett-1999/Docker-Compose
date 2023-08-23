@@ -3,13 +3,18 @@ services:
   zigbee2mqtt:
     container_name: Zigbee2MQTT
     image: koenkk/zigbee2mqtt
-    devices:
-      - /dev/ttyACM0:/dev/ttyACM0
+    restart: unless-stopped
+    environment:
+      TZ: Europe/London
     volumes:
       - /home/config/zigbee2mqtt:/app/data
       - /run/udev:/run/udev:ro
+    devices:
+      - /dev/ttyACM0:/dev/ttyACM0
     ports:
       - 8787:8080
-    environment:
-      TZ: Europe/London
-    restart: unless-stopped
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: [node.platform.os == linux]

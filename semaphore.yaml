@@ -1,8 +1,9 @@
 version: '3.8'
 services:
   ansible-semaphore:
-    image: ghcr.io/imagegenius/semaphore:latest
     container_name: Ansible-Semaphore
+    image: ghcr.io/imagegenius/semaphore:latest
+    restart: unless-stopped
     environment:
       PUID: 1000
       PGID: 1000
@@ -13,16 +14,12 @@ services:
       SEMAPHORE_ADMIN_NAME: Adam Beckett
       SEMAPHORE_ADMIN_EMAIL: becketta@live.com
       SEMAPHORE_ACCESS_KEY_ENCRYPTION: "${ENCRYPTION_KEY}"
+    env_file:
+      - .env
     volumes:
       - /mnt/gluster/containers/semaphore:/config
     ports:
       - 3000:3000
-    restart: unless-stopped
-    deploy:
-      mode: replicated
-      replicas: 1
-      placement:
-        constraints: [node.platform.os == linux]
     networks:
       - proxy
     labels:
@@ -31,8 +28,11 @@ services:
       - "traefik.http.routers.ansible-semaphore.tls=true"
       - "traefik.http.routers.ansible-semaphore.rule=Host(`ansible-2.hyvecloud.dev`)"
       - "traefik.http.routers.ansible-semaphore.service=ansible-semaphore-ansible-semaphore@docker"
-    env_file:
-      - .env
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: [node.platform.os == linux]
 networks:
   proxy:
     external: true

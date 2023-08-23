@@ -3,16 +3,11 @@ services:
   uptime-kuma:
     container_name: Uptime-Kuma
     image: louislam/uptime-kuma
+    restart: unless-stopped
     volumes:
         - /mnt/gluster/containers/uptime-kuma:/app/data
     ports:
-        - 3002:3001
-    deploy:
-      mode: replicated
-      replicas: 1
-      placement:
-        constraints: [node.platform.os == linux]
-    restart: unless-stopped
+        - 3002:3001   
     networks:
       - proxy
     labels:
@@ -21,6 +16,11 @@ services:
       - "traefik.http.routers.uptime-kuma.tls=true"
       - "traefik.http.routers.uptime-kuma.rule=Host(`uptime-kuma.hyvecloud.dev`)"
       - "traefik.http.routers.uptime-kuma.service=uptime-kuma-uptime-kuma@docker"
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: [node.platform.os == linux]
 networks:
   proxy:
     external: true

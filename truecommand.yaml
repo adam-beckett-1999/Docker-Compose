@@ -3,18 +3,13 @@ services:
   truecommand:
     container_name: TrueCommand
     image: ixsystems/truecommand
+    restart: unless-stopped
+    environment:
+      TZ: Europe/London
     volumes:
       - /mnt/gluster/containers/truecommand:/data
     ports:
       - 380:80
-    environment:
-      TZ: Europe/London
-    restart: unless-stopped
-    deploy:
-      mode: replicated
-      replicas: 1
-      placement:
-        constraints: [node.platform.os == linux]
     networks:
       - proxy
     labels:
@@ -23,6 +18,11 @@ services:
       - "traefik.http.routers.truecommand.tls=true"
       - "traefik.http.routers.truecommand.rule=Host(`truecommand.hyvecloud.dev`)"
       - "traefik.http.routers.truecommand.service=truecommand-truecommand@docker"
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: [node.platform.os == linux]
 networks:
   proxy:
     external: true
