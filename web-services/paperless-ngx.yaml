@@ -20,8 +20,8 @@ services:
       PAPERLESS_TIKA_GOTENBERG_ENDPOINT: http://paperless-ngx-gotenberg:3000
       PAPERLESS_TIKA_ENDPOINT: http://paperless-ngx-tika:9998
     volumes:
-      - /home/config/paperless-ngx/config:/config
-      - /home/config/paperless-ngx/data:/data
+      - /mnt/gluster/containers/paperless-ngx/config:/config
+      - /mnt/gluster/containers/paperless-ngx/data:/data
     restart: unless-stopped
     depends_on:
       - paperless-ngx-redis
@@ -57,7 +57,7 @@ services:
     image: docker.io/library/postgres:15
     restart: unless-stopped
     volumes:
-      - /home/config/paperless-ngx/pgdata:/var/lib/postgresql/data
+      - /mnt/gluster/containers/paperless-ngx/pgdata:/var/lib/postgresql/data
     environment:
       POSTGRES_DB: paperless
       POSTGRES_USER: paperless
