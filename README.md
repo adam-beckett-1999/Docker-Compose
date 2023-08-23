@@ -5,14 +5,14 @@
 
 ---
 ### Reverse-Proxy:
-#### Traefik
-#### Authentik
+* Traefik
+* Authentik
 ---
 ### Utilities:
-#### Portainer
-#### File-Browser
-#### VSCode-Server
-#### Guacamole
-#### Ansible-Semaphore
-#### Shepherd
+* Portainer
+* File-Browser
+* VSCode-Server
+* Apache Guacamole
+* Ansible-Semaphore
+* Shepherd
 ---
