@@ -4,17 +4,11 @@ services:
     container_name: Omada-Controller
     image: mbentley/omada-controller:5.9
     restart: unless-stopped
-    ulimits:
-      nofile:
-        soft: 4096
-        hard: 8192
-    stop_grace_period: 60s
-    network_mode: host
     environment:
-      MANAGE_HTTP_PORT: 15006
-      MANAGE_HTTPS_PORT: 15007
-      PORTAL_HTTP_PORT: 15008
-      PORTAL_HTTPS_PORT: 15009
+      MANAGE_HTTP_PORT: 480
+      MANAGE_HTTPS_PORT: 4443
+      PORTAL_HTTP_PORT: 580
+      PORTAL_HTTPS_PORT: 5443
       PORT_APP_DISCOVERY: 27001
       PORT_ADOPT_V1: 29812
       PORT_UPGRADE_V1: 29813
@@ -23,6 +17,35 @@ services:
       PORT_DISCOVERY: 29810
       SHOW_SERVER_LOGS: true
       TZ: Europe/London
+    ulimits:
+      nofile:
+        soft: 4096
+        hard: 8192
+    stop_grace_period: 60s
     volumes:
-      - /home/config/omada/data:/opt/tplink/EAPController/data
-      - /home/config/omada/logs:/opt/tplink/EAPController/logs
+      - /mnt/gluster/containers/omada/data:/opt/tplink/EAPController/data
+      - /mnt/gluster/containers/omada/logs:/opt/tplink/EAPController/logs
+    ports:
+      - 480:480
+      - 4443:4443
+      - 580:580
+      - 5443:5443
+      - 27001:27001
+      - 29810-29814:29810-29814
+    networks:
+      - proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.omada-controller.entrypoints=https"
+      - "traefik.http.routers.omada-controller.tls=true"
+      - "traefik.http.routers.omada-controller.rule=Host(`omada.hyvecloud.dev`)"
+      - "traefik.http.routers.omada-controller.service=omada-controller-omada-controller@docker"
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: [node.platform.os == linux]
+networks:
+  proxy:
+    external: true
+    
