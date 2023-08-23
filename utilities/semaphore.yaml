@@ -8,10 +8,10 @@ services:
       PGID: 1000
       TZ: Europe/London
       SEMAPHORE_DB_DIALECT: bolt
-      SEMAPHORE_ADMIN: "${ADMIN}"
+      SEMAPHORE_ADMIN: abeckett
       SEMAPHORE_ADMIN_PASSWORD: "${PASSWORD}"
-      SEMAPHORE_ADMIN_NAME: "${NAME}"
-      SEMAPHORE_ADMIN_EMAIL: "${EMAIL}"
+      SEMAPHORE_ADMIN_NAME: Adam Beckett
+      SEMAPHORE_ADMIN_EMAIL: becketta@live.com
       SEMAPHORE_ACCESS_KEY_ENCRYPTION: "${ENCRYPTION_KEY}"
     volumes:
       - /mnt/gluster/containers/semaphore:/config
