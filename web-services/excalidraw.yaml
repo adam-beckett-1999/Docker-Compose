@@ -6,36 +6,74 @@ services:
     healthcheck:
       disable: true
     ports:
-      - 14001:80
+      - 9021:80
     environment:
-      BACKEND_V2_GET_URL: http://localhost:14002/api/v2/scenes/
-      BACKEND_V2_POST_URL: http://localhost:14002/api/v2/scenes/
+      BACKEND_V2_GET_URL: http://localhost:9022/api/v2/scenes/
+      BACKEND_V2_POST_URL: http://localhost:9022/api/v2/scenes/
       LIBRARY_URL: https://libraries.excalidraw.com
       LIBRARY_BACKEND: https://us-central1-excalidraw-room-persistence.cloudfunctions.net/libraries
-      SOCKET_SERVER_URL: http://localhost:14003/
+      SOCKET_SERVER_URL: http://localhost:9023/
       STORAGE_BACKEND: "http"
-      HTTP_STORAGE_BACKEND_URL: "http://localhost:14002/api/v2"
+      HTTP_STORAGE_BACKEND_URL: "http://localhost:9022/api/v2"
     restart: unless-stopped
-
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: [node.platform.os == linux]
+    networks:
+      - proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.excalidraw.entrypoints=https"
+      - "traefik.http.routers.excalidraw.tls=true"
+      - "traefik.http.routers.excalidraw.rule=Host(`whiteboard.hyvecloud.dev`)"
+      - "traefik.http.routers.excalidraw.service=excalidraw-excalidraw@docker"
+    depends_on:
+      - excalidraw-storage-backend
+      - excalidraw-room
+      - excalidraw-redis
   excalidraw-storage-backend:
     container_name: Excalidraw-Storage
     image: kiliandeca/excalidraw-storage-backend
     ports:
-      - 14002:8080
+      - 9022:8080
     environment:
-      STORAGE_URI: redis://redis:14004
+      STORAGE_URI: redis://redis:9024
     restart: unless-stopped 
-
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: [node.platform.os == linux]
+    networks:
+      - proxy
   excalidraw-room:
     container_name: Excalidraw-Room
     image: excalidraw/excalidraw-room
     ports:
-      - "14003:80"
+      - "9023:80"
     restart: unless-stopped
-
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: [node.platform.os == linux]
+    networks:
+      - proxy
   excalidraw-redis:
     container_name: Excalidraw-REDIS
     image: redis
     ports:
-      - "14004:6379"
+      - "9024:6379"
     restart: unless-stopped
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: [node.platform.os == linux]
+    networks:
+      - proxy
+networks:
+  proxy:
+    external: true

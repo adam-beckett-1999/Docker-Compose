@@ -19,10 +19,10 @@ services:
       - proxy
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.file-browser.entrypoints=https"
-      - "traefik.http.routers.file-browser.tls=true"
-      - "traefik.http.routers.file-browser.rule=Host(`monitoror.hyvecloud.dev`)"
-      - "traefik.http.routers.file-browser.service=monitoror-monitoror@docker"
+      - "traefik.http.routers.monitoror.entrypoints=https"
+      - "traefik.http.routers.monitoror.tls=true"
+      - "traefik.http.routers.monitoror.rule=Host(`monitoror.hyvecloud.dev`)"
+      - "traefik.http.routers.monitoror.service=monitoror-monitoror@docker"
 networks:
   proxy:
     external: true

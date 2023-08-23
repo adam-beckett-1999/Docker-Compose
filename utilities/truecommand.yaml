@@ -19,10 +19,10 @@ services:
       - proxy
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.vscode-server.entrypoints=https"
-      - "traefik.http.routers.vscode-server.tls=true"
-      - "traefik.http.routers.vscode-server.rule=Host(`truecommand.hyvecloud.dev`)"
-      - "traefik.http.routers.vscode-server.service=truecommand-truecommand@docker"
+      - "traefik.http.routers.truecommand.entrypoints=https"
+      - "traefik.http.routers.truecommand.tls=true"
+      - "traefik.http.routers.truecommand.rule=Host(`truecommand.hyvecloud.dev`)"
+      - "traefik.http.routers.truecommand.service=truecommand-truecommand@docker"
 networks:
   proxy:
     external: true

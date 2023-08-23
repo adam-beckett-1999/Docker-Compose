@@ -27,10 +27,10 @@ services:
       - proxy
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.vscode-server.entrypoints=https"
-      - "traefik.http.routers.vscode-server.tls=true"
-      - "traefik.http.routers.vscode-server.rule=Host(`ansible-2.hyvecloud.dev`)"
-      - "traefik.http.routers.vscode-server.service=ansible-semaphore-ansible-semaphore@docker"
+      - "traefik.http.routers.ansible-semaphore.entrypoints=https"
+      - "traefik.http.routers.ansible-semaphore.tls=true"
+      - "traefik.http.routers.ansible-semaphore.rule=Host(`ansible-2.hyvecloud.dev`)"
+      - "traefik.http.routers.ansible-semaphore.service=ansible-semaphore-ansible-semaphore@docker"
 networks:
   proxy:
     external: true

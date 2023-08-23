@@ -17,10 +17,10 @@ services:
       - proxy
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.file-browser.entrypoints=https"
-      - "traefik.http.routers.file-browser.tls=true"
-      - "traefik.http.routers.file-browser.rule=Host(`uptime-kuma.hyvecloud.dev`)"
-      - "traefik.http.routers.file-browser.service=uptime-kuma-uptime-kuma@docker"
+      - "traefik.http.routers.uptime-kuma.entrypoints=https"
+      - "traefik.http.routers.uptime-kuma.tls=true"
+      - "traefik.http.routers.uptime-kuma.rule=Host(`uptime-kuma.hyvecloud.dev`)"
+      - "traefik.http.routers.uptime-kuma.service=uptime-kuma-uptime-kuma@docker"
 networks:
   proxy:
     external: true
