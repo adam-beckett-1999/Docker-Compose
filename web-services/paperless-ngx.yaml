@@ -4,17 +4,21 @@ services:
     container_name: Paperless-NGX
     image: paperlessngx/paperless-ngx
     ports:
-      - '14007:8000'
+      - '9027:8000'
     environment:
       PUID: 1000
       PGID: 1000
       TZ: Europe/London
-      PAPERLESS_URL: https://docs.beckettcloud.com
-      PAPERLESS_REDIS: redis://192.168.0.243:14011
+      PAPERLESS_URL: https://paperless.hyvecloud.dev
+      PAPERLESS_REDIS: redis://paperless-ngx-redis:9028
       PAPERLESS_DBHOST: paperless-ngx-db
-      PAPERLESS_ADMIN_USER: "${ADMIN_USER}"
-      PAPERLESS_ADMIN_MAIL: "${ADMIN_EMAIL}"
+      PAPERLESS_ADMIN_USER: abeckett
+      PAPERLESS_ADMIN_MAIL: becketta@live.com
       PAPERLESS_ADMIN_PASSWORD: "${ADMIN_PASSWORD}"
+      PAPERLESS_DBPASS: "${DB_PASS}"
+      PAPERLESS_TIKA_ENABLED: 1
+      PAPERLESS_TIKA_GOTENBERG_ENDPOINT: http://paperless-ngx-gotenberg:3000
+      PAPERLESS_TIKA_ENDPOINT: http://paperless-ngx-tika:9998
     volumes:
       - /home/config/paperless-ngx/config:/config
       - /home/config/paperless-ngx/data:/data
@@ -22,14 +26,32 @@ services:
     depends_on:
       - paperless-ngx-redis
       - paperless-ngx-db
-
+    networks:
+      - proxy
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: [node.platform.os == linux]
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.paperless-ngx.entrypoints=https"
+      - "traefik.http.routers.paperless-ngx.tls=true"
+      - "traefik.http.routers.paperless-ngx.rule=Host(`paperless.hyvecloud.dev`)"
+      - "traefik.http.routers.paperless-ngx.service=paperless-ngx-paperless-ngx@docker"
   paperless-ngx-redis:
     container_name: Paperless-NGX-REDIS
     image: redis
     restart: unless-stopped
     ports:
-      - '14011:6379'
-  
+      - '9028:6379'
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: [node.platform.os == linux]
+    networks:
+      - proxy
   paperless-ngx-db:
     container_name: Paperless-NGX-DB
     image: docker.io/library/postgres:15
@@ -39,4 +61,40 @@ services:
     environment:
       POSTGRES_DB: paperless
       POSTGRES_USER: paperless
-      POSTGRES_PASSWORD: paperless
+      POSTGRES_PASSWORD: "${DB_PASS}"
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: [node.platform.os == linux]
+    networks:
+      - proxy
+  paperless-ngx-gotenberg:
+    container_name: Paperless-NGX-Gotenberg
+    image: docker.io/gotenberg/gotenberg:7.8
+    restart: unless-stopped
+    command:
+      - "gotenberg"
+      - "--chromium-disable-javascript=true"
+      - "--chromium-allow-list=file:///tmp/.*"
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: [node.platform.os == linux]
+    networks:
+      - proxy
+  paperless-ngx-tika:
+    container_name: Paperless-NGX-Tika
+    image: ghcr.io/paperless-ngx/tika:latest
+    restart: unless-stopped
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: [node.platform.os == linux]
+    networks:
+      - proxy
+networks:
+  proxy:
+    external: true
