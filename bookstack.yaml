@@ -32,6 +32,8 @@ services:
       replicas: 1
       placement:
         constraints: [node.platform.os == linux]
+    env_file:
+      - .env
   bookstack_db:
     image: lscr.io/linuxserver/mariadb
     container_name: BookstackDB
@@ -53,6 +55,8 @@ services:
       replicas: 1
       placement:
         constraints: [node.platform.os == linux]
+    env_file:
+      - .env
 networks:
   proxy:
     external: true

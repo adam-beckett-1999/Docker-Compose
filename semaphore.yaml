@@ -31,6 +31,8 @@ services:
       - "traefik.http.routers.ansible-semaphore.tls=true"
       - "traefik.http.routers.ansible-semaphore.rule=Host(`ansible-2.hyvecloud.dev`)"
       - "traefik.http.routers.ansible-semaphore.service=ansible-semaphore-ansible-semaphore@docker"
+    env_file:
+      - .env
 networks:
   proxy:
     external: true

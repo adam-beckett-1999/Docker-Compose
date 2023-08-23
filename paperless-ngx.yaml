@@ -39,6 +39,8 @@ services:
       - "traefik.http.routers.paperless-ngx.tls=true"
       - "traefik.http.routers.paperless-ngx.rule=Host(`paperless.hyvecloud.dev`)"
       - "traefik.http.routers.paperless-ngx.service=paperless-ngx-paperless-ngx@docker"
+    env_file:
+      - .env
   paperless-ngx-redis:
     container_name: Paperless-NGX-REDIS
     image: redis
@@ -69,6 +71,8 @@ services:
         constraints: [node.platform.os == linux]
     networks:
       - proxy
+    env_file:
+      - .env
   paperless-ngx-gotenberg:
     container_name: Paperless-NGX-Gotenberg
     image: docker.io/gotenberg/gotenberg:7.8

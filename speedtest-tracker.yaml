@@ -20,7 +20,8 @@ services:
     restart: unless-stopped
     depends_on:
       - speedtest-tracker-db
-
+    env_file:
+      - .env
   speedtest-tracker-db:
     container_name: Speedtest-Tracker-DB
     image: mariadb:10
@@ -34,5 +35,7 @@ services:
       MARIADB_RANDOM_ROOT_PASSWORD: true
     volumes:
       - speedtest-db:/var/lib/mysql
+    env_file:
+      - .env
 volumes:
   speedtest-db:

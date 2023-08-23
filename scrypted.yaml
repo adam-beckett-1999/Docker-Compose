@@ -18,3 +18,5 @@ services:
         max-size: "10m"
         max-file: "10"
     restart: unless-stopped
+    env_file:
+      - .env

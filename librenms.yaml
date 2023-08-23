@@ -18,6 +18,8 @@ services:
       MYSQL_USER: librenms
       MYSQL_PASSWORD: "${DB_PASSWORD}"
     restart: unless-stopped
+    env_file:
+      - .env
   librenms-memcached:
     container_name: LibreNMS-Memcached
     image: memcached:alpine
@@ -66,6 +68,8 @@ services:
       MEMCACHED_HOST: memcached
       MEMCACHED_PORT: 11211
     restart: unless-stopped
+    env_file:
+      - .env
   librenms-dispatcher:
     container_name: LibreNMS-Dispatcher
     image: librenms/librenms
@@ -101,6 +105,8 @@ services:
       MEMCACHED_PORT: 11211
       SIDECAR_DISPATCHER: 1
     restart: unless-stopped
+    env_file:
+      - .env
   librenms-syslogng:
     container_name: LibreNMS-Syslogng
     image: librenms/librenms
@@ -137,6 +143,8 @@ services:
       MEMCACHED_PORT: 11211
       SIDECAR_SYSLOGNG: 1
     restart: unless-stopped
+    env_file:
+      - .env
   librenms-snmptrapd:
     container_name: LibreNMS-SNMPtrapd
     image: librenms/librenms
@@ -173,3 +181,5 @@ services:
       MEMCACHED_PORT: 11211
       SIDECAR_SNMPTRAPD: 1
     restart: unless-stopped
+    env_file:
+      - .env
