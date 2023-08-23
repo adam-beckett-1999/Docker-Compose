@@ -9,10 +9,26 @@ services:
       - TZ=Europe/London
       - DELUGE_LOGLEVEL=error
     volumes:
-      - /home/config/deluge:/config
+      - /mnt/gluster/containers/deluge:/config
       - /mnt/nas1media/Downloads:/downloads
     ports:
       - 10001:8112
-      - 6882:6881
-      - 6882:6881/udp
+      - 6881:6881
+      - 6881:6881/udp
     restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.deluge.entrypoints=https"
+      - "traefik.http.routers.deluge.tls=true"
+      - "traefik.http.routers.deluge.rule=Host(`torrents.hyvecloud.dev`)"
+      - "traefik.http.routers.deluge.service=deluge-deluge@docker"
+    networks:
+      - proxy
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: [node.platform.os == linux]
+networks:
+  proxy:
+    external: true

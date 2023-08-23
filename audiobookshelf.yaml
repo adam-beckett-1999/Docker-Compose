@@ -4,12 +4,28 @@ services:
     container_name: Audiobookshelf
     image: ghcr.io/advplyr/audiobookshelf
     volumes:
-      - /home/config/audiobookshelf:/config
-      - /home/config/audiobookshelf/metadata:/metadata
+      - /mnt/gluster/containers/audiobookshelf:/config
+      - /mnt/gluster/containers/audiobookshelf/metadata:/metadata
       - /mnt/nas1media/Audiobooks:/audiobooks
     ports:
-      - 10000:80
+      - 9030:80
     environment:
       AUDIOBOOKSHELF_UID: 99
       AUDIOBOOKSHELF_GID: 100
     restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.audiobookshelf.entrypoints=https"
+      - "traefik.http.routers.audiobookshelf.tls=true"
+      - "traefik.http.routers.audiobookshelf.rule=Host(`audiobooks.hyvecloud.dev`)"
+      - "traefik.http.routers.audiobookshelf.service=audiobookshelf-audiobookshelf@docker"
+    networks:
+      - proxy
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: [node.platform.os == linux]
+networks:
+  proxy:
+    external: true
