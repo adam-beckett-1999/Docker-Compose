@@ -10,20 +10,24 @@ services:
       interval: 30s
       retries: 5
       timeout: 5s
-    volumes:
-      - /mnt/gluster/containers/authentik/database:/var/lib/postgresql/data
     environment:
       POSTGRES_PASSWORD: ${PG_PASS}
       POSTGRES_USER: ${PG_USER:-authentik}
       POSTGRES_DB: ${PG_DB:-authentik}
     env_file:
       - .env
+    volumes:
+      - /mnt/gluster/containers/authentik/database:/var/lib/postgresql/data
     networks:
       - proxy
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: [node.platform.os == linux]
   authentik-redis:
     container_name: Authentik-REDIS
     image: docker.io/library/redis:alpine
-    command: --save 60 1 --loglevel warning
     restart: unless-stopped
     healthcheck:
       test: ["CMD-SHELL", "redis-cli ping | grep PONG"]
@@ -31,10 +35,16 @@ services:
       interval: 30s
       retries: 5
       timeout: 3s
+    command: --save 60 1 --loglevel warning
     volumes:
       - /mnt/gluster/containers/authentik/redis:/data
     networks:
       - proxy
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: [node.platform.os == linux]
   authentik-server:
     container_name: Authentik-Server
     image: ${AUTHENTIK_IMAGE:-ghcr.io/goauthentik/server}:${AUTHENTIK_TAG:-2023.6.1}
@@ -46,23 +56,28 @@ services:
       AUTHENTIK_POSTGRESQL__USER: ${PG_USER:-authentik}
       AUTHENTIK_POSTGRESQL__NAME: ${PG_DB:-authentik}
       AUTHENTIK_POSTGRESQL__PASSWORD: ${PG_PASS}
+    env_file:
+      - .env
     volumes:
       - /mnt/gluster/containers/authentik/media:/media
       - /mnt/gluster/containers/authentik/custom-templates:/templates
-    env_file:
-      - .env
     ports:
       - "${COMPOSE_PORT_HTTP:-9000}:9000"
       - "${COMPOSE_PORT_HTTPS:-9443}:9443"
-    depends_on:
-      - authentik-postgresql
-      - authentik-redis
     networks:
       - proxy
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.authentik.entryPoints=https"
       - "traefik.http.routers.authentik.rule=Host(`auth.hyvecloud.dev`) || HostRegexp(`{subdomain:[A-Za-z0-9](?:[A-Za-z0-9\-]{0,61}[A-Za-z0-9])?}.hyvecloud.dev`) && PathPrefix(`/outpost.goauthentik.io/`)"
+    depends_on:
+      - authentik-postgresql
+      - authentik-redis
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: [node.platform.os == linux]
   authentik-worker:
     container_name: Authentik-Worker
     image: ${AUTHENTIK_IMAGE:-ghcr.io/goauthentik/server}:${AUTHENTIK_TAG:-2023.6.1}
@@ -74,24 +89,24 @@ services:
       AUTHENTIK_POSTGRESQL__USER: ${PG_USER:-authentik}
       AUTHENTIK_POSTGRESQL__NAME: ${PG_DB:-authentik}
       AUTHENTIK_POSTGRESQL__PASSWORD: ${PG_PASS}
+    env_file:
+      - .env
     user: root
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - /mnt/gluster/containers/authentik/media:/media
       - /mnt/gluster/containers/authentik/certs:/certs
       - /mnt/gluster/containers/authentik/custom-templates:/templates
-    env_file:
-      - .env
+    networks:
+      - proxy
     depends_on:
       - authentik-postgresql
       - authentik-redis
-    networks:
-      - proxy
-volumes:
-  database:
-    driver: local
-  redis:
-    driver: local
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: [node.platform.os == linux]
 networks:
   proxy:
     driver: bridge

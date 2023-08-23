@@ -6,7 +6,7 @@ services:
     volumes:
       - /mnt/gluster/containers/truecommand:/data
     ports:
-      - 9005:80
+      - 380:80
     environment:
       TZ: Europe/London
     restart: unless-stopped

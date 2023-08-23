@@ -1,8 +1,9 @@
 version: "3.8"
 services:
   bookstack:
-    image: lscr.io/linuxserver/bookstack
     container_name: Bookstack
+    image: lscr.io/linuxserver/bookstack
+    restart: unless-stopped
     environment:
       PUID: 1000
       PGID: 1000
@@ -12,31 +13,31 @@ services:
       DB_USER: bookstack
       DB_PASS: "${DB_PASS}"
       DB_DATABASE: bookstackapp
+    env_file:
+      - .env
     volumes:
       - /mnt/gluster/containers/bookstack/data:/config
     ports:
-      - 9026:80
-    restart: unless-stopped
-    depends_on:
-      - bookstack_db
+      - 8001:80
+    networks:
+      - proxy
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.bookstack.entrypoints=https"
       - "traefik.http.routers.bookstack.tls=true"
       - "traefik.http.routers.bookstack.rule=Host(`docs.hyvecloud.dev`)"
       - "traefik.http.routers.bookstack.service=bookstack-bookstack@docker"
-    networks:
-      - proxy
+    depends_on:
+      - bookstack_db
     deploy:
       mode: replicated
       replicas: 1
       placement:
         constraints: [node.platform.os == linux]
-    env_file:
-      - .env
   bookstack_db:
-    image: lscr.io/linuxserver/mariadb
     container_name: BookstackDB
+    image: lscr.io/linuxserver/mariadb
+    restart: unless-stopped
     environment:
       PUID: 1000
       PGID: 1000
@@ -45,9 +46,10 @@ services:
       MYSQL_DATABASE: bookstackapp
       MYSQL_USER: bookstack
       MYSQL_PASSWORD: "${DB_PASS}"
+    env_file:
+      - .env
     volumes:
       - /mnt/gluster/containers/bookstack/db_data:/config
-    restart: unless-stopped
     networks:
       - proxy
     deploy:
@@ -55,8 +57,6 @@ services:
       replicas: 1
       placement:
         constraints: [node.platform.os == linux]
-    env_file:
-      - .env
 networks:
   proxy:
     external: true

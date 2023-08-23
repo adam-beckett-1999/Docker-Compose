@@ -1,18 +1,13 @@
 version: '3.8'
 services:
   homepage:
-    image: ghcr.io/benphelps/homepage:latest
     container_name: Homepage
-    ports:
-      - 9020:3000
+    image: ghcr.io/benphelps/homepage:latest
+    restart: unless-stopped
     volumes:
       - /mnt/gluster/containers/homepage:/app/config
-    restart: unless-stopped
-    deploy:
-      mode: replicated
-      replicas: 1
-      placement:
-        constraints: [node.platform.os == linux]
+    ports:
+      - 3001:3000
     networks:
       - proxy
     labels:
@@ -21,6 +16,11 @@ services:
       - "traefik.http.routers.homepage.tls=true"
       - "traefik.http.routers.homepage.rule=Host(`dashboard.hyvecloud.dev`)"
       - "traefik.http.routers.homepage.service=homepage-homepage@docker"
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: [node.platform.os == linux]
 networks:
   proxy:
     external: true

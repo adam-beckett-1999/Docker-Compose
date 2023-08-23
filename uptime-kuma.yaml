@@ -6,7 +6,7 @@ services:
     volumes:
         - /mnt/gluster/containers/uptime-kuma:/app/data
     ports:
-        - 9011:3001
+        - 3002:3001
     deploy:
       mode: replicated
       replicas: 1

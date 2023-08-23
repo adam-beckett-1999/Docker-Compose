@@ -3,18 +3,13 @@ services:
   monitoror:
     container_name: Monitoror
     image: monitoror/monitoror
-    ports:
-      - 9012:8080
-    volumes:
-      - /mnt/gluster/containers/monitoror:/configs
+    restart: unless-stopped
     environment:
       MO_CONFIG: /configs/config.json
-    deploy:
-      mode: replicated
-      replicas: 1
-      placement:
-        constraints: [node.platform.os == linux]
-    restart: unless-stopped
+    volumes:
+      - /mnt/gluster/containers/monitoror:/configs
+    ports:
+      - 8484:8080
     networks:
       - proxy
     labels:
@@ -23,6 +18,11 @@ services:
       - "traefik.http.routers.monitoror.tls=true"
       - "traefik.http.routers.monitoror.rule=Host(`monitoror.hyvecloud.dev`)"
       - "traefik.http.routers.monitoror.service=monitoror-monitoror@docker"
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: [node.platform.os == linux]
 networks:
   proxy:
     external: true

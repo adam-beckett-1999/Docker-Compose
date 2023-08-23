@@ -6,7 +6,7 @@ services:
     volumes:
       - /home/config/prowlarr:/config
     ports:
-      - 10005:9696
+      - 9696:9696
     environment:
       PUID: 1000
       PGID: 1000

@@ -4,13 +4,13 @@ services:
     container_name: Paperless-NGX
     image: paperlessngx/paperless-ngx
     ports:
-      - '9027:8000'
+      - '8004:8000'
     environment:
       PUID: 1000
       PGID: 1000
       TZ: Europe/London
       PAPERLESS_URL: https://paperless.hyvecloud.dev
-      PAPERLESS_REDIS: redis://paperless-ngx-redis:9028
+      PAPERLESS_REDIS: redis://paperless-ngx-redis:6379
       PAPERLESS_DBHOST: paperless-ngx-db
       PAPERLESS_ADMIN_USER: abeckett
       PAPERLESS_ADMIN_MAIL: becketta@live.com
@@ -46,7 +46,7 @@ services:
     image: redis
     restart: unless-stopped
     ports:
-      - '9028:6379'
+      - '6379:6379'
     deploy:
       mode: replicated
       replicas: 1

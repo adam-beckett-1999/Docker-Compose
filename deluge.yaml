@@ -1,8 +1,9 @@
 version: "3.8"
 services:
   deluge:
-    image: lscr.io/linuxserver/deluge:latest
     container_name: Deluge
+    image: lscr.io/linuxserver/deluge:latest
+    restart: unless-stopped
     environment:
       - PUID=1000
       - PGID=1000
@@ -12,18 +13,17 @@ services:
       - /mnt/gluster/containers/deluge:/config
       - /mnt/nas1media/Downloads:/downloads
     ports:
-      - 10001:8112
+      - 8112:8112
       - 6881:6881
       - 6881:6881/udp
-    restart: unless-stopped
+    networks:
+      - proxy
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.deluge.entrypoints=https"
       - "traefik.http.routers.deluge.tls=true"
       - "traefik.http.routers.deluge.rule=Host(`torrents.hyvecloud.dev`)"
       - "traefik.http.routers.deluge.service=deluge-deluge@docker"
-    networks:
-      - proxy
     deploy:
       mode: replicated
       replicas: 1

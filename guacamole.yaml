@@ -3,18 +3,13 @@ services:
   guacamole:
     container_name: Guacamole
     image: jasonbean/guacamole
+    restart: unless-stopped
+    environment:
+      OPT_MYSQL: Y
     volumes:
     - /mnt/gluster/containers/guacamole:/config
     ports:
-    - 9003:8080
-    environment:
-      OPT_MYSQL: Y
-    restart: unless-stopped
-    deploy:
-      mode: replicated
-      replicas: 1
-      placement:
-        constraints: [node.platform.os == linux]
+    - 8282:8080
     networks:
       - proxy
     labels:
@@ -23,6 +18,11 @@ services:
       - "traefik.http.routers.guacamole.tls=true"
       - "traefik.http.routers.guacamole.rule=Host(`guacamole.hyvecloud.dev`)"
       - "traefik.http.routers.guacamole.service=guacamole-guacamole@docker"
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: [node.platform.os == linux]
 networks:
   proxy:
     external: true

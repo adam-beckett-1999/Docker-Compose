@@ -3,21 +3,16 @@ services:
   filebrowser:
     container_name: Filebrowser
     image: hurlenko/filebrowser
-    volumes:
-      - /mnt/gluster/containers/file-browser:/config
-      - /mnt/gluster/containers:/data
-    ports:
-      - 9001:8080
+    restart: unless-stopped
     environment:
       PUID: 1000
       PGID: 1000
       TZ: Europe/London
-    deploy:
-      mode: replicated
-      replicas: 1
-      placement:
-        constraints: [node.platform.os == linux]
-    restart: unless-stopped
+    volumes:
+      - /mnt/gluster/containers/file-browser:/config
+      - /mnt/gluster/containers:/data
+    ports:
+      - 8181:8080
     networks:
       - proxy
     labels:
@@ -26,6 +21,11 @@ services:
       - "traefik.http.routers.file-browser.tls=true"
       - "traefik.http.routers.file-browser.rule=Host(`file-browser.hyvecloud.dev`)"
       - "traefik.http.routers.file-browser.service=filebrowser-filebrowser@docker"
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: [node.platform.os == linux]
 networks:
   proxy:
     external: true

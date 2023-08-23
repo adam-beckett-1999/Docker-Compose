@@ -9,7 +9,7 @@ services:
       - /home/config/zigbee2mqtt:/app/data
       - /run/udev:/run/udev:ro
     ports:
-      - 13003:8080
+      - 8787:8080
     environment:
       TZ: Europe/London
     restart: unless-stopped

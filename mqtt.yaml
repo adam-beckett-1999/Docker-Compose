@@ -8,5 +8,13 @@ services:
       - /home/config/mosquitto:/mosquitto
     ports:
       - 1883:1883
-      - 13002:9001
+      - 9001:9001
     restart: unless-stopped
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: [node.platform.os == linux]
+networks:
+  proxy:
+    external: true

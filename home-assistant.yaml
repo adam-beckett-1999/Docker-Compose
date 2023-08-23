@@ -3,13 +3,28 @@ services:
   home-assistant:
     container_name: Home-Assistant
     image: lscr.io/linuxserver/homeassistant
-    network_mode: host
-    volumes:
-      - /home/config/home-assistant:/config
-    ports:
-      - 13001:8123
+    restart: unless-stopped
     environment:
       PUID: 1000
       PGID: 1000
       TZ: Europe/London
-    restart: unless-stopped
+    volumes:
+      - /mnt/gluster/containers/home-assistant:/config
+    ports:
+      - 8123:8123
+    networks:
+      - proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.home-assistant.entrypoints=https"
+      - "traefik.http.routers.home-assistant.tls=true"
+      - "traefik.http.routers.home-assistant.rule=Host(`home-assistant.hyvecloud.dev`)"
+      - "traefik.http.routers.home-assistant.service=home-assistant-home-assistant@docker"
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: [node.platform.os == linux]
+networks:
+  proxy:
+    external: true

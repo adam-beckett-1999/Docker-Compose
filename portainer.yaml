@@ -19,8 +19,7 @@ services:
     image: portainer/portainer-ce:2.18.4
     command: -H tcp://tasks.agent:9001 --tlsskipverify
     ports:
-      - "9443:9443"
-      - "9000:9000"
+      - "7443:9443"
       - "8000:8000"
     volumes:
       - /mnt/gluster/containers/portainer:/data
