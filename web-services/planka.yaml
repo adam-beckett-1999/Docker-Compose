@@ -19,7 +19,7 @@ services:
     ports:
       - 14010:1337
     environment:
-      BASE_URL: "${BASE_URL}"
+      BASE_URL: board.hyvecloud.dev
       TRUST_PROXY: 1
       DATABASE_URL: postgresql://postgres@postgres/planka
       SECRET_KEY: "${SECRET_KEY}"
