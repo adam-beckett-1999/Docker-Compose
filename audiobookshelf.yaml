@@ -16,11 +16,11 @@ services:
     networks:
       - proxy
     labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.audiobookshelf.entrypoints=https"
-      - "traefik.http.routers.audiobookshelf.tls=true"
-      - "traefik.http.routers.audiobookshelf.rule=Host(`audiobooks.hyvecloud.dev`)"
-      - "traefik.http.routers.audiobookshelf.service=audiobookshelf-audiobookshelf@docker"
+      traefik.enable: true
+      traefik.http.routers.audiobookshelf.entrypoints: https
+      traefik.http.routers.audiobookshelf.tls: true
+      traefik.http.routers.audiobookshelf.rule: Host(`audiobooks.hyvecloud.dev`)
+      traefik.http.routers.audiobookshelf.service: audiobookshelf-audiobookshelf@docker
     deploy:
       mode: replicated
       replicas: 1
