@@ -9,7 +9,7 @@ services:
       PGID: 1000
       TZ: Europe/London
     volumes:
-      - /mnt/gluster/containers/home-assistant:/config
+      - /glusterfs/bricks/gv0/containers/home-assistant:/config
     ports:
       - 8123:8123
     networks:

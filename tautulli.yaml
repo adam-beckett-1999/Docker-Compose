@@ -9,7 +9,7 @@ services:
       PGID: 1000
       TZ: Europe/London
     volumes:
-      - /mnt/gluster/containers/tautulli:/config
+      - /glusterfs/bricks/gv0/containers/tautulli:/config
     ports:
       - 8686:8181
     networks:

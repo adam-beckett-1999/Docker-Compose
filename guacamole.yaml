@@ -7,7 +7,7 @@ services:
     environment:
       OPT_MYSQL: Y
     volumes:
-    - /mnt/gluster/containers/guacamole:/config
+    - /glusterfs/bricks/gv0/containers/guacamole:/config
     ports:
     - 8282:8080
     networks:

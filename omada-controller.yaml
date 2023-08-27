@@ -23,8 +23,8 @@ services:
         hard: 8192
     stop_grace_period: 60s
     volumes:
-      - /mnt/gluster/containers/omada/data:/opt/tplink/EAPController/data
-      - /mnt/gluster/containers/omada/logs:/opt/tplink/EAPController/logs
+      - /glusterfs/bricks/gv0/containers/omada/data:/opt/tplink/EAPController/data
+      - /glusterfs/bricks/gv0/containers/omada/logs:/opt/tplink/EAPController/logs
     ports:
       - 480:480
       - 4443:4443

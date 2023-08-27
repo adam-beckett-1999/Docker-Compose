@@ -16,7 +16,7 @@ services:
     env_file:
       - .env
     volumes:
-      - /mnt/gluster/containers/bookstack/data:/config
+      - /glusterfs/bricks/gv0/containers/bookstack/data:/config
     ports:
       - 8001:80
     networks:
@@ -49,7 +49,7 @@ services:
     env_file:
       - .env
     volumes:
-      - /mnt/gluster/containers/bookstack/db_data:/config
+      - /glusterfs/bricks/gv0/containers/bookstack/db_data:/config
     networks:
       - proxy
     deploy:

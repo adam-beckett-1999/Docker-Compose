@@ -7,7 +7,7 @@ services:
     environment:
       - TZ=Europe/London
     volumes:
-      - /home/config/plex-meta-manager:/config
+      - /glusterfs/bricks/gv0/containers/plex-meta-manager:/config
     deploy:
       mode: replicated
       replicas: 1

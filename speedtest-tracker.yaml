@@ -16,7 +16,7 @@ services:
     env_file:
       - .env
     volumes:
-      - '/mnt/gluster/containers/speedtest-tracker:/config'
+      - '/glusterfs/bricks/gv0/containers/speedtest-tracker:/config'
     ports:
       - 180:80
       - 1443:443
@@ -47,7 +47,7 @@ services:
     env_file:
       - .env
     volumes:
-      - /mnt/gluster/containers/speedtest-tracker/db:/var/lib/mysql
+      - /glusterfs/bricks/gv0/containers/speedtest-tracker/db:/var/lib/mysql
     ports:
       - 3306:3306
     networks:

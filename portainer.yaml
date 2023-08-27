@@ -19,7 +19,7 @@ services:
     restart: unless-stopped
     command: -H tcp://tasks.agent:9001 --tlsskipverify
     volumes:
-      - /mnt/gluster/containers/portainer:/data
+      - /glusterfs/bricks/gv0/containers/portainer:/data
     ports:
       - "7443:9443"
       - "8000:8000"

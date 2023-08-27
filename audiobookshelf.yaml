@@ -8,8 +8,8 @@ services:
       AUDIOBOOKSHELF_UID: 99
       AUDIOBOOKSHELF_GID: 100
     volumes:
-      - /mnt/gluster/containers/audiobookshelf:/config
-      - /mnt/gluster/containers/audiobookshelf/metadata:/metadata
+      - /glusterfs/bricks/gv0/containers/audiobookshelf:/config
+      - /glusterfs/bricks/gv0/containers/audiobookshelf/metadata:/metadata
       - /mnt/nas1media/Audiobooks:/audiobooks
     ports:
       - 280:80

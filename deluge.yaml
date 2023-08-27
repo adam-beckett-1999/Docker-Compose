@@ -10,7 +10,7 @@ services:
       - TZ=Europe/London
       - DELUGE_LOGLEVEL=error
     volumes:
-      - /mnt/gluster/containers/deluge:/config
+      - /glusterfs/bricks/gv0/containers/deluge:/config
       - /mnt/nas1media/Downloads:/downloads
     ports:
       - 8112:8112

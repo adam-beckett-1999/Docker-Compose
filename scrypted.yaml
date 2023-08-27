@@ -10,7 +10,7 @@ services:
     env_file:
       - .env
     volumes:
-      - /mnt/gluster/containers/.scrypted/volume:/server/volume
+      - /glusterfs/bricks/gv0/containers/.scrypted/volume:/server/volume
     devices: [
       "/dev/dri:/dev/dri",
     ]
