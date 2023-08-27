@@ -1,9 +1,7 @@
 version: '3.4'
 services:
-  postgresql:
+  db:
     image: postgres:12-alpine
-    restart: unless-stopped
-    container_name: authentik-postgres
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -d $${POSTGRES_DB} -U $${POSTGRES_USER}"]
       start_period: 20s
@@ -17,11 +15,9 @@ services:
       - POSTGRES_USER=${PG_USER:-authentik}
       - POSTGRES_DB=${PG_DB:-authentik}
     networks:
-      - proxy
+      - authentik-network
   redis:
     image: redis:alpine
-    restart: unless-stopped
-    container_name: authentik-redis
     healthcheck:
       test: ["CMD-SHELL", "redis-cli ping | grep PONG"]
       start_period: 20s
@@ -29,15 +25,13 @@ services:
       retries: 5
       timeout: 3s
     networks:
-      - proxy
+      - authentik-network
   server:
     image: ${AUTHENTIK_IMAGE:-ghcr.io/goauthentik/server}:${AUTHENTIK_TAG:-2022.7.2}
-    restart: unless-stopped
-    container_name: authentik-server
     command: server
     environment:
-      AUTHENTIK_REDIS__HOST: authentik-redis
-      AUTHENTIK_POSTGRESQL__HOST: authentik-postgres
+      AUTHENTIK_REDIS__HOST: redis
+      AUTHENTIK_POSTGRESQL__HOST: db
       AUTHENTIK_POSTGRESQL__USER: ${PG_USER:-authentik}
       AUTHENTIK_POSTGRESQL__NAME: ${PG_DB:-authentik}
       AUTHENTIK_POSTGRESQL__PASSWORD: ${PG_PASS}
@@ -48,6 +42,7 @@ services:
       - "0.0.0.0:${AUTHENTIK_PORT_HTTP:-9000}:9000"
       - "0.0.0.0:${AUTHENTIK_PORT_HTTPS:-9443}:9443"
     networks:
+      - authentik-network
       - proxy
     labels:
       traefik.enable: 'true'
@@ -55,12 +50,10 @@ services:
       traefik.http.routers.authentik.rule: Host(`auth.hyvecloud.dev`) || HostRegexp(`{subdomain:[A-Za-z0-9](?:[A-Za-z0-9\-]{0,61}[A-Za-z0-9])?}.hyvecloud.dev`) && PathPrefix(`/outpost.goauthentik.io/`)
   worker:
     image: ${AUTHENTIK_IMAGE:-ghcr.io/goauthentik/server}:${AUTHENTIK_TAG:-2022.7.2}
-    restart: unless-stopped
-    container_name: authentik-worker
     command: worker
     environment:
-      AUTHENTIK_REDIS__HOST: authentik-redis
-      AUTHENTIK_POSTGRESQL__HOST: authentik-postgres
+      AUTHENTIK_REDIS__HOST: redis
+      AUTHENTIK_POSTGRESQL__HOST: db
       AUTHENTIK_POSTGRESQL__USER: ${PG_USER:-authentik}
       AUTHENTIK_POSTGRESQL__NAME: ${PG_DB:-authentik}
       AUTHENTIK_POSTGRESQL__PASSWORD: ${PG_PASS}
@@ -71,12 +64,12 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - /mnt/gluster/containers/authentik/custom-templates:/templates
     networks:
-      - proxy
+      - internal
 volumes:
   database:
     driver: local
 networks:
+  internal:
   proxy:
     driver: bridge
     external: true
-
