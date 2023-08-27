@@ -21,8 +21,8 @@ services:
     env_file:
       - .env
     volumes:
-      - /glusterfs/bricks/gv0/containers/paperless-ngx/config:/config
-      - /glusterfs/bricks/gv0/containers/paperless-ngx/data:/data
+      - /mnt/gluster/containers/paperless-ngx/config:/config
+      - /mnt/gluster/containers/paperless-ngx/data:/data
     ports:
       - '8004:8000'
     networks:
@@ -65,7 +65,7 @@ services:
     env_file:
       - .env
     volumes:
-      - /glusterfs/bricks/gv0/containers/paperless-ngx/pgdata:/var/lib/postgresql/data
+      - /mnt/gluster/containers/paperless-ngx/pgdata:/var/lib/postgresql/data
     networks:
       - proxy
     deploy:

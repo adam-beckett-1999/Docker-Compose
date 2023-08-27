@@ -5,8 +5,8 @@ services:
     image: kizaing/kavita:latest
     restart: unless-stopped
     volumes:
-      - /glusterfs/bricks/gv0/containers/kavita:/kavita/config
-      - /mnt/nas1media/Comics:/books
+      - /mnt/gluster/containers/kavita:/kavita/config
+      - /mnt/nas-01/Comics:/books
     ports:
       - 5000:5000
     networks:

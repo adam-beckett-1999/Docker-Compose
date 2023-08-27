@@ -9,9 +9,9 @@ services:
       PGID: 1000
       TZ: Europe/London
     volumes:
-      - /glusterfs/bricks/gv0/containers/sabnzbd:/config
-      - /mnt/nas1media/Downloads:/downloads
-      - /mnt/nas1media/Downloads/Incomplete:/incomplete-downloads
+      - /mnt/gluster/containers/sabnzbd:/config
+      - /mnt/nas-01/Downloads:/downloads
+      - /mnt/nas-01/Downloads/Incomplete:/incomplete-downloads
     ports:
       - 8585:8080
     networks:

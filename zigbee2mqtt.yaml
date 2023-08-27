@@ -7,7 +7,7 @@ services:
     environment:
       TZ: Europe/London
     volumes:
-      - /glusterfs/bricks/gv0/containers/zigbee2mqtt:/app/data
+      - /mnt/gluster/containers/zigbee2mqtt:/app/data
       - /run/udev:/run/udev:ro
     devices:
       - /dev/ttyACM0:/dev/ttyACM0

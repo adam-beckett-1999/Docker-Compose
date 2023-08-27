@@ -20,9 +20,9 @@ services:
     env_file:
       - .env
     volumes:
-      - /glusterfs/bricks/gv0/containers/planka/user-avatars:/app/public/user-avatars
-      - /glusterfs/bricks/gv0/containers/planka/project-background-images:/app/public/project-background-images
-      - /glusterfs/bricks/gv0/containers/planka/attachments:/app/private/attachments
+      - /mnt/gluster/containers/planka/user-avatars:/app/public/user-avatars
+      - /mnt/gluster/containers/planka/project-background-images:/app/public/project-background-images
+      - /mnt/gluster/containers/planka/attachments:/app/private/attachments
     ports:
       - 1337:1337
     networks:
@@ -48,7 +48,7 @@ services:
       POSTGRES_DB: planka
       POSTGRES_HOST_AUTH_METHOD: trust
     volumes:
-      - /glusterfs/bricks/gv0/containers/planka/db-data:/var/lib/postgresql/data
+      - /mnt/gluster/containers/planka/db-data:/var/lib/postgresql/data
     networks:
       - proxy
     deploy:

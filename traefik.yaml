@@ -12,9 +12,9 @@ services:
       - 80:80
       - 443:443
     volumes:
-      - /glusterfs/bricks/gv0/containers/traefik/:/etc/traefik
-      - /glusterfs/bricks/gv0/containers/traefik/traefik.yml:/traefik.yml
-      - /glusterfs/bricks/gv0/containers/traefik/letsencrypt:/letsencrypt
+      - /mnt/gluster/containers/traefik/:/etc/traefik
+      - /mnt/gluster/containers/traefik/traefik.yml:/traefik.yml
+      - /mnt/gluster/containers/traefik/letsencrypt:/letsencrypt
       - /var/run/docker.sock:/var/run/docker.sock
     labels:
       - "traefik.enable=true"

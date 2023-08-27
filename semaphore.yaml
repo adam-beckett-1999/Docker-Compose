@@ -17,7 +17,7 @@ services:
     env_file:
       - .env
     volumes:
-      - /glusterfs/bricks/gv0/containers/semaphore:/config
+      - /mnt/gluster/containers/semaphore:/config
     ports:
       - 3000:3000
     networks:

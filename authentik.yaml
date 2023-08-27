@@ -17,7 +17,7 @@ services:
     env_file:
       - .env
     volumes:
-      - /glusterfs/bricks/gv0/containers/authentik/database:/var/lib/postgresql/data
+      - /mnt/gluster/containers/authentik/database:/var/lib/postgresql/data
     networks:
       - proxy
     deploy:
@@ -37,7 +37,7 @@ services:
       timeout: 3s
     command: --save 60 1 --loglevel warning
     volumes:
-      - /glusterfs/bricks/gv0/containers/authentik/redis:/data
+      - /mnt/gluster/containers/authentik/redis:/data
     networks:
       - proxy
     deploy:
@@ -59,8 +59,8 @@ services:
     env_file:
       - .env
     volumes:
-      - /glusterfs/bricks/gv0/containers/authentik/media:/media
-      - /glusterfs/bricks/gv0/containers/authentik/custom-templates:/templates
+      - /mnt/gluster/containers/authentik/media:/media
+      - /mnt/gluster/containers/authentik/custom-templates:/templates
     ports:
       - "${COMPOSE_PORT_HTTP:-9000}:9000"
       - "${COMPOSE_PORT_HTTPS:-9443}:9443"
@@ -94,9 +94,9 @@ services:
     user: root
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - /glusterfs/bricks/gv0/containers/authentik/media:/media
-      - /glusterfs/bricks/gv0/containers/authentik/certs:/certs
-      - /glusterfs/bricks/gv0/containers/authentik/custom-templates:/templates
+      - /mnt/gluster/containers/authentik/media:/media
+      - /mnt/gluster/containers/authentik/certs:/certs
+      - /mnt/gluster/containers/authentik/custom-templates:/templates
     networks:
       - proxy
     depends_on:

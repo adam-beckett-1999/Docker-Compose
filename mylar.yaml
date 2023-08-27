@@ -8,9 +8,9 @@ services:
       PUID: 1000
       PGID: 1000
     volumes:
-      - /glusterfs/bricks/gv0/containers/mylar:/config
-      - /mnt/nas1media/Comics:/comics
-      - /mnt/nas1media/Downloads:/downloads
+      - /mnt/gluster/containers/mylar:/config
+      - /mnt/nas-01/Comics:/comics
+      - /mnt/nas-01/Downloads:/downloads
     ports:
       - 8090:8090
     networks:

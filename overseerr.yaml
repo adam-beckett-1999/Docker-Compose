@@ -8,7 +8,7 @@ services:
       - LOG_LEVEL=debug
       - TZ=Europe/London
     volumes:
-      - /glusterfs/bricks/gv0/containers/overseerr:/app/config
+      - /mnt/gluster/containers/overseerr:/app/config
     ports:
       - 5055:5055
     networks:

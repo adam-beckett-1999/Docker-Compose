@@ -7,7 +7,7 @@ services:
     environment:
       TZ: Europe/London
     volumes:
-      - /glusterfs/bricks/gv0/containers/truecommand:/data
+      - /mnt/gluster/containers/truecommand:/data
     ports:
       - 380:80
     networks:

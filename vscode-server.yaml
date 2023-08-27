@@ -10,8 +10,8 @@ services:
       TZ: Europe/London
       DEFAULT_WORKSPACE: /containers
     volumes:
-      - /glusterfs/bricks/gv0/containers/vscode-server:/config
-      - /glusterfs/bricks/gv0/containers:/containers
+      - /mnt/gluster/containers/vscode-server:/config
+      - /mnt/gluster/containers:/containers
     ports:
       - 8443:8443
     networks:

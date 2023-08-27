@@ -9,8 +9,8 @@ services:
       PGID: 1000
       TZ: Europe/London
     volumes:
-      - /glusterfs/bricks/gv0/containers/file-browser:/config
-      - /glusterfs/bricks/gv0/containers:/data
+      - /mnt/gluster/containers/file-browser:/config
+      - /mnt/gluster/containers:/data
     ports:
       - 8181:8080
     networks:

@@ -5,7 +5,7 @@ services:
     image: alexta69/metube
     restart: unless-stopped
     volumes:
-      - /mnt/nas1media/Downloads/Youtube:/downloads
+      - /mnt/nas-01/Downloads/Youtube:/downloads
     ports:
       - 8081:8081
     networks:

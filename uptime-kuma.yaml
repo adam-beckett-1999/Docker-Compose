@@ -5,7 +5,7 @@ services:
     image: louislam/uptime-kuma
     restart: unless-stopped
     volumes:
-        - /glusterfs/bricks/gv0/containers/uptime-kuma:/app/data
+        - /mnt/gluster/containers/uptime-kuma:/app/data
     ports:
         - 3002:3001   
     networks:
