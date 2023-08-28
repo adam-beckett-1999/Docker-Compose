@@ -17,6 +17,8 @@ services:
       AUTHENTIK_SECRET_KEY: ${AUTHENTIK_SECRET_KEY}
     env_file:
       - .env
+    labels:
+      - io.portainer.accesscontrol.public
   authentik_redis:
     image: redis:alpine
     healthcheck:
@@ -25,6 +27,8 @@ services:
       interval: 30s
       retries: 5
       timeout: 3s
+    labels:
+      - io.portainer.accesscontrol.public
   authentik_server:
     image: ghcr.io/goauthentik/server:latest
     command: server
@@ -46,6 +50,8 @@ services:
     depends_on:
       - authentik_db
       - authentik_redis
+    labels:
+      - io.portainer.accesscontrol.public
   authentik_worker:
     image: ghcr.io/goauthentik/server:latest
     command: worker
@@ -67,6 +73,8 @@ services:
     depends_on:
       - authentik_db
       - authentik_redis
+    labels:
+      - io.portainer.accesscontrol.public
 volumes:
   database:
     driver: local
