@@ -3,8 +3,6 @@ services:
   guacamole:
     image: jasonbean/guacamole
     restart: unless-stopped
-    environment:
-      OPT_MYSQL: 'Y'
     volumes:
     - /mnt/gluster/containers/guacamole:/config
     ports:
