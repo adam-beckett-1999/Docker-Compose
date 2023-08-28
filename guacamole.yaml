@@ -1,11 +1,15 @@
 version: '3.8'
 services:
   guacamole:
-    image: jasonbean/guacamole
+    image: flcontainers/guacamole
     restart: unless-stopped
     environment:
-      OPT_MYSQL: Y
+      PUID: 1000
+      PGID: 1000
+      TZ: 'UTC'
+      EXTENSIONS: 'auth-totp,auth-ldap'
     volumes:
-    - /mnt/gluster/containers/guacamole:/config
+      - /mnt/gluster/containers/guacamole:/config
+      - /etc/localtime:/etc/localtime:ro
     ports:
     - 8282:8080

@@ -5,11 +5,12 @@
 
 ---
 ### Reverse-Proxy:
-* Traefik (80/443)
-* Authentik (9000/9443)
+* NGINX-Proxy-Manager (80/443/85)
+* Authentik (10000/10443)
+* NGINX (Loadbalancer)
 ---
 ### Utilities:
-* Portainer (7443/8000)
+* Portainer (9000/9443/8000)
 * File-Browser (8181)
 * VSCode-Server (8443)
 * Apache Guacamole (8282)
