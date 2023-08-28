@@ -6,4 +6,6 @@ services:
     volumes:
       - /mnt/gluster/containers/nginx:/etc/nginx/conf.d
     ports:
-      - 7443:7443
+      - 9000:9000
+      - 9443:9443
+      - 8181:8181
