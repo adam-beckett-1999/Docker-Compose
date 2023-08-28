@@ -30,7 +30,7 @@ services:
     networks:
       - authentik-network
   server:
-    image: ${AUTHENTIK_IMAGE:-ghcr.io/goauthentik/server}:${AUTHENTIK_TAG:-2022.7.2}
+    image: ghcr.io/goauthentik/server:latest
     command: server
     environment:
       AUTHENTIK_REDIS__HOST: redis
@@ -55,7 +55,7 @@ services:
       traefik.http.routers.authentik.entryPoints: https
       traefik.http.routers.authentik.rule: Host(`auth.hyvecloud.dev`) || HostRegexp(`{subdomain:[A-Za-z0-9](?:[A-Za-z0-9\-]{0,61}[A-Za-z0-9])?}.hyvecloud.dev`) && PathPrefix(`/outpost.goauthentik.io/`)
   worker:
-    image: ${AUTHENTIK_IMAGE:-ghcr.io/goauthentik/server}:${AUTHENTIK_TAG:-2022.7.2}
+    image: ghcr.io/goauthentik/server:latest
     command: worker
     environment:
       AUTHENTIK_REDIS__HOST: redis
