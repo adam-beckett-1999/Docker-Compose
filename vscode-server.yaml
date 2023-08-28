@@ -1,15 +1,15 @@
 version: "3.8"
 services: 
   vscode-server:
-    image: lscr.io/linuxserver/code-server
+    image: codercom/code-server
     restart: unless-stopped
     environment:
       PUID: 1000
       PGID: 1000
       TZ: Europe/London
-      DEFAULT_WORKSPACE: /containers
+      DOCKER_USER: 'abeckett'
     volumes:
-      - /mnt/gluster/containers/vscode-server:/config
-      - /mnt/gluster/containers:/containers
+      - /mnt/gluster/containers/vscode-server:/home/coder/.config
+      - /mnt/gluster/containers:/home/coder/containers
     ports:
-      - 8443:8443
+      - 8443:8080
