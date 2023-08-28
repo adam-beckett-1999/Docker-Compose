@@ -1,7 +1,6 @@
 version: "3.8"
 services:
   planka:
-    container_name: Planka
     image: ghcr.io/plankanban/planka:latest
     restart: unless-stopped
     command: >
@@ -15,33 +14,17 @@ services:
     environment:
       BASE_URL: https://board.hyvecloud.dev
       TRUST_PROXY: 1
-      DATABASE_URL: postgresql://postgres@postgres/planka
+      DATABASE_URL: postgresql://postgres@planka_db/planka
       SECRET_KEY: "${SECRET_KEY}"
-    env_file:
-      - .env
     volumes:
       - /mnt/gluster/containers/planka/user-avatars:/app/public/user-avatars
       - /mnt/gluster/containers/planka/project-background-images:/app/public/project-background-images
       - /mnt/gluster/containers/planka/attachments:/app/private/attachments
     ports:
       - 1337:1337
-    networks:
-      - proxy
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.planka.entrypoints=https"
-      - "traefik.http.routers.planka.tls=true"
-      - "traefik.http.routers.planka.rule=Host(`board.hyvecloud.dev`)"
-      - "traefik.http.routers.planka.service=planka-planka@docker"
     depends_on:
-      - planka-db
-    deploy:
-      mode: replicated
-      replicas: 1
-      placement:
-        constraints: [node.platform.os == linux]
-  planka-db:
-    container_name: Planka-DB
+      - planka_db
+  planka_db:
     image: postgres:14-alpine
     restart: unless-stopped
     environment:
@@ -49,13 +32,3 @@ services:
       POSTGRES_HOST_AUTH_METHOD: trust
     volumes:
       - /mnt/gluster/containers/planka/db-data:/var/lib/postgresql/data
-    networks:
-      - proxy
-    deploy:
-      mode: replicated
-      replicas: 1
-      placement:
-        constraints: [node.platform.os == linux]
-networks:
-  proxy:
-    external: true

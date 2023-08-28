@@ -1,7 +1,6 @@
 version: "3.8"
 services:
   shepherd:
-    container_name: Shepherd
     image: mazzolino/shepherd
     build: .
     restart: unless-stopped

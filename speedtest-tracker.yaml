@@ -1,42 +1,25 @@
 version: '3.8'
 services:
   speedtest-tracker:
-    container_name: Speedtest-Tracker
     image: 'ghcr.io/alexjustesen/speedtest-tracker:latest'
     restart: unless-stopped
     environment:
       PUID: 1000
       PGID: 1000
       DB_CONNECTION: mysql
-      DB_HOST: speedtest-tracker-db
+      DB_HOST: speedtest_tracker_db
       DB_PORT: 3306
       DB_DATABASE: speedtest_tracker
       DB_USERNAME: speedtest
       DB_PASSWORD: "${DB_PASSWORD}"
-    env_file:
-      - .env
     volumes:
       - '/mnt/gluster/containers/speedtest-tracker:/config'
     ports:
       - 180:80
       - 1443:443
-    networks:
-      - proxy
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.speedtest-tracker.entrypoints=https"
-      - "traefik.http.routers.speedtest-tracker.tls=true"
-      - "traefik.http.routers.speedtest-tracker.rule=Host(`speedtest-tracker.hyvecloud.dev`)"
-      - "traefik.http.routers.speedtest-tracker.service=speedtest-tracker-speedtest-tracker@docker"  
     depends_on:
-      - speedtest-tracker-db
-    deploy:
-      mode: replicated
-      replicas: 1
-      placement:
-        constraints: [node.platform.os == linux]
-  speedtest-tracker-db:
-    container_name: Speedtest-Tracker-DB
+      - speedtest_tracker_db
+  speedtest_tracker_db:
     image: mariadb:10
     restart: unless-stopped
     environment:
@@ -44,19 +27,5 @@ services:
       MARIADB_USER: speedtest
       MARIADB_PASSWORD: "${DB_PASSWORD}"
       MARIADB_RANDOM_ROOT_PASSWORD: true
-    env_file:
-      - .env
     volumes:
       - /mnt/gluster/containers/speedtest-tracker/db:/var/lib/mysql
-    ports:
-      - 3306:3306
-    networks:
-      - proxy
-    deploy:
-      mode: replicated
-      replicas: 1
-      placement:
-        constraints: [node.platform.os == linux]
-networks:
-  proxy:
-    external: true

@@ -1,7 +1,6 @@
 version: '3.2'
 services:
   agent:
-    container_name: Portainer-Agent
     image: portainer/agent:2.18.4
     restart: unless-stopped
     volumes:
@@ -14,7 +13,6 @@ services:
       placement:
         constraints: [node.platform.os == linux] 
   portainer:
-    container_name: Portainer
     image: portainer/portainer-ce:2.18.4
     restart: unless-stopped
     command: -H tcp://tasks.agent:9001 --tlsskipverify
@@ -25,13 +23,6 @@ services:
       - "8000:8000"
     networks:
       - agent_network
-      - proxy
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.portainer.entrypoints=https"
-      - "traefik.http.routers.portainer.tls=true"
-      - "traefik.http.routers.portainer.rule=Host(`portainer.hyvecloud.dev`)"
-      - "traefik.http.routers.portainer.service=portainer-portainer@docker"   
     deploy:
       mode: replicated
       replicas: 1
@@ -41,5 +32,3 @@ networks:
   agent_network:
     driver: overlay
     attachable: true
-  proxy:
-    external: true

@@ -1,17 +1,12 @@
 version: "3.8"
 services:
   mqtt:
-    container_name: MQTT
     image: eclipse-mosquitto
+    restart: unless-stopped
     command: "mosquitto -c /mosquitto-no-auth.conf"
     volumes:
       - /mnt/gluster/containers/mosquitto:/mosquitto
     ports:
       - 1883:1883
       - 9001:9001
-    restart: unless-stopped
-    deploy:
-      mode: replicated
-      replicas: 1
-      placement:
-        constraints: [node.platform.os == linux]
+    

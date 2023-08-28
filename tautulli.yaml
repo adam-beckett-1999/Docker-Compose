@@ -1,7 +1,6 @@
 version: "3.8"
 services:
   tautulli:
-    container_name: Tautulli
     image: lscr.io/linuxserver/tautulli
     restart: unless-stopped
     environment:
@@ -12,19 +11,3 @@ services:
       - /mnt/gluster/containers/tautulli:/config
     ports:
       - 8686:8181
-    networks:
-      - proxy
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.tautulli.entrypoints=https"
-      - "traefik.http.routers.tautulli.tls=true"
-      - "traefik.http.routers.tautulli.rule=Host(`tautulli.hyvecloud.dev`)"
-      - "traefik.http.routers.tautulli.service=tautulli-tautulli@docker"   
-    deploy:
-      mode: replicated
-      replicas: 1
-      placement:
-        constraints: [node.platform.os == linux]
-networks:
-  proxy:
-    external: true

@@ -1,7 +1,6 @@
 version: '3'
 services:
   overseerr:
-    container_name: Overseerr
     image: sctx/overseerr:latest
     restart: unless-stopped
     environment:
@@ -11,19 +10,3 @@ services:
       - /mnt/gluster/containers/overseerr:/app/config
     ports:
       - 5055:5055
-    networks:
-      - proxy
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.overseerr.entrypoints=https"
-      - "traefik.http.routers.overseerr.tls=true"
-      - "traefik.http.routers.overseerr.rule=Host(`request.hyvecloud.dev`)"
-      - "traefik.http.routers.overseerr.service=overseerr-overseerr@docker"
-    deploy:
-      mode: replicated
-      replicas: 1
-      placement:
-        constraints: [node.platform.os == linux]
-networks:
-  proxy:
-    external: true

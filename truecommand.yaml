@@ -1,7 +1,6 @@
 version: '3.8'
 services:
   truecommand:
-    container_name: TrueCommand
     image: ixsystems/truecommand
     restart: unless-stopped
     environment:
@@ -10,19 +9,3 @@ services:
       - /mnt/gluster/containers/truecommand:/data
     ports:
       - 380:80
-    networks:
-      - proxy
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.truecommand.entrypoints=https"
-      - "traefik.http.routers.truecommand.tls=true"
-      - "traefik.http.routers.truecommand.rule=Host(`truecommand.hyvecloud.dev`)"
-      - "traefik.http.routers.truecommand.service=truecommand-truecommand@docker"
-    deploy:
-      mode: replicated
-      replicas: 1
-      placement:
-        constraints: [node.platform.os == linux]
-networks:
-  proxy:
-    external: true

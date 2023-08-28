@@ -1,7 +1,6 @@
 version: "3.8"
 services:
   kavita:
-    container_name: Kavita
     image: kizaing/kavita:latest
     restart: unless-stopped
     volumes:
@@ -9,19 +8,3 @@ services:
       - /mnt/nas-01/Comics:/books
     ports:
       - 5000:5000
-    networks:
-      - proxy
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.kavita.entrypoints=https"
-      - "traefik.http.routers.kavita.tls=true"
-      - "traefik.http.routers.kavita.rule=Host(`comics.hyvecloud.dev`)"
-      - "traefik.http.routers.kavita.service=kavita-kavita@docker"
-    deploy:
-      mode: replicated
-      replicas: 1
-      placement:
-        constraints: [node.platform.os == linux]
-networks:
-  proxy:
-    external: true

@@ -1,15 +1,9 @@
 version: "3.8"
 services:
   plex-meta-manager:
-    container_name: Plex-Meta-Manager
     image: meisnate12/plex-meta-manager
     restart: unless-stopped
     environment:
       - TZ=Europe/London
     volumes:
       - /mnt/gluster/containers/plex-meta-manager:/config
-    deploy:
-      mode: replicated
-      replicas: 1
-      placement:
-        constraints: [node.platform.os == linux]

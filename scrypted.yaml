@@ -1,14 +1,11 @@
 version: "3.8"
 services:
   scrypted:
-    container_name: Scrypted
     image: koush/scrypted
     restart: unless-stopped
     environment:
       SCRYPTED_WEBHOOK_UPDATE_AUTHORIZATION: "${SCRYPTED_WEBHOOK_UPDATE_AUTHORIZATION}"
       SCRYPTED_WEBHOOK_UPDATE: http://localhost:10444/v1/update
-    env_file:
-      - .env
     volumes:
       - /mnt/gluster/containers/.scrypted/volume:/server/volume
     devices: [
@@ -20,10 +17,4 @@ services:
       options:
         max-size: "10m"
         max-file: "10"
-    deploy:
-      mode: replicated
-      replicas: 1
-      placement:
-        constraints: [node.platform.os == linux]
-    
     
