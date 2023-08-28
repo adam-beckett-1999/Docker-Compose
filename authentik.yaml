@@ -73,12 +73,12 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - /mnt/gluster/containers/authentik/custom-templates:/templates
     networks:
-      - internal
+      - authentik-network
 volumes:
   database:
     driver: local
 networks:
-  internal:
+  authentik-network:
   proxy:
     driver: bridge
     external: true
