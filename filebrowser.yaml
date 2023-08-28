@@ -3,11 +3,11 @@ services:
   filebrowser:
     image: hurlenko/filebrowser
     restart: unless-stopped
-    command: filebrowser config set --auth.method=noauth
     environment:
       PUID: 1000
       PGID: 1000
       TZ: Europe/London
+      FB_NOAUTH: noauth
     volumes:
       - /mnt/gluster/containers/file-browser:/config
       - /mnt/gluster/containers:/data
