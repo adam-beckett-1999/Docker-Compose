@@ -9,4 +9,4 @@ services:
       TZ: Europe/London
     volumes:
       - /mnt/gluster/containers/home-assistant:/config
-    network: host
+    network_mode: host

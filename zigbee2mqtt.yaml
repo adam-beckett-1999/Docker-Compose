@@ -10,4 +10,4 @@ services:
       - /run/udev:/run/udev:ro
     devices:
       - /dev/ttyACM0:/dev/ttyACM0
-    network: host
+    network_mode: host

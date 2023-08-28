@@ -5,4 +5,4 @@ services:
     restart: unless-stopped
     volumes:
       - /mnt/gluster/containers/nginx:/etc/nginx/conf.d
-    network: host
+    network_mode: host

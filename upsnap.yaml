@@ -13,4 +13,4 @@ services:
       UPSNAP_WEBSITE_TITLE: 'HyveCloud WoL'
     volumes:
       - /mnt/gluster/containers/upsnap:/app/pb_data
-    network: host
+    network_mode: host
