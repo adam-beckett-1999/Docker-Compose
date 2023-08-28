@@ -1,7 +1,6 @@
 version: '3.2'
 services:
   agent:
-    name: portainer_agent
     image: portainer/agent:2.18.4
     restart: unless-stopped
     volumes:
