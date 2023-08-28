@@ -4,6 +4,8 @@ services:
     image: flcontainers/guacamole
     restart: unless-stopped
     environment:
+      PUID: 1000
+      PGID: 1000
       TZ: 'UTC'
       EXTENSIONS: 'auth-totp,auth-ldap'
     volumes:
