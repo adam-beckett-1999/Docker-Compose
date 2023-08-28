@@ -1,0 +1,8 @@
+version: "3.8"
+services:
+  nginx:
+    image: nginx
+    restart: unless-stopped
+    volumes:
+      - /mnt/gluster/containers/nginx:/etc/nginx/conf.d
+    network: host
