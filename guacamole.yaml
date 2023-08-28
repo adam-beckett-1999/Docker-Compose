@@ -1,9 +1,13 @@
 version: '3.8'
 services:
   guacamole:
-    image: jasonbean/guacamole
+    image: flcontainers/guacamole
     restart: unless-stopped
+    environment:
+      TZ: 'UTC'
+      EXTENSIONS: 'auth-totp,auth-ldap'
     volumes:
-    - /mnt/gluster/containers/guacamole:/config
+      - /mnt/gluster/containers/guacamole:/config
+      - /etc/localtime:/etc/localtime:ro
     ports:
     - 8282:8080
