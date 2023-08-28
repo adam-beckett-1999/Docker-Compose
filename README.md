@@ -5,8 +5,9 @@
 
 ---
 ### Reverse-Proxy:
-* Traefik (80/443)
+* NGINX-Proxy-Manager (80/443/85)
 * Authentik (9000/9443)
+* NGINX (Loadbalancer)
 ---
 ### Utilities:
 * Portainer (7443/8000)
