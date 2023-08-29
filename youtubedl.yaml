@@ -4,8 +4,6 @@ services:
     image: ghcr.io/alexta69/metube
     restart: unless-stopped
     environment:
-      UID: 99
-      GID: 100
       TZ: Europe/London
       DARK_MODE: 'true'
     volumes:
