@@ -5,7 +5,6 @@ services:
     restart: unless-stopped
     environment:
       TZ: Europe/London
-      DARK_MODE: 'true'
     volumes:
       - /mnt/nas-01/Downloads/Youtube:/downloads
     ports:
