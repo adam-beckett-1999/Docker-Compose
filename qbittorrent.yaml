@@ -1,0 +1,17 @@
+version: "3.8"
+services:
+  qbittorrent:
+    image: lscr.io/linuxserver/qbittorrent:latest
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/London
+      - WEBUI_PORT=8112
+    volumes:
+      - /mnt/gluster/containers/deluge:/config
+      - /mnt/nas-01/Downloads:/downloads
+    ports:
+      - 8112:8112
+      - 6881:6881
+      - 6881:6881/udp
+    restart: unless-stopped
