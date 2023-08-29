@@ -7,7 +7,7 @@ services:
       UID: 99
       GID: 100
       TZ: Europe/London
-      DARK_MODE: true
+      DARK_MODE: 'true'
     volumes:
       - /mnt/nas-01/Downloads/Youtube:/downloads
     ports:
