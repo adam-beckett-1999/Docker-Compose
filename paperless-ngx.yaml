@@ -1,7 +1,7 @@
 version: "3.8"
 services:
   paperless_ngx:
-    image: paperlessngx/paperless-ngx
+    image: paperlessngx/paperless-ngx:latest
     restart: unless-stopped
     environment:
       PUID: 1000
