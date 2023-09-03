@@ -1,6 +1,7 @@
 version: "3.8"
 services:
   prowlarr:
+    container_name: Prowlarr
     image: lscr.io/linuxserver/prowlarr:latest
     restart: unless-stopped
     environment:
