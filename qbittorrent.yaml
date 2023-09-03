@@ -8,7 +8,7 @@ services:
       - TZ=Europe/London
       - WEBUI_PORT=8112
     volumes:
-      - /mnt/gluster/containers/deluge:/config
+      - /mnt/gluster/containers/qbittorrent:/config
       - /mnt/nas-01/Downloads:/downloads
     ports:
       - 8112:8112
