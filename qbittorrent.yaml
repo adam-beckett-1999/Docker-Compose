@@ -1,6 +1,7 @@
 version: "3.8"
 services:
   qbittorrent:
+    container_name: qBittorrent
     image: lscr.io/linuxserver/qbittorrent:latest
     environment:
       PUID: 1000
