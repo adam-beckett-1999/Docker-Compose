@@ -7,7 +7,7 @@ services:
       PUID: 1000
       PGID: 1000
       TZ: Europe/London
-      EXTENSIONS: 'auth-ldap,auth-sso-openid'
+      EXTENSIONS: 'auth-sso-openid'
       OPENID_AUTHORIZATION_ENDPOINT: https://auth.hyvecloud.dev/application/o/authorize/
       OPENID_CLIENT_ID: "${CLIENT_ID}"
       OPENID_ISSUER: https://auth.hyvecloud.dev/application/o/guacamole/
