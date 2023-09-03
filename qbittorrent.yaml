@@ -3,10 +3,12 @@ services:
   qbittorrent:
     image: lscr.io/linuxserver/qbittorrent:latest
     environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=Europe/London
-      - WEBUI_PORT=8112
+      PUID: 1000
+      PGID: 1000
+      TZ: Europe/London
+      WEBUI_PORT: 8112
+      DOCKER_MODS: 'ghcr.io/gilbn/theme.park:radarr'
+      TP_THEME: 'nord'
     volumes:
       - /mnt/gluster/containers/qbittorrent:/config
       - /mnt/nas-01/Downloads:/downloads
