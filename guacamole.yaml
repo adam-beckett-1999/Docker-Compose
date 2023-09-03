@@ -1,6 +1,7 @@
 version: '3.8'
 services:
   guacamole:
+    container_name: Guacamole
     image: flcontainers/guacamole
     restart: unless-stopped
     environment:
