@@ -18,8 +18,6 @@ services:
       POSTGRES_USER: ${POSTGRES_USER:-authentik}
       POSTGRES_DB: ${POSTGRES_DB:-authentik}
       AUTHENTIK_SECRET_KEY: ${AUTHENTIK_SECRET_KEY}
-    env_file:
-      - .env
   authentik_redis:
     container_name: Authentik-REDIS
     image: redis:alpine
@@ -40,8 +38,6 @@ services:
       AUTHENTIK_POSTGRESQL__NAME: ${POSTGRES_DB:-authentik}
       AUTHENTIK_POSTGRESQL__PASSWORD: ${POSTGRES_PASSWORD}
       AUTHENTIK_SECRET_KEY: ${AUTHENTIK_SECRET_KEY}
-    env_file:
-      - .env
     volumes:
       - /mnt/gluster/containers/authentik/media:/media
       - /mnt/gluster/containers/authentik/custom-templates:/templates
@@ -62,8 +58,6 @@ services:
       AUTHENTIK_POSTGRESQL__NAME: ${POSTGRES_DB:-authentik}
       AUTHENTIK_POSTGRESQL__PASSWORD: ${POSTGRES_PASSWORD}
       AUTHENTIK_SECRET_KEY: ${AUTHENTIK_SECRET_KEY}
-    env_file:
-      - .env
     user: root
     volumes:
       - /mnt/gluster/containers/authentik/media:/media
