@@ -11,4 +11,4 @@ services:
       - /mnt/gluster/containers/audiobookshelf/metadata:/metadata
       - /mnt/nas-01/Audiobooks:/audiobooks
     ports:
-      - 280:80
+      - 80:80
