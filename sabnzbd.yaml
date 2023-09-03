@@ -1,6 +1,7 @@
 version: "3.8"
 services:
   sabnzbd:
+    container_name: SABnzbd
     image: lscr.io/linuxserver/sabnzbd
     restart: unless-stopped
     environment:
