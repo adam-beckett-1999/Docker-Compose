@@ -7,7 +7,6 @@
 ### Reverse-Proxy:
 * NGINX-Proxy-Manager (80/443/85)
 * Authentik (10000/10443)
-* NGINX (Loadbalancer)
 ---
 ### Utilities:
 * Portainer (9000/9443/8000)
@@ -16,7 +15,6 @@
 * Apache Guacamole (8282)
 * Ansible-Semaphore (3000)
 * TrueCommand (380)
-* Shepherd
 ---
 ### Client Services:
 * Bookstack (8001)
