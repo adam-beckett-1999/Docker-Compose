@@ -1,6 +1,7 @@
 version: '3.8'
 services:
   homepage:
+    container_name: Homepage
     image: ghcr.io/benphelps/homepage:latest
     restart: unless-stopped
     volumes:
