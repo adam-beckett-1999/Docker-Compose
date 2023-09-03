@@ -9,8 +9,8 @@ services:
       TZ: Europe/London
       FB_NOAUTH: noauth
     volumes:
-      - /mnt/gluster/containers/file-browser:/config
-      - /mnt/gluster/containers/file-browser/branding:/branding
+      - /mnt/gluster/containers/filebrowser:/config
+      - /mnt/gluster/containers/filebrowser/branding:/branding
       - /mnt/gluster/containers:/data
     ports:
       - 8181:8080
