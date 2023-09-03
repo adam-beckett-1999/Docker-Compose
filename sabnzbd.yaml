@@ -7,9 +7,11 @@ services:
       PUID: 1000
       PGID: 1000
       TZ: Europe/London
+      DOCKER_MODS: 'ghcr.io/gilbn/theme.park:sabnzbd'
+      TP_THEME: 'nord'
     volumes:
       - /mnt/gluster/containers/sabnzbd:/config
       - /mnt/nas-01/Downloads:/downloads
       - /mnt/nas-01/Downloads/Incomplete:/incomplete-downloads
     ports:
-      - 8585:8080
+      - 8080:8080

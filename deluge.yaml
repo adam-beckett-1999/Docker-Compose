@@ -4,10 +4,12 @@ services:
     image: lscr.io/linuxserver/deluge:latest
     restart: unless-stopped
     environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=Europe/London
-      - DELUGE_LOGLEVEL=error
+      PUID: 1000
+      PGID: 1000
+      TZ: Europe/London
+      DELUGE_LOGLEVEL: error
+      DOCKER_MODS: 'ghcr.io/gilbn/theme.park:deluge'
+      TP_THEME: 'nord'
     volumes:
       - /mnt/gluster/containers/deluge:/config
       - /mnt/nas-01/Downloads:/downloads

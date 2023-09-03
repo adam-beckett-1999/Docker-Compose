@@ -1,0 +1,15 @@
+version: '3.8'
+services:
+    goaccess:
+        image: 'xavierh/goaccess-for-nginxproxymanager:latest'
+        container_name: GoAccessNPM
+        restart: unless-stopped
+        ports:
+            - '7880:7880'
+        environment:
+            TZ: Europe/London
+            LANG: uk.UTF-8
+            DEBUG: true
+            EXCLUDE_IPS: 127.0.0.1,192.168.0.1-254,192.168.30.1-254
+        volumes:
+        - /mnt/gluster/containers/nginx-proxy-manager/logs:/opt/log

@@ -1,13 +1,16 @@
 version: "3.8"
 services:
   tautulli:
+    container_name: Tautulli
     image: lscr.io/linuxserver/tautulli
     restart: unless-stopped
     environment:
       PUID: 1000
       PGID: 1000
       TZ: Europe/London
+      DOCKER_MODS: 'ghcr.io/gilbn/theme.park:tautulli'
+      TP_THEME: 'nord'
     volumes:
       - /mnt/gluster/containers/tautulli:/config
     ports:
-      - 8686:8181
+      - 8181:8181

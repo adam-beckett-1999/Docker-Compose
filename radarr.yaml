@@ -7,6 +7,8 @@ services:
       PUID: 1000
       PGID: 1000
       TZ: Europe/London
+      DOCKER_MODS: 'ghcr.io/gilbn/theme.park:radarr'
+      TP_THEME: 'nord'
     volumes:
       - /mnt/gluster/containers/radarr:/config
       - /mnt/nas-01/Movies:/movies
