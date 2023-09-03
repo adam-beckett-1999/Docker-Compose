@@ -17,4 +17,4 @@ services:
       - /mnt/gluster/containers/guacamole:/config
       - /etc/localtime:/etc/localtime:ro
     ports:
-    - 8080:8080
+    - 8181:8080
