@@ -13,4 +13,4 @@ services:
       - /mnt/gluster/containers/file-browser/branding:/branding
       - /mnt/gluster/containers:/data
     ports:
-      - 8181:8080
+      - 8080:8080
