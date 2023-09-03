@@ -1,6 +1,7 @@
 version: "3.8"
 services:
   youtubedl:
+    container_name: YoutubeDL
     image: ghcr.io/alexta69/metube
     restart: unless-stopped
     environment:
