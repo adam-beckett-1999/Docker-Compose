@@ -1,6 +1,7 @@
 version: '3'
 services:
   overseerr:
+    container_name: Overseerr
     image: lscr.io/linuxserver/overseerr:latest
     restart: unless-stopped
     environment:
