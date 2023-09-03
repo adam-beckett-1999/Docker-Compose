@@ -1,9 +1,13 @@
 version: "3.8"
 services:
   plex-meta-manager:
-    image: meisnate12/plex-meta-manager
+    image: lscr.io/linuxserver/plex-meta-manager:latest
     restart: unless-stopped
     environment:
       - TZ=Europe/London
+      - PUID=1000
+      - PGID=1000
+      - PMM_CONFIG=/config/config.yml
+      - PMM_TIME=00:00
     volumes:
       - /mnt/gluster/containers/plex-meta-manager:/config

@@ -6,8 +6,13 @@ services:
     environment:
       PUID: 1000
       PGID: 1000
-      TZ: 'UTC'
-      EXTENSIONS: 'auth-totp,auth-ldap'
+      TZ: Europe/London
+      EXTENSIONS: 'auth-ldap,auth-sso-openid'
+      OPENID_AUTHORIZATION_ENDPOINT: https://auth.hyvecloud.dev/application/o/authorize/
+      OPENID_CLIENT_ID: "${CLIENT_ID}"
+      OPENID_ISSUER: https://auth.hyvecloud.dev/application/o/guacamole/
+      OPENID_JWKS_ENDPOINT: https://auth.hyvecloud.dev/application/o/guacamole/jwks/
+      OPENID_REDIRECT_URI: https://guacamole.hyvecloud.dev/
     volumes:
       - /mnt/gluster/containers/guacamole:/config
       - /etc/localtime:/etc/localtime:ro

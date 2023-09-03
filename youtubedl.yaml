@@ -1,8 +1,10 @@
 version: "3.8"
 services:
   youtubedl:
-    image: alexta69/metube
+    image: ghcr.io/alexta69/metube
     restart: unless-stopped
+    environment:
+      TZ: Europe/London
     volumes:
       - /mnt/nas-01/Downloads/Youtube:/downloads
     ports:

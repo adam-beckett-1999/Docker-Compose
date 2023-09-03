@@ -1,12 +1,13 @@
 version: '3'
 services:
   overseerr:
-    image: sctx/overseerr:latest
+    image: lscr.io/linuxserver/overseerr:latest
     restart: unless-stopped
     environment:
-      - LOG_LEVEL=debug
+      - PUID=1000
+      - PGID=1000
       - TZ=Europe/London
     volumes:
-      - /mnt/gluster/containers/overseerr:/app/config
+      - /mnt/gluster/containers/overseerr:/config
     ports:
       - 5055:5055

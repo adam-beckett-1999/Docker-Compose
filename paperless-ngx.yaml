@@ -1,7 +1,7 @@
 version: "3.8"
 services:
   paperless_ngx:
-    image: paperlessngx/paperless-ngx
+    image: paperlessngx/paperless-ngx:latest
     restart: unless-stopped
     environment:
       PUID: 1000
@@ -36,6 +36,8 @@ services:
     image: docker.io/library/postgres:15
     restart: unless-stopped
     environment:
+      PUID: 1000
+      PGID: 1000
       POSTGRES_DB: paperless
       POSTGRES_USER: paperless
       POSTGRES_PASSWORD: "${DB_PASS}"
