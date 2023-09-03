@@ -8,7 +8,7 @@ services:
       PGID: 1000
       TZ: Europe/London
       WEBUI_PORT: 8112
-      DOCKER_MODS: 'ghcr.io/gilbn/theme.park:radarr'
+      DOCKER_MODS: 'ghcr.io/gilbn/theme.park:qbittorrent'
       TP_THEME: 'nord'
     volumes:
       - /mnt/gluster/containers/qbittorrent:/config
