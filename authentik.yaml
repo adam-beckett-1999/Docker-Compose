@@ -42,8 +42,8 @@ services:
       - /mnt/gluster/containers/authentik/media:/media
       - /mnt/gluster/containers/authentik/custom-templates:/templates
     ports:
-      - "${AUTHENTIK_PORT_HTTP:-9000}:9000"
-      - "${AUTHENTIK_PORT_HTTPS:-9443}:9443"
+      - "${AUTHENTIK_PORT_HTTP:-10000}:9000"
+      - "${AUTHENTIK_PORT_HTTPS:-10443}:9443"
     depends_on:
       - authentik_db
       - authentik_redis
