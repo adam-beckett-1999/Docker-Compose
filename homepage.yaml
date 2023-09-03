@@ -7,4 +7,4 @@ services:
       - /mnt/gluster/containers/homepage:/app/config
       - /mnt/gluster/containers/homepage/images:/app/public/images
     ports:
-      - 3001:3000
+      - 3000:3000
