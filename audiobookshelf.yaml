@@ -1,6 +1,7 @@
 version: "3.8"
 services:
   audiobookshelf:
+    container_name: audiobookshelf
     image: ghcr.io/advplyr/audiobookshelf
     restart: unless-stopped
     environment:
