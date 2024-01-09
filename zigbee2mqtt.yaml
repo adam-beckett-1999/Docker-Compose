@@ -1,6 +1,7 @@
 version: "3.8"
 services:
   zigbee2mqtt:
+    container_name: Zigbee2MQTT
     image: koenkk/zigbee2mqtt
     restart: unless-stopped
     environment:
