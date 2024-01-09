@@ -10,6 +10,4 @@ services:
       - /run/udev:/run/udev:ro
     devices:
       - /dev/ttyACM0:/dev/ttyACM0
-    ports:
-      - 1883:1883
-      - 9002:9001
+    network_mode: host
