@@ -11,7 +11,7 @@ services:
       DB_HOST: 192.168.0.162
       DB_PORT: 5432
       DB_DATABASE: speedtest_tracker
-      DB_USERNAME: speedtest
+      DB_USERNAME: postgres
       DB_PASSWORD: "${DB_PASSWORD}"
     volumes:
       - '/mnt/gluster/containers/speedtest-tracker:/config'
@@ -26,7 +26,7 @@ services:
     restart: unless-stopped
     environment:
       POSTGRES_DATABASE: speedtest_tracker
-      POSTGRES_USER: speedtest
+      POSTGRES_USER: postgres
       POSTGRES_PASSWORD: "${DB_PASSWORD}"
     volumes:
       - /mnt/gluster/containers/speedtest-tracker/db:/var/lib/postgresql/data
