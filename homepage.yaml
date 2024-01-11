@@ -2,7 +2,7 @@ version: '3.8'
 services:
   homepage:
     container_name: Homepage
-    image: ghcr.io/benphelps/homepage:latest
+    image: ghcr.io/gethomepage/homepage:latest
     restart: unless-stopped
     volumes:
       - /mnt/gluster/containers/homepage:/app/config
