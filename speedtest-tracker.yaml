@@ -8,7 +8,7 @@ services:
       PUID: 1000
       PGID: 1000
       DB_CONNECTION: mysql
-      DB_HOST: speedtest_tracker_db
+      DB_HOST: stt_db
       DB_PORT: 5432
       DB_DATABASE: speedtest_tracker
       DB_USERNAME: speedtest
@@ -19,8 +19,8 @@ services:
       - 180:80
       - 1443:443
     depends_on:
-      - speedtest_tracker_db
-  speedtest_tracker_db:
+      - stt_db
+  stt_db:
     container_name: Speedtest-Tracker-DB
     image: postgres:15
     restart: unless-stopped
