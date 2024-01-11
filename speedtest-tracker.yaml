@@ -25,7 +25,7 @@ services:
     image: postgres:15
     restart: unless-stopped
     environment:
-      POSTGRES_DATABASE: speedtest_tracker
+      POSTGRES_DB: speedtest_tracker
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: "${DB_PASSWORD}"
     volumes:
