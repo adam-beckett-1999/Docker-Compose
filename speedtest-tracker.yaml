@@ -1,6 +1,7 @@
 version: '3.8'
 services:
   speedtest-tracker:
+    container_name: Speedtest-Tracker
     image: 'ghcr.io/alexjustesen/speedtest-tracker:latest'
     restart: unless-stopped
     environment:
@@ -20,6 +21,7 @@ services:
     depends_on:
       - speedtest_tracker_db
   speedtest_tracker_db:
+    container_name: Speedtest-Tracker-DB
     image: mariadb:10
     restart: unless-stopped
     environment:
