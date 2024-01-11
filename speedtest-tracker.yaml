@@ -25,6 +25,8 @@ services:
     image: postgres:15
     restart: unless-stopped
     environment:
+      PUID: 1000
+      PGID: 1000
       POSTGRES_DB: speedtest_tracker
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: "${DB_PASSWORD}"
