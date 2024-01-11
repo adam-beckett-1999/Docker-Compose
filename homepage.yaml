@@ -7,5 +7,6 @@ services:
     volumes:
       - /mnt/gluster/containers/homepage:/app/config
       - /mnt/gluster/containers/homepage/images:/app/public/images
+      - /mnt/gluster/containers/homepage/icons:/app/public/icons
     ports:
       - 3000:3000
