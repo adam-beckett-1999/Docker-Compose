@@ -1,4 +1,4 @@
-version: '3.8'
+version: '3.3'
 services:
   speedtest-tracker:
     container_name: Speedtest-Tracker
@@ -7,11 +7,11 @@ services:
     environment:
       PUID: 1000
       PGID: 1000
-      DB_CONNECTION: pgsql
-      DB_HOST: 192.168.0.162
-      DB_PORT: 5432
+      DB_CONNECTION: mysql
+      DB_HOST: speedtest-db
+      DB_PORT: 3306
       DB_DATABASE: speedtest_tracker
-      DB_USERNAME: postgres
+      DB_USERNAME: speedy
       DB_PASSWORD: "${DB_PASSWORD}"
     volumes:
       - '/mnt/gluster/containers/speedtest-tracker:/config'
@@ -19,16 +19,14 @@ services:
       - 180:80
       - 1443:443
     depends_on:
-      - speedtest-tracker-db
-  speedtest-tracker-db:
-    container_name: Speedtest-Tracker-DB
-    image: postgres:15
-    restart: unless-stopped
+      - speedtest-db
+  speedtest-db:
+    image: mariadb:10
+    restart: always
     environment:
-      PUID: 1000
-      PGID: 1000
-      POSTGRES_DB: speedtest_tracker
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: "${DB_PASSWORD}"
+      MARIADB_DATABASE: speedtest_tracker
+      MARIADB_USER: speedy
+      MARIADB_PASSWORD: "${DB_PASSWORD}"
+      MARIADB_RANDOM_ROOT_PASSWORD: true
     volumes:
-      - /mnt/gluster/containers/speedtest-tracker/db:/var/lib/postgresql/data
+      - /mnt/gluster/containers/speedtest-tracker/db:/var/lib/mysql
