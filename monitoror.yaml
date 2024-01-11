@@ -1,6 +1,7 @@
 version: '3.8'
 services:
   monitoror:
+    container_name: Monitoror
     image: monitoror/monitoror
     restart: unless-stopped
     environment:
