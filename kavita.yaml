@@ -1,10 +1,15 @@
 version: "3.8"
 services:
   kavita:
-    image: kizaing/kavita:latest
+    container_name: Kavita
+    image: lscr.io/linuxserver/kavita:latest
     restart: unless-stopped
+    environment:
+      PUID: 1000
+      PGID: 1000
+      TZ: Europe/London
     volumes:
-      - /mnt/gluster/containers/kavita:/kavita/config
-      - /mnt/nas-01/Comics:/books
+      - /mnt/gluster/containers/kavita:/config
+      - /mnt/nas-01/Comics:/data
     ports:
       - 5000:5000
