@@ -8,11 +8,8 @@ services:
       PGID: 1000
       UMASK: 002
       TZ: Europe/London
-      TP_HOTIO: true
-      TP_THEME: nord
     volumes:
       - /mnt/gluster/containers/qbittorrent:/config
-      - /mnt/gluster/containers/qbittorrent/98-themepark:/etc/cont-init.d/98-themepark
       - /mnt/nas-01/Downloads:/downloads
     ports:
       - 8112:8080
