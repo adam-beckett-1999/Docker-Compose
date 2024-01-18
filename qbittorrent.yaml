@@ -2,20 +2,20 @@ version: "3.8"
 services:
   qbittorrent:
     container_name: qBittorrent
-    image: lscr.io/linuxserver/qbittorrent:latest
+    image: ghcr.io/hotio/qbittorrent
     environment:
       PUID: 1000
       PGID: 1000
+      UMASK: 002
       TZ: Europe/London
-      WEBUI_PORT: 8112
-      DOCKER_MODS: 'ghcr.io/themepark-dev/theme.park:qbittorrent-develop'
-      TP_DOMAIN: 'theme-park.dev'
-      TP_THEME: 'nord'
+      TP_HOTIO: true
+      TP_THEME: nord
     volumes:
       - /mnt/gluster/containers/qbittorrent:/config
+      - /mnt/gluster/containers/qbittorrent/98-themepark:/etc/cont-init.d/98-themepark
       - /mnt/nas-01/Downloads:/downloads
     ports:
-      - 8112:8112
+      - 8112:8080
       - 6881:6881
       - 6881:6881/udp
     restart: unless-stopped
