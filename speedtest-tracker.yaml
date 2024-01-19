@@ -1,10 +1,10 @@
 version: '3.3'
 services:
     speedtest-tracker:
-        container_name: speedtest-tracker
+        container_name: Speedtest-Tracker
         ports:
-            - '8080:80'
-            - '8443:443'
+            - '180:80'
+            - '1443:443'
         environment:
             - PUID=1000
             - PGID=1000
@@ -22,6 +22,7 @@ services:
         depends_on:
             - db
     db:
+        container_name: Speedtest-Tracker-DB
         image: mariadb:10
         restart: always
         environment:
