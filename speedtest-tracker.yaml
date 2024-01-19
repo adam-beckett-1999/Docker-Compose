@@ -12,7 +12,7 @@ services:
       - DB_PORT=3306
       - DB_DATABASE=speedtest_tracker
       - DB_USERNAME=speedy
-      - DB_PASSWORD="${DB_PASSWORD}"
+      - DB_PASSWORD=${DB_PASSWORD}
     volumes:
       - '/mnt/gluster/containers/speedtest-tracker:/config'
     ports:
@@ -26,7 +26,7 @@ services:
     environment:
       - MARIADB_DATABASE=speedtest_tracker
       - MARIADB_USER=speedy
-      - MARIADB_PASSWORD="${DB_PASSWORD}"
+      - MARIADB_PASSWORD=${DB_PASSWORD}
       - MARIADB_RANDOM_ROOT_PASSWORD=true
     volumes:
       - /mnt/gluster/containers/speedtest-tracker/db:/var/lib/mysql
