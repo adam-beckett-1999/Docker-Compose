@@ -24,6 +24,8 @@ services:
     image: mariadb:10
     restart: always
     environment:
+      - PUID=1000
+      - PGID=1000
       - MARIADB_DATABASE=speedtest_tracker
       - MARIADB_USER=speedy
       - MARIADB_PASSWORD=${DB_PASSWORD}
