@@ -18,6 +18,7 @@ services:
       POSTGRES_USER: ${POSTGRES_USER:-authentik}
       POSTGRES_DB: ${POSTGRES_DB:-authentik}
       AUTHENTIK_SECRET_KEY: ${AUTHENTIK_SECRET_KEY}
+    restart: unless-stopped
   authentik_redis:
     container_name: Authentik-REDIS
     image: redis:alpine
@@ -27,6 +28,7 @@ services:
       interval: 30s
       retries: 5
       timeout: 3s
+    restart: unless-stopped
   authentik_server:
     container_name: Authentik-Server
     image: ghcr.io/goauthentik/server:latest
@@ -47,6 +49,7 @@ services:
     depends_on:
       - authentik_db
       - authentik_redis
+    restart: unless-stopped
   authentik_worker:
     container_name: Authentik-Worker
     image: ghcr.io/goauthentik/server:latest
@@ -67,3 +70,4 @@ services:
     depends_on:
       - authentik_db
       - authentik_redis
+    restart: unless-stopped
