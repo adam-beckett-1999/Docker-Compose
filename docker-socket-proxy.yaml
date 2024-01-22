@@ -10,3 +10,4 @@ services:
       - 2375:2375
     environment:
       CONTAINERS: 1
+    restart: unless-stopped
