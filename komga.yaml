@@ -1,15 +1,16 @@
 version: "3.8"
 services:
   kavita:
-    container_name: Kavita
-    image: lscr.io/linuxserver/kavita:latest
+    container_name: Komga
+    image: gotson/komga:latest
     restart: unless-stopped
     environment:
       PUID: 1000
       PGID: 1000
       TZ: Europe/London
+      JAVA_TOOL_OPTIONS: '-Xmx4g'
     volumes:
-      - /mnt/gluster/containers/kavita:/config
+      - /mnt/gluster/containers/komga:/config
       - /mnt/nas-01/Comics:/data
     ports:
-      - 5000:5000
+      - 25600:25600
