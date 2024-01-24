@@ -1,6 +1,7 @@
 version: "3.8"
 services:
   bookstack:
+    container_name: Bookstack
     image: lscr.io/linuxserver/bookstack
     restart: unless-stopped
     environment:
@@ -13,12 +14,13 @@ services:
       DB_PASS: "${DB_PASS}"
       DB_DATABASE: bookstackapp
     volumes:
-      - /mnt/gluster/containers/bookstack/data:/config
+      - /mnt/gluster/containers/bookstack:/config
     ports:
       - 8001:80
     depends_on:
       - bookstack_db
   bookstack_db:
+    container_name: Bookstack-DB
     image: lscr.io/linuxserver/mariadb
     restart: unless-stopped
     environment:
