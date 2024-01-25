@@ -7,7 +7,7 @@ services:
     environment:
       - PUID=1000
       - PGID=1000
-      - APP_URL=https://docs.hyvecloud.dev
+      - APP_URL=https://wiki.hyvecloud.dev
       - DB_HOST=bookstack_db
       - DB_PORT=3307
       - DB_USER=bookstack
