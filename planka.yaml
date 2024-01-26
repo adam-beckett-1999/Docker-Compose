@@ -17,6 +17,14 @@ services:
       - TRUST_PROXY=1
       - DATABASE_URL=postgresql://postgres@planka_db/planka
       - SECRET_KEY=${SECRET_KEY}
+      - OIDC_ISSUER=${OIDC_ISSUER}
+      - OIDC_CLIENT_ID=${OIDC_CLIENT_ID}
+      - OIDC_CLIENT_SECRET=${OIDC_CLIENT_SECRET}
+      - OIDC_SCOPES=openid email profile
+      - OIDC_ADMIN_ROLES=admin
+      - OIDC_EMAIL_ATTRIBUTE=email
+      - OIDC_NAME_ATTRIBUTE=name
+      - OIDC_USERNAME_ATTRIBUTE=preferred_username
     volumes:
       - /mnt/gluster/containers/planka/user-avatars:/app/public/user-avatars
       - /mnt/gluster/containers/planka/project-background-images:/app/public/project-background-images
@@ -33,4 +41,6 @@ services:
       - POSTGRES_DB=planka
       - POSTGRES_HOST_AUTH_METHOD=trust
     volumes:
-      - /mnt/gluster/containers/planka/db-data:/var/lib/postgresql/data
+      - planka-db-data:/var/lib/postgresql/data
+volumes:
+  planka-db-data:
