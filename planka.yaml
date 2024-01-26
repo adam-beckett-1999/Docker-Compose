@@ -15,7 +15,7 @@ services:
     environment:
       - BASE_URL=https://board.hyvecloud.dev
       - TRUST_PROXY=1
-      - DATABASE_URL=postgresql://postgres@planka_db/planka
+      - DATABASE_URL=postgresql://postgres@postgres/planka
       - SECRET_KEY=${SECRET_KEY}
       - OIDC_ISSUER=${OIDC_ISSUER}
       - OIDC_CLIENT_ID=${OIDC_CLIENT_ID}
@@ -33,7 +33,7 @@ services:
       - 1337:1337
     depends_on:
       - planka_db
-  planka_db:
+  postgres:
     container_name: Planka-DB
     image: postgres:14-alpine
     restart: unless-stopped
