@@ -1,6 +1,7 @@
 version: "3.8"
 services:
   planka:
+    container_name: Planka
     image: ghcr.io/plankanban/planka:latest
     restart: unless-stopped
     command: >
@@ -12,10 +13,10 @@ services:
           sleep 5;
         done; (exit $$s)"
     environment:
-      BASE_URL: https://board.hyvecloud.dev
-      TRUST_PROXY: 1
-      DATABASE_URL: postgresql://postgres@planka_db/planka
-      SECRET_KEY: "${SECRET_KEY}"
+      - BASE_URL=https://board.hyvecloud.dev
+      - TRUST_PROXY=1
+      - DATABASE_URL=postgresql://postgres@planka_db/planka
+      - SECRET_KEY=${SECRET_KEY}
     volumes:
       - /mnt/gluster/containers/planka/user-avatars:/app/public/user-avatars
       - /mnt/gluster/containers/planka/project-background-images:/app/public/project-background-images
@@ -25,10 +26,11 @@ services:
     depends_on:
       - planka_db
   planka_db:
+    container_name: Planka-DB
     image: postgres:14-alpine
     restart: unless-stopped
     environment:
-      POSTGRES_DB: planka
-      POSTGRES_HOST_AUTH_METHOD: trust
+      - POSTGRES_DB=planka
+      - POSTGRES_HOST_AUTH_METHOD=trust
     volumes:
       - /mnt/gluster/containers/planka/db-data:/var/lib/postgresql/data
