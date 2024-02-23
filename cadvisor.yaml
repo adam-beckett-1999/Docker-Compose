@@ -1,7 +1,7 @@
 version: "3.8"
 services:
   cadvisor:
-    image: google/cadvisor:latest
+    image: gcr.io/cadvisor/cadvisor
     container_name: Monitoring-CAdvisor
     restart: unless-stopped
     volumes:
