@@ -4,5 +4,5 @@ services:
     image: prom/node-exporter:latest
     container_name: Monitoring-Node-Exporter
     restart: unless-stopped
-    expose:
-      - 9100
+    ports:
+      - 9100:9100
