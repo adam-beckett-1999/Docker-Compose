@@ -1,0 +1,8 @@
+version: "3.8"
+services:
+  node-exporter:
+    image: prom/node-exporter:latest
+    container_name: Monitoring-Node-Exporter
+    restart: unless-stopped
+    expose:
+      - 9100

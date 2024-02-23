@@ -15,4 +15,4 @@ services:
       - /mnt/nas-01/Downloads:/downloads
       - /mnt/nas-01/Downloads/Incomplete:/incomplete-downloads
     ports:
-      - 8080:8080
+      - 8787:8080
