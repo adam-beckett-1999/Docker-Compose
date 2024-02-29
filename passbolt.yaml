@@ -1,6 +1,6 @@
 version: "3.9"
 services:
-  passbolt-db:
+  db:
     container_name: Passbolt-DB
     image: mariadb:10.11
     restart: unless-stopped
@@ -16,10 +16,10 @@ services:
     image: passbolt/passbolt:latest-ce
     restart: unless-stopped
     depends_on:
-      - passbolt-db
+      - db
     environment:
       APP_FULL_BASE_URL: https://passbolt.hyvecloud.dev
-      DATASOURCES_DEFAULT_HOST: "passbolt-db"
+      DATASOURCES_DEFAULT_HOST: "db"
       DATASOURCES_DEFAULT_USERNAME: "passbolt"
       DATASOURCES_DEFAULT_PASSWORD: "${DB_PASSWORD}"
       DATASOURCES_DEFAULT_DATABASE: "passbolt"
