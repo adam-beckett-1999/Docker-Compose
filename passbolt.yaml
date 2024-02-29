@@ -5,10 +5,10 @@ services:
     image: mariadb:10.11
     restart: unless-stopped
     environment:
-      MYSQL_RANDOM_ROOT_PASSWORD: "true"
-      MYSQL_DATABASE: "passbolt"
-      MYSQL_USER: "passbolt"
-      MYSQL_PASSWORD: "${DB_PASSWORD}"
+      - MYSQL_RANDOM_ROOT_PASSWORD=true
+      - MYSQL_DATABASE=passbolt
+      - MYSQL_USER=passbolt
+      - MYSQL_PASSWORD=${DB_PASSWORD}
     volumes:
       - /mnt/gluster/containers/passbolt/db:/var/lib/mysql
   passbolt:
@@ -18,11 +18,11 @@ services:
     depends_on:
       - db
     environment:
-      APP_FULL_BASE_URL: https://passbolt.hyvecloud.dev
-      DATASOURCES_DEFAULT_HOST: "db"
-      DATASOURCES_DEFAULT_USERNAME: "passbolt"
-      DATASOURCES_DEFAULT_PASSWORD: "${DB_PASSWORD}"
-      DATASOURCES_DEFAULT_DATABASE: "passbolt"
+      - APP_FULL_BASE_URL=https://passbolt.hyvecloud.dev
+      - DATASOURCES_DEFAULT_HOST=db
+      - DATASOURCES_DEFAULT_USERNAME=passbolt
+      - DATASOURCES_DEFAULT_PASSWORD=${DB_PASSWORD}
+      - DATASOURCES_DEFAULT_DATABASE=passbolt
     volumes:
       - /mnt/gluster/containers/passbolt/gpg:/etc/passbolt/gpg
       - /mnt/gluster/containers/passbolt/jwt:/etc/passbolt/jwt
