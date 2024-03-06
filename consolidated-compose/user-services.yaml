@@ -18,6 +18,13 @@ services:
       - /mnt/gluster/containers/bookstack:/config
     ports:
       - 8001:80
+    networks:
+      - proxy
+      - bookstack
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.bookstack.entryPoints=https
+      - traefik.http.routers.bookstack.middlewares=middlewares-authentik@file
     depends_on:
       - bookstack_db
   bookstack_db:
@@ -35,6 +42,9 @@ services:
       - MYSQL_TCP_PORT=3307
     volumes:
       - /mnt/gluster/containers/bookstack/db_data:/config
+    networks:
+      - proxy
+      - bookstack
 ###
   planka:
     container_name: Planka
@@ -68,6 +78,13 @@ services:
       - /mnt/gluster/containers/planka/attachments:/app/private/attachments
     ports:
       - 1337:1337
+    networks:
+      - proxy
+      - planka
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.planka.entryPoints=https
+      - traefik.http.routers.planka.middlewares=middlewares-authentik@file
     depends_on:
       - postgres
   planka-db:
@@ -79,6 +96,9 @@ services:
       - POSTGRES_HOST_AUTH_METHOD=trust
     volumes:
       - /mnt/gluster/containers/planka/db:/var/lib/postgresql/data
+    networks:
+      - proxy
+      - planka
 ###
   paperless_ngx:
     container_name: Paperless-NGX
@@ -103,6 +123,13 @@ services:
       - /mnt/gluster/containers/paperless-ngx/data:/data
     ports:
       - 8000:8000
+    networks:
+      - proxy
+      - paperless-ngx
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.paperless-ngx.entryPoints=https
+      - traefik.http.routers.paperless-ngx.middlewares=middlewares-authentik@file
     depends_on:
       - paperless_ngx_redis
       - paperless_ngx_db
@@ -114,6 +141,9 @@ services:
     restart: unless-stopped
     ports:
       - 6379:6379
+    networks:
+      - proxy
+      - paperless-ngx
   paperless_ngx_db:
     container_name: Paperless-NGX-DB
     image: docker.io/library/postgres:15
@@ -126,6 +156,9 @@ services:
       - POSTGRES_PASSWORD=${DB_PASS}
     volumes:
       - /mnt/gluster/containers/paperless-ngx/db:/var/lib/postgresql/data
+    networks:
+      - proxy
+      - paperless-ngx
   paperless_ngx_gotenberg:
     container_name: Paperless-NGX-Gotenberg
     image: docker.io/gotenberg/gotenberg:7.8
@@ -134,10 +167,16 @@ services:
       - "gotenberg"
       - "--chromium-disable-javascript=true"
       - "--chromium-allow-list=file:///tmp/.*"
+    networks:
+      - proxy
+      - paperless-ngx
   paperless_ngx_tika:
     container_name: Paperless-NGX-Tika
     image: ghcr.io/paperless-ngx/tika:latest
     restart: unless-stopped
+    networks:
+      - proxy
+      - paperless-ngx
 ###
   excalidraw:
     container_name: Excalidraw
@@ -155,6 +194,13 @@ services:
       HTTP_STORAGE_BACKEND_URL: "http://excalidraw_storage_backend:8383/api/v2"
     ports:
       - 8002:80
+    networks:
+      - proxy
+      - excalidraw
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.excalidraw.entryPoints=https
+      - traefik.http.routers.excalidraw.middlewares=middlewares-authentik@file
     depends_on:
       - excalidraw_storage_backend
       - excalidraw_room
@@ -167,16 +213,33 @@ services:
       STORAGE_URI: redis://excalidraw_redis:6380
     ports:
       - 8383:8080
+    networks:
+      - proxy
+      - excalidraw
   excalidraw_room:
     container_name: Excalidraw-Room
     image: excalidraw/excalidraw-room
     restart: unless-stopped
     ports:
       - 8003:80
+    networks:
+      - proxy
+      - excalidraw
   excalidraw_redis:
     container_name: Excalidraw-REDIS
     image: redis
     restart: unless-stopped
     ports:
       - 6380:6379
+    networks:
+      - proxy
+      - excalidraw
 ###
+networks:
+  proxy:
+    driver: bridge
+    external: true
+  bookstack:
+  planka:
+  paperless-ngx:
+  excalidraw:

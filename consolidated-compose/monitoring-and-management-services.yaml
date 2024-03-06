@@ -37,6 +37,7 @@ services:
       - /mnt/gluster/containers/speedtest-tracker:/config
     networks:
       - proxy
+      - speedtest-tracker
     labels:
       - traefik.enable=true
       - traefik.http.routers.speedtest-tracker.entryPoints=https
@@ -55,6 +56,7 @@ services:
       - speedtest-db:/var/lib/mysql
     networks:
       - proxy
+      - speedtest-tracker
 ###
   dozzle:
     container_name: Dozzle
@@ -163,3 +165,4 @@ networks:
   proxy:
     driver: bridge
     external: true
+  speedtest-tracker:
