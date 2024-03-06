@@ -1,0 +1,165 @@
+version: "3.8"
+services:
+###
+  uptime-kuma:
+    container_name: Uptime-Kuma
+    image: louislam/uptime-kuma:latest
+    restart: unless-stopped
+    volumes:
+      - /mnt/gluster/containers/uptime-kuma:/app/data
+      - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - 3001:3001
+    networks:
+      - proxy
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.uptime-kuma.entryPoints=https
+      - traefik.http.routers.uptime-kuma.middlewares=middlewares-authentik@file
+###
+  speedtest-tracker:
+    container_name: Speedtest-Tracker
+    image: ghcr.io/alexjustesen/speedtest-tracker:latest
+    restart: unless-stopped
+    ports:
+      - 180:80
+      - 1443:443
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - DB_CONNECTION=mysql
+      - DB_HOST=speedtest-db
+      - DB_PORT=3306
+      - DB_DATABASE=speedtest_tracker
+      - DB_USERNAME=speedy
+      - DB_PASSWORD=${DB_PASSWORD}
+    volumes:
+      - /mnt/gluster/containers/speedtest-tracker:/config
+    networks:
+      - proxy
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.speedtest-tracker.entryPoints=https
+    depends_on:
+      - speedtest-db
+  speedtest-db:
+    container_name: Speedtest-Tracker-DB
+    image: mariadb:10
+    restart: unless-stopped
+    environment:
+      - MARIADB_DATABASE=speedtest_tracker
+      - MARIADB_USER=speedy
+      - MARIADB_PASSWORD=${DB_PASSWORD}
+      - MARIADB_RANDOM_ROOT_PASSWORD=true
+    volumes:
+      - speedtest-db:/var/lib/mysql
+    networks:
+      - proxy
+###
+  dozzle:
+    container_name: Dozzle
+    image: amir20/dozzle:latest
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "/dozzle", "healthcheck"]
+      interval: 3s
+      timeout: 30s
+      retries: 5
+      start_period: 30s
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - DOZZLE_REMOTE_HOST="tcp://192.168.0.161:2375|VM-DOCKER-SERVER-01,tcp://192.168.0.162:2375|VM-DOCKER-SERVER-02,tcp://192.168.0.163:2375|VM-DOCKER-SERVER-03"
+      - DOZZLE_HOSTNAME="VM-DOCKER-SERVER-04"
+    ports:
+      - 9999:8080
+    networks:
+      - proxy
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.dozzle.entryPoints=https
+      - traefik.http.routers.dozzle.middlewares=middlewares-authentik@file
+###
+  filebrowser:
+    container_name: Filebrowser
+    image: hurlenko/filebrowser:latest
+    restart: unless-stopped
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/London
+      - FB_NOAUTH=noauth
+    volumes:
+      - /mnt/gluster/containers/file-browser:/config
+      - /mnt/gluster/containers/file-browser/branding:/branding
+      - /mnt/gluster/containers:/data
+    ports:
+      - 9898:8080
+    networks:
+      - proxy
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.file-browser.entryPoints=https
+      - traefik.http.routers.file-browser.middlewares=middlewares-authentik@file
+###
+  guacamole:
+    container_name: Guacamole
+    image: abesnier/guacamole:latest
+    restart: unless-stopped
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/London
+      - EXTENSIONS=auth-sso-openid
+    volumes:
+      - /mnt/gluster/containers/guacamole:/config
+      - /etc/localtime:/etc/localtime:ro
+    ports:
+      - 9797:8080
+    networks:
+      - proxy
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.guacamole.entryPoints=https
+###
+  upsnap:
+    container_name: Upsnap
+    image: ghcr.io/seriousm4x/upsnap:latest
+    restart: unless-stopped
+    entrypoint: /bin/sh -c "./upsnap serve --http 0.0.0.0:5001"
+    healthcheck:
+      test: curl -fs "http://localhost:5001/api/health" || exit 1
+      interval: 10s
+    environment:
+      - TZ=Europe/London
+      - UPSNAP_WEBSITE_TITLE=Hyvecloud Host Management
+    volumes:
+      - /mnt/gluster/containers/upsnap:/app/pb_data
+    network_mode: host
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.upsnap.entryPoints=https
+      - traefik.http.routers.upsnap.middlewares=middlewares-authentik@file
+      - traefik.http.services.upsnap.loadbalancer.server.port=5001
+###
+  homepage:
+    container_name: Homepage
+    image: ghcr.io/gethomepage/homepage:latest
+    restart: unless-stopped
+    volumes:
+      - /mnt/gluster/containers/homepage:/app/config
+      - /mnt/gluster/containers/homepage/images:/app/public/images
+      - /mnt/gluster/containers/homepage/icons:/app/public/icons
+    ports:
+      - 3000:3000
+    networks:
+      - proxy
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.homepage.entryPoints=https
+      - traefik.http.routers.homepage.middlewares=middlewares-authentik@file
+###
+networks:
+  proxy:
+    driver: bridge
+    external: true

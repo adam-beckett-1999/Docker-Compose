@@ -1,0 +1,56 @@
+version: "3.8"
+services:
+###
+  watchtower:
+    container_name: Watchtower
+    image: containrrr/watchtower:latest
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - WATCHTOWER_CLEANUP=true
+      - WATCHTOWER_INCLUDE_STOPPED=true
+      - WATCHTOWER_REVIVE_STOPPED=false
+      - WATCHTOWER_POLL_INTERVAL=86400
+      - WATCHTOWER_NOTIFICATIONS=shoutrrr
+      - WATCHTOWER_NOTIFICATIONS_LEVEL=info
+      - WATCHTOWER_NOTIFICATION_REPORT=true
+      - WATCHTOWER_NOTIFICATION_URL="${WATCHTOWER_NOTIFICATIONS}"
+      - WATCHTOWER_HTTP_API_METRICS=true
+      - WATCHTOWER_HTTP_API_TOKEN="${WATCHTOWER_API_TOKEN}"
+###
+  docker-socket-proxy:
+    container_name: Docker-Socket-Proxy
+    image: tecnativa/docker-socket-proxy:latest
+    restart: unless-stopped
+    privileged: true
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      CONTAINERS: 1
+    ports:
+      - 2375:2375
+###
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:latest
+    container_name: Monitoring-CAdvisor
+    restart: unless-stopped
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:rw
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+    ports:
+      - 9101:8080
+###
+  node-exporter:
+    container_name: Monitoring-Node-Exporter
+    image: quay.io/prometheus/node-exporter:latest
+    restart: unless-stopped
+    volumes:
+      - /:/host:ro,rslave
+    command:
+      - --path.rootfs=/host
+    ports:
+      - 9100:9100
+###

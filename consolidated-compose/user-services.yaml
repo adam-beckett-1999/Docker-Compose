@@ -1,0 +1,182 @@
+version: "3.8"
+services:
+###
+  bookstack:
+    container_name: Bookstack
+    image: lscr.io/linuxserver/bookstack:latest
+    restart: unless-stopped
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - APP_URL=https://wiki.hyvecloud.dev
+      - DB_HOST=bookstack_db
+      - DB_PORT=3307
+      - DB_USER=bookstack
+      - DB_PASS=${DB_PASS}
+      - DB_DATABASE=bookstackapp
+    volumes:
+      - /mnt/gluster/containers/bookstack:/config
+    ports:
+      - 8001:80
+    depends_on:
+      - bookstack_db
+  bookstack_db:
+    container_name: Bookstack-DB
+    image: lscr.io/linuxserver/mariadb
+    restart: unless-stopped
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASS}
+      - TZ=Europe/London
+      - MYSQL_DATABASE=bookstackapp
+      - MYSQL_USER=bookstack
+      - MYSQL_PASSWORD=${DB_PASS}
+      - MYSQL_TCP_PORT=3307
+    volumes:
+      - /mnt/gluster/containers/bookstack/db_data:/config
+###
+  planka:
+    container_name: Planka
+    image: ghcr.io/plankanban/planka:latest
+    restart: unless-stopped
+    command: >
+      bash -c
+        "for i in `seq 1 30`; do
+          ./start.sh &&
+          s=$$? && break || s=$$?;
+          echo \"Tried $$i times. Waiting 5 seconds...\";
+          sleep 5;
+        done; (exit $$s)"
+    environment:
+      - BASE_URL=https://board.hyvecloud.dev
+      - TRUST_PROXY=1
+      - DATABASE_URL=postgresql://postgres@planka-db/planka
+      - SECRET_KEY=${SECRET_KEY}
+      - OIDC_ISSUER=${OIDC_ISSUER}
+      - OIDC_CLIENT_ID=${OIDC_CLIENT_ID}
+      - OIDC_CLIENT_SECRET=${OIDC_CLIENT_SECRET}
+      - OIDC_SCOPES=openid email profile
+      - OIDC_ADMIN_ROLES=planka-admin
+      - OIDC_ROLES_ATTRIBUTE=groups
+      - OIDC_EMAIL_ATTRIBUTE=email
+      - OIDC_NAME_ATTRIBUTE=name
+      - OIDC_USERNAME_ATTRIBUTE=preferred_username
+    volumes:
+      - /mnt/gluster/containers/planka/user-avatars:/app/public/user-avatars
+      - /mnt/gluster/containers/planka/project-background-images:/app/public/project-background-images
+      - /mnt/gluster/containers/planka/attachments:/app/private/attachments
+    ports:
+      - 1337:1337
+    depends_on:
+      - postgres
+  planka-db:
+    container_name: Planka-DB
+    image: postgres:14-alpine
+    restart: unless-stopped
+    environment:
+      - POSTGRES_DB=planka
+      - POSTGRES_HOST_AUTH_METHOD=trust
+    volumes:
+      - /mnt/gluster/containers/planka/db:/var/lib/postgresql/data
+###
+  paperless_ngx:
+    container_name: Paperless-NGX
+    image: paperlessngx/paperless-ngx:latest
+    restart: unless-stopped
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/London
+      - PAPERLESS_URL=https://docs.hyvecloud.dev
+      - PAPERLESS_REDIS=redis://paperless_ngx_redis:6379
+      - PAPERLESS_DBHOST=paperless_ngx_db
+      - PAPERLESS_ADMIN_USER=${ADMIN_USER}
+      - PAPERLESS_ADMIN_MAIL=${ADMIN_EMAIL}
+      - PAPERLESS_ADMIN_PASSWORD=${ADMIN_PASSWORD}
+      - PAPERLESS_DBPASS=${DB_PASS}
+      - PAPERLESS_TIKA_ENABLED=1
+      - PAPERLESS_TIKA_GOTENBERG_ENDPOINT=http://paperless_ngx_gotenberg:3000
+      - PAPERLESS_TIKA_ENDPOINT=http://paperless_ngx_tika:9998
+    volumes:
+      - /mnt/gluster/containers/paperless-ngx/config:/config
+      - /mnt/gluster/containers/paperless-ngx/data:/data
+    ports:
+      - 8000:8000
+    depends_on:
+      - paperless_ngx_redis
+      - paperless_ngx_db
+      - paperless_ngx_gotenberg
+      - paperless_ngx_tika
+  paperless_ngx_redis:
+    container_name: Paperless-NGX-REDIS
+    image: redis
+    restart: unless-stopped
+    ports:
+      - 6379:6379
+  paperless_ngx_db:
+    container_name: Paperless-NGX-DB
+    image: docker.io/library/postgres:15
+    restart: unless-stopped
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - POSTGRES_DB=paperless
+      - POSTGRES_USER=paperless
+      - POSTGRES_PASSWORD=${DB_PASS}
+    volumes:
+      - /mnt/gluster/containers/paperless-ngx/db:/var/lib/postgresql/data
+  paperless_ngx_gotenberg:
+    container_name: Paperless-NGX-Gotenberg
+    image: docker.io/gotenberg/gotenberg:7.8
+    restart: unless-stopped
+    command:
+      - "gotenberg"
+      - "--chromium-disable-javascript=true"
+      - "--chromium-allow-list=file:///tmp/.*"
+  paperless_ngx_tika:
+    container_name: Paperless-NGX-Tika
+    image: ghcr.io/paperless-ngx/tika:latest
+    restart: unless-stopped
+###
+  excalidraw:
+    container_name: Excalidraw
+    image: kiliandeca/excalidraw
+    restart: unless-stopped
+    healthcheck:
+      disable: true
+    environment:
+      BACKEND_V2_GET_URL: http://excalidraw_storage_backend:8383/api/v2/scenes/
+      BACKEND_V2_POST_URL: http://excalidraw_storage_backend:8383/api/v2/scenes/
+      LIBRARY_URL: https://libraries.excalidraw.com
+      LIBRARY_BACKEND: https://us-central1-excalidraw-room-persistence.cloudfunctions.net/libraries
+      SOCKET_SERVER_URL: http://excalidraw_room:8003/
+      STORAGE_BACKEND: "http"
+      HTTP_STORAGE_BACKEND_URL: "http://excalidraw_storage_backend:8383/api/v2"
+    ports:
+      - 8002:80
+    depends_on:
+      - excalidraw_storage_backend
+      - excalidraw_room
+      - excalidraw_redis
+  excalidraw_storage_backend:
+    container_name: Excalidraw-Storage-Backend
+    image: kiliandeca/excalidraw-storage-backend
+    restart: unless-stopped
+    environment:
+      STORAGE_URI: redis://excalidraw_redis:6380
+    ports:
+      - 8383:8080
+  excalidraw_room:
+    container_name: Excalidraw-Room
+    image: excalidraw/excalidraw-room
+    restart: unless-stopped
+    ports:
+      - 8003:80
+  excalidraw_redis:
+    container_name: Excalidraw-REDIS
+    image: redis
+    restart: unless-stopped
+    ports:
+      - 6380:6379
+###
