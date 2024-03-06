@@ -42,3 +42,12 @@
 * CAdvisor
 * Node-Exporter
 * Portainer Agent
+
+Considerations/Alternatives:
+Outline - https://github.com/outline/outline
+Vikunja - https://vikunja.io/
+Pingvin - https://github.com/stonith404/pingvin-share
+Microbin - https://microbin.eu/
+Graylog - https://graylog.org/products/source-available/
+Nextcloud - https://nextcloud.com/
+Photoprism - https://www.photoprism.app/features
