@@ -37,6 +37,7 @@
 ### Docker Specific Services:
 * Watchtower
 * Docker-Socket-Proxy
+* Traefik Kop
 * CAdvisor
 * Node-Exporter
 * Portainer Agent
