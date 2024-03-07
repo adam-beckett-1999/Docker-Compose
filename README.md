@@ -4,28 +4,26 @@
 #### Docker compose files for use in my Homelab, deployed and auto-updated using Portainer stacks.
 
 ---
-### Reverse-Proxy & Authentication:
+### Reverse-Proxy & Authentication Services:
 * Traefik
-* Authentik
+* Authentik (Server, Worker, DB & REDIS)
 ---
-### Utilities & Management:
+### Monitoring & Management Services:
 * File-Browser
 * Dozzle
 * Apache Guacamole
 * Upsnap
----
-### Monitoring:
+* Homepage
 * Speedtest-Tracker
 * Uptime-Kuma
 ---
 ### User Services:
 * Bookstack
 * Excalidraw
-* Homepage
 * Paperless-NGX
 * Planka
 ---
-### Media Servers, Management & Downloading:
+### Media Services:
 * Overseerr
 * Tautulli
 * Plex-Meta-Manager
@@ -36,14 +34,14 @@
 * qBittorrent
 * YoutubeDL
 ---
-### Docker Host Services:
+### Docker Specific Services:
 * Watchtower
 * Docker-Socket-Proxy
 * CAdvisor
 * Node-Exporter
 * Portainer Agent
-
-Considerations/Alternatives:
+---
+### Considerations/Alternatives:
 * Outline - https://github.com/outline/outline
 * Vikunja - https://vikunja.io/
 * Pingvin - https://github.com/stonith404/pingvin-share
