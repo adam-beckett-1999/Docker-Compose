@@ -8,11 +8,11 @@ services:
     environment:
       - PUID=1000
       - PGID=1000
-      - APP_URL=https://wiki.hyvecloud.dev
+      - APP_URL=https://wiki.${DOMAIN}
       - DB_HOST=bookstack_db
       - DB_PORT=3307
-      - DB_USER=bookstack
-      - DB_PASS=${DB_PASS}
+      - DB_USER=${BOOKSTACK_DB_USER}
+      - DB_PASS=${BOOKSTACK_DB_PASSWORD}
       - DB_DATABASE=bookstackapp
     volumes:
       - /mnt/gluster/containers/bookstack:/config
@@ -24,8 +24,7 @@ services:
     labels:
       - traefik.enable=true
       - traefik.http.routers.bookstack.entryPoints=https
-      - traefik.http.routers.bookstack.middlewares=middlewares-authentik@file
-      - traefik.http.routers.bookstack.rule=Host(`wiki.hyvecloud.dev`)
+      - traefik.http.routers.bookstack.rule=Host(`wiki.${DOMAIN}`)
       - kop.bind.ip=192.168.10.163
     depends_on:
       - bookstack_db
@@ -36,11 +35,11 @@ services:
     environment:
       - PUID=1000
       - PGID=1000
-      - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASS}
+      - MYSQL_ROOT_PASSWORD=${BOOKSTACK_DB_ROOT_PASS}
       - TZ=Europe/London
       - MYSQL_DATABASE=bookstackapp
-      - MYSQL_USER=bookstack
-      - MYSQL_PASSWORD=${DB_PASS}
+      - MYSQL_USER=${BOOKSTACK_DB_USER}
+      - MYSQL_PASSWORD=${BOOKSTACK_DB_PASSWORD}
       - MYSQL_TCP_PORT=3307
     volumes:
       - /mnt/gluster/containers/bookstack/db_data:/config
@@ -61,13 +60,13 @@ services:
           sleep 5;
         done; (exit $$s)"
     environment:
-      - BASE_URL=https://board.hyvecloud.dev
+      - BASE_URL=https://board.${DOMAIN}
       - TRUST_PROXY=1
       - DATABASE_URL=postgresql://postgres@planka-db/planka
-      - SECRET_KEY=${SECRET_KEY}
-      - OIDC_ISSUER=${OIDC_ISSUER}
-      - OIDC_CLIENT_ID=${OIDC_CLIENT_ID}
-      - OIDC_CLIENT_SECRET=${OIDC_CLIENT_SECRET}
+      - SECRET_KEY=${PLANKA_SECRET_KEY}
+      - OIDC_ISSUER=${PLANKA_OIDC_ISSUER}
+      - OIDC_CLIENT_ID=${PLANKA_OIDC_CLIENT_ID}
+      - OIDC_CLIENT_SECRET=${PLANKA_OIDC_CLIENT_SECRET}
       - OIDC_SCOPES=openid email profile
       - OIDC_ADMIN_ROLES=planka-admin
       - OIDC_ROLES_ATTRIBUTE=groups
@@ -86,8 +85,7 @@ services:
     labels:
       - traefik.enable=true
       - traefik.http.routers.planka.entryPoints=https
-      - traefik.http.routers.planka.middlewares=middlewares-authentik@file
-      - traefik.http.routers.planka.rule=Host(`board.hyvecloud.dev`)
+      - traefik.http.routers.planka.rule=Host(`board.${DOMAIN}`)
       - kop.bind.ip=192.168.10.163
     depends_on:
       - postgres
@@ -112,13 +110,13 @@ services:
       - PUID=1000
       - PGID=1000
       - TZ=Europe/London
-      - PAPERLESS_URL=https://docs.hyvecloud.dev
+      - PAPERLESS_URL=https://docs.${DOMAIN}
       - PAPERLESS_REDIS=redis://paperless_ngx_redis:6379
       - PAPERLESS_DBHOST=paperless_ngx_db
-      - PAPERLESS_ADMIN_USER=${ADMIN_USER}
-      - PAPERLESS_ADMIN_MAIL=${ADMIN_EMAIL}
-      - PAPERLESS_ADMIN_PASSWORD=${ADMIN_PASSWORD}
-      - PAPERLESS_DBPASS=${DB_PASS}
+      - PAPERLESS_ADMIN_USER=${PAPERLESS_NGX_ADMIN_USER}
+      - PAPERLESS_ADMIN_MAIL=${PAPERLESS_NGX_ADMIN_EMAIL}
+      - PAPERLESS_ADMIN_PASSWORD=${PAPERLESS_NGX_ADMIN_PASSWORD}
+      - PAPERLESS_DBPASS=${PAPERLESS_NGX_DB_PASSWORD}
       - PAPERLESS_TIKA_ENABLED=1
       - PAPERLESS_TIKA_GOTENBERG_ENDPOINT=http://paperless_ngx_gotenberg:3000
       - PAPERLESS_TIKA_ENDPOINT=http://paperless_ngx_tika:9998
@@ -134,7 +132,7 @@ services:
       - traefik.enable=true
       - traefik.http.routers.paperless-ngx.entryPoints=https
       - traefik.http.routers.paperless-ngx.middlewares=middlewares-authentik@file
-      - traefik.http.routers.paperless-ngx.rule=Host(`docs.hyvecloud.dev`)
+      - traefik.http.routers.paperless-ngx.rule=Host(`docs.${DOMAIN}`)
       - kop.bind.ip=192.168.10.163
     depends_on:
       - paperless_ngx_redis
