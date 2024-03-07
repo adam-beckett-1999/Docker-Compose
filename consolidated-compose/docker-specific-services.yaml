@@ -37,6 +37,15 @@ services:
     networks:
       - proxy # Docker network for Traefik to watch for container labels.
 ###
+  traefik-kop:
+    container_name: Traefik-Kop
+    image: ghcr.io/jittering/traefik-kop:latest
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock # Bind to local docker socket.
+    environment:
+      - "REDIS_ADDR=192.168.10.161:6379"
+###
   cadvisor:
     image: gcr.io/cadvisor/cadvisor:latest
     container_name: Monitoring-CAdvisor

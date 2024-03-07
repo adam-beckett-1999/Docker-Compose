@@ -21,6 +21,18 @@ services:
       - traefik.http.routers.api.entryPoints=https # Entrypoint for Traefik Dashboard.
       - traefik.http.routers.api.service=api@internal # Enable Traefik API.
       - traefik.enable=true # Enable Traefik reverse proxy for the Traefik Dashboard.
+  traefik_redis:
+    container_name: Traefik-REDIS
+    image: redis:alpine
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli ping | grep PONG"]
+      start_period: 20s
+      interval: 30s
+      retries: 5
+      timeout: 3s
+    networks:
+      - proxy # Docker network for Traefik to watch for container labels.
 ###
   authentik_server:
     container_name: Authentik-Server
@@ -49,6 +61,7 @@ services:
       - traefik.http.routers.authentik-rtr-outpost.entrypoints=https
     networks:
       - proxy # Docker network for Traefik to watch for container labels.
+      - authentik # Authentik service docker network.
     depends_on:
       - authentik_db
       - authentik_redis
@@ -72,6 +85,7 @@ services:
       - /mnt/gluster/containers/authentik/custom-templates:/templates
     networks:
       - proxy # Docker network for Traefik to watch for container labels.
+      - authentik # Authentik service docker network.
     depends_on:
       - authentik_db
       - authentik_redis
@@ -96,6 +110,7 @@ services:
       - AUTHENTIK_SECRET_KEY=${AUTHENTIK_SECRET_KEY} # Secret key for Authentik cookie signing and user IDs (secured with Variable/Secret).
     networks:
       - proxy # Docker network for Traefik to watch for container labels.
+      - authentik # Authentik service docker network.
   authentik_redis:
     container_name: Authentik-REDIS
     image: redis:alpine
@@ -108,8 +123,10 @@ services:
       timeout: 3s
     networks:
       - proxy # Docker network for Traefik to watch for container labels.
+      - authentik # Authentik service docker network.
 ###
 networks:
   proxy: # Docker network for Traefik to watch for container labels.
     driver: bridge
     external: true
+  authentik: # Authentik service docker network.

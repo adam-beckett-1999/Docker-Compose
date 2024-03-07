@@ -20,6 +20,7 @@ services:
     labels:
       - traefik.enable=true
       - traefik.http.routers.tautulli.entryPoints=https
+      - kop.bind.ip=192.168.10.162
 ###
   overseerr:
     container_name: Overseerr
@@ -41,6 +42,7 @@ services:
       - traefik.enable=true
       - traefik.http.routers.overseerr.entryPoints=https
       - traefik.http.routers.overseerr.rule=Host(`request.hyvecloud.dev`)
+      - kop.bind.ip=192.168.10.162
 ###
   plex-meta-manager:
     container_name: Plex-Meta-Manager
@@ -75,6 +77,7 @@ services:
       - traefik.enable=true
       - traefik.http.routers.prowlarr.entryPoints=https
       - traefik.http.routers.prowlarr.middlewares=middlewares-authentik@file
+      - kop.bind.ip=192.168.10.162
 ###
   sonarr:
     container_name: Sonarr
@@ -98,6 +101,7 @@ services:
       - traefik.enable=true
       - traefik.http.routers.sonarr.entryPoints=https
       - traefik.http.routers.sonarr.middlewares=middlewares-authentik@file
+      - kop.bind.ip=192.168.10.162
 ###
   radarr:
     container_name: Radarr
@@ -121,6 +125,7 @@ services:
       - traefik.enable=true
       - traefik.http.routers.radarr.entryPoints=https
       - traefik.http.routers.radarr.middlewares=middlewares-authentik@file
+      - kop.bind.ip=192.168.10.162
 ###
   sabnzbd:
     container_name: SABnzbd
@@ -144,6 +149,7 @@ services:
       - traefik.enable=true
       - traefik.http.routers.sabnzbd.entryPoints=https
       - traefik.http.routers.sabnzbd.middlewares=middlewares-authentik@file
+      - kop.bind.ip=192.168.10.162
 ###
   qbittorrent:
     container_name: qBittorrent
@@ -169,6 +175,7 @@ services:
       - traefik.http.routers.qbittorrent.entryPoints=https
       - traefik.http.routers.qbittorrent.middlewares=middlewares-authentik@file
       - traefik.http.services.qbittorrent.loadbalancer.server.port=8082
+      - kop.bind.ip=192.168.10.162
 ###
   youtubedl:
     container_name: YoutubeDL
@@ -186,6 +193,7 @@ services:
       - traefik.enable=true
       - traefik.http.routers.youtubedl.entryPoints=https
       - traefik.http.routers.youtubedl.middlewares=middlewares-authentik@file
+      - kop.bind.ip=192.168.10.162
 ###
 networks:
   proxy:

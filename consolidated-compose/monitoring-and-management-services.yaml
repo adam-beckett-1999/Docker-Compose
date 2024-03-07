@@ -16,6 +16,7 @@ services:
       - traefik.enable=true
       - traefik.http.routers.uptime-kuma.entryPoints=https
       - traefik.http.routers.uptime-kuma.middlewares=middlewares-authentik@file
+      - kop.bind.ip=192.168.10.164
 ###
   speedtest-tracker:
     container_name: Speedtest-Tracker
@@ -41,6 +42,7 @@ services:
     labels:
       - traefik.enable=true
       - traefik.http.routers.speedtest-tracker.entryPoints=https
+      - kop.bind.ip=192.168.10.164
     depends_on:
       - speedtest-db
   speedtest-db:
@@ -81,6 +83,7 @@ services:
       - traefik.enable=true
       - traefik.http.routers.dozzle.entryPoints=https
       - traefik.http.routers.dozzle.middlewares=middlewares-authentik@file
+      - kop.bind.ip=192.168.10.164
 ###
   filebrowser:
     container_name: Filebrowser
@@ -103,6 +106,7 @@ services:
       - traefik.enable=true
       - traefik.http.routers.file-browser.entryPoints=https
       - traefik.http.routers.file-browser.middlewares=middlewares-authentik@file
+      - kop.bind.ip=192.168.10.164
 ###
   guacamole:
     container_name: Guacamole
@@ -123,6 +127,7 @@ services:
     labels:
       - traefik.enable=true
       - traefik.http.routers.guacamole.entryPoints=https
+      - kop.bind.ip=192.168.10.164
 ###
   upsnap:
     container_name: Upsnap
@@ -143,6 +148,7 @@ services:
       - traefik.http.routers.upsnap.entryPoints=https
       - traefik.http.routers.upsnap.middlewares=middlewares-authentik@file
       - traefik.http.services.upsnap.loadbalancer.server.port=5001
+      - kop.bind.ip=192.168.10.164
 ###
   homepage:
     container_name: Homepage
@@ -160,6 +166,7 @@ services:
       - traefik.enable=true
       - traefik.http.routers.homepage.entryPoints=https
       - traefik.http.routers.homepage.middlewares=middlewares-authentik@file
+      - kop.bind.ip=192.168.10.164
 ###
 networks:
   proxy:

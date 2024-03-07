@@ -26,6 +26,7 @@ services:
       - traefik.http.routers.bookstack.entryPoints=https
       - traefik.http.routers.bookstack.middlewares=middlewares-authentik@file
       - traefik.http.routers.bookstack.rule=Host(`wiki.hyvecloud.dev`)
+      - kop.bind.ip=192.168.10.163
     depends_on:
       - bookstack_db
   bookstack_db:
@@ -87,6 +88,7 @@ services:
       - traefik.http.routers.planka.entryPoints=https
       - traefik.http.routers.planka.middlewares=middlewares-authentik@file
       - traefik.http.routers.planka.rule=Host(`board.hyvecloud.dev`)
+      - kop.bind.ip=192.168.10.163
     depends_on:
       - postgres
   planka-db:
@@ -133,6 +135,7 @@ services:
       - traefik.http.routers.paperless-ngx.entryPoints=https
       - traefik.http.routers.paperless-ngx.middlewares=middlewares-authentik@file
       - traefik.http.routers.paperless-ngx.rule=Host(`docs.hyvecloud.dev`)
+      - kop.bind.ip=192.168.10.163
     depends_on:
       - paperless_ngx_redis
       - paperless_ngx_db
@@ -204,6 +207,7 @@ services:
       - traefik.enable=true
       - traefik.http.routers.excalidraw.entryPoints=https
       - traefik.http.routers.excalidraw.middlewares=middlewares-authentik@file
+      - kop.bind.ip=192.168.10.163
     depends_on:
       - excalidraw_storage_backend
       - excalidraw_room
