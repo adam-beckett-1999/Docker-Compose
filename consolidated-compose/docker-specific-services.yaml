@@ -6,32 +6,36 @@ services:
     image: containrrr/watchtower:latest
     restart: unless-stopped
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
+      - /var/run/docker.sock:/var/run/docker.sock # Bind to local docker socket.
     environment:
-      - WATCHTOWER_CLEANUP=true
-      - WATCHTOWER_INCLUDE_STOPPED=true
-      - WATCHTOWER_REVIVE_STOPPED=false
-      - WATCHTOWER_POLL_INTERVAL=86400
-      - WATCHTOWER_NOTIFICATIONS=shoutrrr
-      - WATCHTOWER_NOTIFICATIONS_LEVEL=info
-      - WATCHTOWER_NOTIFICATION_REPORT=true
-      - WATCHTOWER_NOTIFICATION_URL="${WATCHTOWER_NOTIFICATIONS}"
-      - WATCHTOWER_HTTP_API_METRICS=true
-      - WATCHTOWER_HTTP_API_TOKEN="${WATCHTOWER_API_TOKEN}"
+      - WATCHTOWER_CLEANUP=true # Remove old/unused images once containers have been updated.
+      - WATCHTOWER_INCLUDE_STOPPED=true # Include stopped containers in the update process.
+      - WATCHTOWER_REVIVE_STOPPED=false # Do not start updated containers if they were stopped before updating.
+      - WATCHTOWER_POLL_INTERVAL=86400 # Check for container updates every 24 hours.
+      - WATCHTOWER_NOTIFICATIONS=shoutrrr # Enable notifications via built-in Shoutrrr service.
+      - WATCHTOWER_NOTIFICATIONS_LEVEL=info # Notify for all events.
+      - WATCHTOWER_NOTIFICATION_REPORT=true # Use a report notification at update cycle completion rather than individual notifications per service.
+      - WATCHTOWER_NOTIFICATION_URL="${WATCHTOWER_NOTIFICATIONS}" # Notification URL in the format specified in the Shoutrrr documentation.
+      - WATCHTOWER_HTTP_API_METRICS=true # Expose the watchtower API for metrics collection
+      - WATCHTOWER_HTTP_API_TOKEN="${WATCHTOWER_API_TOKEN}" # Token for metrics API.
+    ports:
+      - 8888:8080
+    networks:
+      - proxy # Docker network for Traefik to watch for container labels.
 ###
   docker-socket-proxy:
     container_name: Docker-Socket-Proxy
     image: tecnativa/docker-socket-proxy:latest
     restart: unless-stopped
-    privileged: true
+    privileged: true # Container needs privileged access to expose the docker socket over secure external connection.
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
+      - /var/run/docker.sock:/var/run/docker.sock # Bind to local docker socket.
     environment:
       CONTAINERS: 1
     ports:
       - 2375:2375
     networks:
-      - proxy
+      - proxy # Docker network for Traefik to watch for container labels.
 ###
   cadvisor:
     image: gcr.io/cadvisor/cadvisor:latest

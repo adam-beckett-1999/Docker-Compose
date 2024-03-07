@@ -40,6 +40,7 @@ services:
     labels:
       - traefik.enable=true
       - traefik.http.routers.overseerr.entryPoints=https
+      - traefik.http.routers.overseerr.rule=Host(`request.hyvecloud.dev`)
 ###
   plex-meta-manager:
     container_name: Plex-Meta-Manager
