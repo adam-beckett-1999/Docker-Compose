@@ -30,6 +30,8 @@ services:
       CONTAINERS: 1
     ports:
       - 2375:2375
+    networks:
+      - proxy
 ###
   cadvisor:
     image: gcr.io/cadvisor/cadvisor:latest
@@ -54,3 +56,7 @@ services:
     ports:
       - 9100:9100
 ###
+networks:
+  proxy: # Docker network for Traefik to watch for container labels.
+    driver: bridge
+    external: true

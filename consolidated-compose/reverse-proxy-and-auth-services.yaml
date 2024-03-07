@@ -1,32 +1,80 @@
-version: "3.3"
+version: "3.8"
 services:
 ###
   traefik:
     container_name: Traefik
     image: traefik:latest
     restart: unless-stopped
-    ports:
-      - 80:80
-      - 443:443
-      - 8080:8080
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-      - /mnt/gluster/containers/traefik/:/etc/traefik/
-    networks:
-      - proxy
-    command:
-      - "--api"
-      - "--providers.docker=true"
-      - "--providers.docker.exposedByDefault=false"
-      - "--entrypoints.web.address=:80"
-    labels:
-      - traefik.http.routers.api.rule=Host(`traefik.hyvecloud.dev`)
-      - traefik.http.routers.api.entryPoints=https
-      - traefik.http.routers.api.service=api@internal
-      - traefik.enable=true
+      - /mnt/gluster/containers/traefik/:/etc/traefik/ # Location for config files and Letsencrypt Certificates.
     environment:
-      - CF_DNS_API_TOKEN=${CF_API_TOKEN}
+      - DOCKER_HOST=docker-socket-proxy # Use docker-socket-proxy container for secure access to docker socket rather than /docker.sock.
+      - CF_DNS_API_TOKEN=${CF_API_TOKEN} # Cloudflare API key for DNS challenge.
+    ports:
+      - 80:80 # HTTP
+      - 443:443 # HTTPS
+      - 8080:8080 # Traefik Dashboard
+    networks:
+      - proxy # Docker network for Traefik to watch for container labels.
+    labels:
+      - traefik.http.routers.api.rule=Host(`traefik.hyvecloud.dev`) # Domain for Traefik Dashboard.
+      - traefik.http.routers.api.entryPoints=https # Entrypoint for Traefik Dashboard.
+      - traefik.http.routers.api.service=api@internal # Enable Traefik API.
+      - traefik.enable=true # Enable Traefik reverse proxy for the Traefik Dashboard.
 ###
+  authentik_server:
+    container_name: Authentik-Server
+    image: ghcr.io/goauthentik/server:latest
+    restart: unless-stopped
+    command: server # Start container with server configuration.
+    environment:
+      - AUTHENTIK_REDIS__HOST=authentik_redis # REDIS server hostname (depends on).
+      - AUTHENTIK_POSTGRESQL__HOST=authentik_db # Postgres server hostname (depends on).
+      - AUTHENTIK_POSTGRESQL__USER=authentik # Database user.
+      - AUTHENTIK_POSTGRESQL__NAME=authentik # Database name.
+      - AUTHENTIK_POSTGRESQL__PASSWORD=${POSTGRES_PASSWORD} # Database user password (secured with Variable/Secret).
+      - AUTHENTIK_SECRET_KEY=${AUTHENTIK_SECRET_KEY} # Secret key for Authentik cookie signing and user IDs (secured with Variable/Secret).
+    volumes:
+      - /mnt/gluster/containers/authentik/media:/media # Location for media content like branding and styling for Authentik service pages.
+      - /mnt/gluster/containers/authentik/custom-templates:/templates
+    ports:
+      - 9000:9000 # Access port for Authentik server, exposed only with HTTP.
+    labels:
+      - traefik.enable=true # Enable Traefik reverse proxy for the Authentik server.
+      # Standard HTTP router to Authentik server.
+      - traefik.http.routers.authentik-rtr.rule=Host(`auth.hyvecloud.dev`) # Domain for Authentik server.
+      - traefik.http.routers.authentik-rtr.entryPoints=https # Entrypoint for Authentik server.
+      # Individual application forwardAuth regex (catch any subdomain using individual application forwardAuth).
+      - traefik.http.routers.authentik-rtr-outpost.rule=HostRegexp(`{subdomain:[a-z0-9-]+}.hyvecloud.dev`) && PathPrefix(`/outpost.goauthentik.io/`) # adds the Authentik outpost path to any services configured for authentication.
+      - traefik.http.routers.authentik-rtr-outpost.entrypoints=https
+    networks:
+      - proxy # Docker network for Traefik to watch for container labels.
+    depends_on:
+      - authentik_db
+      - authentik_redis
+  authentik_worker:
+    container_name: Authentik-Worker
+    image: ghcr.io/goauthentik/server:latest
+    restart: unless-stopped
+    command: worker # Start container with worker configuration.
+    environment:
+      - AUTHENTIK_REDIS__HOST=authentik_redis # REDIS server hostname (depends on).
+      - AUTHENTIK_POSTGRESQL__HOST=authentik_db # Postgres server hostname (depends on).
+      - AUTHENTIK_POSTGRESQL__USER=authentik # Database user.
+      - AUTHENTIK_POSTGRESQL__NAME=authentik # Database name.
+      - AUTHENTIK_POSTGRESQL__PASSWORD=${POSTGRES_PASSWORD} # Database user password (secured with Variable/Secret).
+      - AUTHENTIK_SECRET_KEY=${AUTHENTIK_SECRET_KEY} # Secret key for Authentik cookie signing and user IDs (secured with Variable/Secret).
+    user: root
+    volumes:
+      - /mnt/gluster/containers/authentik/media:/media # Location for media content like branding and styling for Authentik service pages.
+      - /mnt/gluster/containers/authentik/certs:/certs
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /mnt/gluster/containers/authentik/custom-templates:/templates
+    networks:
+      - proxy # Docker network for Traefik to watch for container labels.
+    depends_on:
+      - authentik_db
+      - authentik_redis
   authentik_db:
     container_name: Authentik-DB
     image: postgres:12-alpine
@@ -42,12 +90,12 @@ services:
     environment:
       - PUID=1000
       - PGID=1000
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      - POSTGRES_USER=authentik
-      - POSTGRES_DB=authentik
-      - AUTHENTIK_SECRET_KEY=${AUTHENTIK_SECRET_KEY}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD} # Database user password (secured with Variable/Secret).
+      - POSTGRES_USER=authentik # Database user.
+      - POSTGRES_DB=authentik # Database name.
+      - AUTHENTIK_SECRET_KEY=${AUTHENTIK_SECRET_KEY} # Secret key for Authentik cookie signing and user IDs (secured with Variable/Secret).
     networks:
-      - proxy
+      - proxy # Docker network for Traefik to watch for container labels.
   authentik_redis:
     container_name: Authentik-REDIS
     image: redis:alpine
@@ -59,66 +107,9 @@ services:
       retries: 5
       timeout: 3s
     networks:
-      - proxy
-  authentik_server:
-    container_name: Authentik-Server
-    image: ghcr.io/goauthentik/server:latest
-    restart: unless-stopped
-    command: server
-    environment:
-      - AUTHENTIK_REDIS__HOST=authentik_redis
-      - AUTHENTIK_POSTGRESQL__HOST=authentik_db
-      - AUTHENTIK_POSTGRESQL__USER=authentik
-      - AUTHENTIK_POSTGRESQL__NAME=authentik
-      - AUTHENTIK_POSTGRESQL__PASSWORD=${POSTGRES_PASSWORD}
-      - AUTHENTIK_SECRET_KEY=${AUTHENTIK_SECRET_KEY}
-    volumes:
-      - /mnt/gluster/containers/authentik/media:/media
-      - /mnt/gluster/containers/authentik/custom-templates:/templates
-    ports:
-      - 9000:9000
-    labels:
-      - traefik.enable=true
-      - traefik.http.routers.authentik-rtr.rule=Host(`auth.hyvecloud.dev`)
-      - traefik.http.routers.authentik-rtr.entryPoints=https
-      - traefik.http.routers.authentik-rtr.tls=true
-      - traefik.http.routers.authentik-rtr.tls.certresolver=le
-      - traefik.http.routers.authentik-rtr-outpost.rule=HostRegexp(`{subdomain:[a-z0-9-]+}.hyvecloud.dev`) && PathPrefix(`/outpost.goauthentik.io/`)
-      - traefik.http.routers.authentik-rtr-outpost.entrypoints=https
-      - traefik.http.routers.authentik-rtr-outpost.tls=true
-      - traefik.http.routers.authentik-rtr-outpost.tls.certresolver=le
-      - traefik.http.routers.authentik-rtr.service=authentik-svc
-      - traefik.http.services.authentik-svc.loadBalancer.server.port=9000
-    networks:
-      - proxy
-    depends_on:
-      - authentik_db
-      - authentik_redis
-  authentik_worker:
-    container_name: Authentik-Worker
-    image: ghcr.io/goauthentik/server:latest
-    restart: unless-stopped
-    command: worker
-    environment:
-      - AUTHENTIK_REDIS__HOST=authentik_redis
-      - AUTHENTIK_POSTGRESQL__HOST=authentik_db
-      - AUTHENTIK_POSTGRESQL__USER=authentik
-      - AUTHENTIK_POSTGRESQL__NAME=authentik
-      - AUTHENTIK_POSTGRESQL__PASSWORD=${POSTGRES_PASSWORD}
-      - AUTHENTIK_SECRET_KEY=${AUTHENTIK_SECRET_KEY}
-    user: root
-    volumes:
-      - /mnt/gluster/containers/authentik/media:/media
-      - /mnt/gluster/containers/authentik/certs:/certs
-      - /var/run/docker.sock:/var/run/docker.sock
-      - /mnt/gluster/containers/authentik/custom-templates:/templates
-    networks:
-      - proxy
-    depends_on:
-      - authentik_db
-      - authentik_redis
+      - proxy # Docker network for Traefik to watch for container labels.
 ###
 networks:
-  proxy:
+  proxy: # Docker network for Traefik to watch for container labels.
     driver: bridge
     external: true
