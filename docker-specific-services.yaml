@@ -21,7 +21,7 @@ services:
     ports:
       - 8888:8080
     networks:
-      - proxy # Docker network for Traefik to watch for container labels.
+      - docker-services # Network for Docker specific services providing updates and monitoring/metrics.
 ###
   docker-socket-proxy:
     container_name: Docker-Socket-Proxy
@@ -35,16 +35,7 @@ services:
     ports:
       - 2375:2375
     networks:
-      - proxy # Docker network for Traefik to watch for container labels.
-###
-  traefik-kop:
-    container_name: Traefik-Kop
-    image: ghcr.io/jittering/traefik-kop:latest
-    restart: unless-stopped
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock # Bind to local docker socket.
-    environment:
-      - "REDIS_ADDR=192.168.10.161:6379"
+      - docker-services # Network for Docker specific services providing updates and monitoring/metrics.
 ###
   cadvisor:
     image: gcr.io/cadvisor/cadvisor:latest
@@ -57,6 +48,8 @@ services:
       - /var/lib/docker/:/var/lib/docker:ro
     ports:
       - 9101:8080
+    networks:
+      - docker-services # Network for Docker specific services providing updates and monitoring/metrics.
 ###
   node-exporter:
     container_name: Monitoring-Node-Exporter
@@ -68,8 +61,9 @@ services:
       - --path.rootfs=/host
     ports:
       - 9100:9100
+    networks:
+      - docker-services # Network for Docker specific services providing updates and monitoring/metrics.
 ###
 networks:
-  proxy: # Docker network for Traefik to watch for container labels.
+  docker-services: # Network for Docker specific services providing updates and monitoring/metrics.
     driver: bridge
-    external: true
