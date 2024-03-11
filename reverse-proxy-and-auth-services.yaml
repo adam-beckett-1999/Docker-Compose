@@ -6,7 +6,7 @@ services:
     image: traefik:latest
     restart: unless-stopped
     volumes:
-      - /glusterfs/bricks/gv0/containers/traefik/:/etc/traefik/ # Location for config files and Letsencrypt Certificates.
+      - /mnt/gluster/containers/traefik/:/etc/traefik/ # Location for config files and Letsencrypt Certificates.
     environment:
       - DOCKER_HOST=docker-socket-proxy # Use docker-socket-proxy container for secure access to docker socket rather than /docker.sock.
       - CF_DNS_API_TOKEN=${CF_API_TOKEN} # Cloudflare API key for DNS challenge.
@@ -79,10 +79,10 @@ services:
       - AUTHENTIK_SECRET_KEY=${AUTHENTIK_SECRET_KEY} # Secret key for Authentik cookie signing and user IDs (secured with Variable/Secret).
     user: root
     volumes:
-      - /glusterfs/bricks/gv0/containers/authentik/media:/media # Location for media content like branding and styling for Authentik service pages.
-      - /glusterfs/bricks/gv0/containers/authentik/certs:/certs
+      - /mnt/gluster/containers/authentik/media:/media # Location for media content like branding and styling for Authentik service pages.
+      - /mnt/gluster/containers/authentik/certs:/certs
       - /var/run/docker.sock:/var/run/docker.sock
-      - /glusterfs/bricks/gv0/containers/authentik/custom-templates:/templates
+      - /mnt/gluster/containers/authentik/custom-templates:/templates
     networks:
       - proxy # Docker network for Traefik to watch for container labels.
       - authentik # Authentik service docker network.
@@ -100,7 +100,7 @@ services:
       retries: 5
       timeout: 5s
     volumes:
-      - /glusterfs/bricks/gv0/containers/authentik/db:/var/lib/postgresql/data
+      - /mnt/gluster/containers/authentik/db:/var/lib/postgresql/data
     environment:
       - PUID=1000
       - PGID=1000
