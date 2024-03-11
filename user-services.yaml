@@ -15,7 +15,7 @@ services:
       - DB_PASS=${BOOKSTACK_DB_PASSWORD}
       - DB_DATABASE=bookstackapp
     volumes:
-      - /mnt/gluster/containers/bookstack:/config
+      - /glusterfs/bricks/gv0/containers/bookstack:/config
     ports:
       - 8001:80
     networks:
@@ -42,7 +42,7 @@ services:
       - MYSQL_PASSWORD=${BOOKSTACK_DB_PASSWORD}
       - MYSQL_TCP_PORT=3307
     volumes:
-      - /mnt/gluster/containers/bookstack/db_data:/config
+      - /glusterfs/bricks/gv0/containers/bookstack/db_data:/config
     networks:
       - proxy
       - bookstack
@@ -74,9 +74,9 @@ services:
       - OIDC_NAME_ATTRIBUTE=name
       - OIDC_USERNAME_ATTRIBUTE=preferred_username
     volumes:
-      - /mnt/gluster/containers/planka/user-avatars:/app/public/user-avatars
-      - /mnt/gluster/containers/planka/project-background-images:/app/public/project-background-images
-      - /mnt/gluster/containers/planka/attachments:/app/private/attachments
+      - /glusterfs/bricks/gv0/containers/planka/user-avatars:/app/public/user-avatars
+      - /glusterfs/bricks/gv0/containers/planka/project-background-images:/app/public/project-background-images
+      - /glusterfs/bricks/gv0/containers/planka/attachments:/app/private/attachments
     ports:
       - 1337:1337
     networks:
@@ -97,7 +97,7 @@ services:
       - POSTGRES_DB=planka
       - POSTGRES_HOST_AUTH_METHOD=trust
     volumes:
-      - /mnt/gluster/containers/planka/db:/var/lib/postgresql/data
+      - /glusterfs/bricks/gv0/containers/planka/db:/var/lib/postgresql/data
     networks:
       - proxy
       - planka
@@ -121,8 +121,8 @@ services:
       - PAPERLESS_TIKA_GOTENBERG_ENDPOINT=http://paperless_ngx_gotenberg:3000
       - PAPERLESS_TIKA_ENDPOINT=http://paperless_ngx_tika:9998
     volumes:
-      - /mnt/gluster/containers/paperless-ngx/config:/config
-      - /mnt/gluster/containers/paperless-ngx/data:/data
+      - /glusterfs/bricks/gv0/containers/paperless-ngx/config:/config
+      - /glusterfs/bricks/gv0/containers/paperless-ngx/data:/data
     ports:
       - 8000:8000
     networks:
@@ -159,7 +159,7 @@ services:
       - POSTGRES_USER=paperless
       - POSTGRES_PASSWORD=${DB_PASS}
     volumes:
-      - /mnt/gluster/containers/paperless-ngx/db:/var/lib/postgresql/data
+      - /glusterfs/bricks/gv0/containers/paperless-ngx/db:/var/lib/postgresql/data
     networks:
       - proxy
       - paperless-ngx
