@@ -130,3 +130,4 @@ networks:
     driver: bridge
     external: true
   authentik: # Authentik service docker network.
+    driver: bridge
