@@ -6,7 +6,7 @@ services:
     image: louislam/uptime-kuma:latest
     restart: unless-stopped
     volumes:
-      - /mnt/gluster/containers/uptime-kuma:/app/data
+      - /glusterfs/bricks/gv0/containers/uptime-kuma:/app/data
       - /var/run/docker.sock:/var/run/docker.sock
     ports:
       - 3001:3001
@@ -35,7 +35,7 @@ services:
       - DB_USERNAME=${SPEEDTEST_TRACKER_DB_USER}
       - DB_PASSWORD=${SPEEDTEST_TRACKER_DB_PASSWORD}
     volumes:
-      - /mnt/gluster/containers/speedtest-tracker:/config
+      - /glusterfs/bricks/gv0/containers/speedtest-tracker:/config
     networks:
       - proxy
       - speedtest-tracker
@@ -55,7 +55,7 @@ services:
       - MARIADB_PASSWORD=${DB_PASSWORD}
       - MARIADB_RANDOM_ROOT_PASSWORD=true
     volumes:
-      - speedtest-db:/var/lib/mysql
+      - /glusterfs/bricks/gv0/containers/speedtest-tracker/db:/var/lib/mysql
     networks:
       - proxy
       - speedtest-tracker
@@ -95,9 +95,9 @@ services:
       - TZ=Europe/London
       - FB_NOAUTH=noauth
     volumes:
-      - /mnt/gluster/containers/file-browser:/config
-      - /mnt/gluster/containers/file-browser/branding:/branding
-      - /mnt/gluster/containers:/data
+      - /glusterfs/bricks/gv0/containers/file-browser:/config
+      - /glusterfs/bricks/gv0/containers/file-browser/branding:/branding
+      - /glusterfs/bricks/gv0/containers:/data
     ports:
       - 9898:8080
     networks:
@@ -118,7 +118,7 @@ services:
       - TZ=Europe/London
       - EXTENSIONS=auth-sso-openid
     volumes:
-      - /mnt/gluster/containers/guacamole:/config
+      - /glusterfs/bricks/gv0/containers/guacamole:/config
       - /etc/localtime:/etc/localtime:ro
     ports:
       - 9797:8080
@@ -141,7 +141,7 @@ services:
       - TZ=Europe/London
       - UPSNAP_WEBSITE_TITLE=Hyvecloud Host Management
     volumes:
-      - /mnt/gluster/containers/upsnap:/app/pb_data
+      - /glusterfs/bricks/gv0/containers/upsnap:/app/pb_data
     network_mode: host
     labels:
       - traefik.enable=true
@@ -155,9 +155,9 @@ services:
     image: ghcr.io/gethomepage/homepage:latest
     restart: unless-stopped
     volumes:
-      - /mnt/gluster/containers/homepage:/app/config
-      - /mnt/gluster/containers/homepage/images:/app/public/images
-      - /mnt/gluster/containers/homepage/icons:/app/public/icons
+      - /glusterfs/bricks/gv0/containers/homepage:/app/config
+      - /glusterfs/bricks/gv0/containers/homepage/images:/app/public/images
+      - /glusterfs/bricks/gv0/containers/homepage/icons:/app/public/icons
     ports:
       - 3000:3000
     networks:
