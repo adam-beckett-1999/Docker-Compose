@@ -1,38 +1,43 @@
 version: "3.8"
 services:
 ###
-  traefik:
-    container_name: Traefik
-    image: traefik:latest
+  nginx-proxy-manager:
+    container_name: NGINX-Proxy-Manager
+    image: jc21/nginx-proxy-manager:latest
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "/usr/bin/check-health"]
+      interval: 10s
+      timeout: 3s
     volumes:
-      - /mnt/gluster/containers/traefik/:/etc/traefik/ # Location for config files and Letsencrypt Certificates.
+      - /mnt/gluster/containers/nginx-proxy-manager/:/data # Location for config files.
+      - /mnt/gluster/containers/nginx-proxy-manager/certificates/:/etc/letsencrypt # Location for Letsencrypt Certificates.
     environment:
-      - DOCKER_HOST=docker-socket-proxy # Use docker-socket-proxy container for secure access to docker socket rather than /docker.sock.
-      - CF_DNS_API_TOKEN=${CF_API_TOKEN} # Cloudflare API key for DNS challenge.
+      - DISABLE_IPV6=true
+      - X_FRAME_OPTIONS=sameorigin
     ports:
       - 80:80 # HTTP
       - 443:443 # HTTPS
-      - 8080:8080 # Traefik Dashboard
+      - 81:81 # NGINX-Proxy-Manager Dashboard
     networks:
-      - proxy # Docker network for Traefik to watch for container labels.
-    labels:
-      - traefik.http.routers.api.rule=Host(`traefik.${DOMAIN}`) # Domain for Traefik Dashboard.
-      - traefik.http.routers.api.entryPoints=https # Entrypoint for Traefik Dashboard.
-      - traefik.http.routers.api.service=api@internal # Enable Traefik API.
-      - traefik.enable=true # Enable Traefik reverse proxy for the Traefik Dashboard.
-  traefik_redis:
-    container_name: Traefik-REDIS
-    image: redis:alpine
+      - nginx-proxy # Docker network for Traefik to watch for container labels.
+###
+  goaccess-npm:
+    container_name: Goaccess-NPM
+    image: xavierh/goaccess-for-nginxproxymanager:latest
     restart: unless-stopped
-    healthcheck:
-      test: ["CMD-SHELL", "redis-cli ping | grep PONG"]
-      start_period: 20s
-      interval: 30s
-      retries: 5
-      timeout: 3s
+    ports:
+      - 7880:7880 # Port for Goaccess metrics page.
+    environment:
+      - TZ=Europe/London      
+      - EXCLUDE_IPS=127.0.0.1,192.168.0.0/16 # Comma delimited list of IPs to exclude from logging metrics.
+      - HTML_REFRESH=5 # Refresh the HTML report every X seconds.
+      - KEEP_LAST=30 # Keep the last specified number of days in storage.
+      - PROCESSING_THREADS=2
+    volumes:
+      - /mnt/gluster/containers/nginx-proxy-manager/logs:/opt/log
     networks:
-      - proxy # Docker network for Traefik to watch for container labels.
+      - nginx-proxy
 ###
   authentik_server:
     container_name: Authentik-Server
@@ -51,16 +56,8 @@ services:
       - /mnt/gluster/containers/authentik/custom-templates:/templates
     ports:
       - 9000:9000 # Access port for Authentik server, exposed only with HTTP.
-    labels:
-      - traefik.enable=true # Enable Traefik reverse proxy for the Authentik server.
-      # Standard HTTP router to Authentik server.
-      - traefik.http.routers.authentik-rtr.rule=Host(`auth.${DOMAIN}`) # Domain for Authentik server.
-      - traefik.http.routers.authentik-rtr.entryPoints=https # Entrypoint for Authentik server.
-      # Individual application forwardAuth regex (catch any subdomain using individual application forwardAuth).
-      - traefik.http.routers.authentik-rtr-outpost.rule=HostRegexp(`{subdomain:[a-z0-9-]+}.${DOMAIN}`) && PathPrefix(`/outpost.goauthentik.io/`) # adds the Authentik outpost path to any services configured for authentication.
-      - traefik.http.routers.authentik-rtr-outpost.entrypoints=https
     networks:
-      - proxy # Docker network for Traefik to watch for container labels.
+      - nginx-proxy # NGINX-Proxy-Manager service docker network.
       - authentik # Authentik service docker network.
     depends_on:
       - authentik_db
@@ -84,7 +81,6 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - /mnt/gluster/containers/authentik/custom-templates:/templates
     networks:
-      - proxy # Docker network for Traefik to watch for container labels.
       - authentik # Authentik service docker network.
     depends_on:
       - authentik_db
@@ -94,7 +90,7 @@ services:
     image: postgres:12-alpine
     restart: unless-stopped
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -d authentik -U $${AUTHENTIK_DB_USER}"]
+      test: ["CMD-SHELL", "pg_isready -d $${POSTGRES_DB} -U $${AUTHENTIK_DB_USER}"]
       start_period: 20s
       interval: 30s
       retries: 5
@@ -109,7 +105,6 @@ services:
       - POSTGRES_DB=authentik # Database name.
       - AUTHENTIK_SECRET_KEY=${AUTHENTIK_SECRET_KEY} # Secret key for Authentik cookie signing and user IDs (secured with Variable/Secret).
     networks:
-      - proxy # Docker network for Traefik to watch for container labels.
       - authentik # Authentik service docker network.
   authentik_redis:
     container_name: Authentik-REDIS
@@ -122,12 +117,10 @@ services:
       retries: 5
       timeout: 3s
     networks:
-      - proxy # Docker network for Traefik to watch for container labels.
       - authentik # Authentik service docker network.
 ###
 networks:
-  proxy: # Docker network for Traefik to watch for container labels.
+  nginx-proxy: # NGINX-Proxy-Manager service docker network.
     driver: bridge
-    external: true
   authentik: # Authentik service docker network.
     driver: bridge
