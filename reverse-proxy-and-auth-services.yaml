@@ -20,7 +20,6 @@ services:
       - traefik.http.routers.api.rule=Host(`traefik.${DOMAIN}`) # Domain for Traefik Dashboard.
       - traefik.http.routers.api.entryPoints=https # Entrypoint for Traefik Dashboard.
       - traefik.http.routers.api.service=api@internal # Enable Traefik API.
-      - traefik.http.routers.api.middlewares=middlewares-authentik@file # Put Authentik authentication in front of Traefik Dashboard.
       - traefik.enable=true # Enable Traefik reverse proxy for the Traefik Dashboard.
   traefik_redis:
     container_name: Traefik-REDIS
