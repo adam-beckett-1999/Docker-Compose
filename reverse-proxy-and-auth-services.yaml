@@ -102,7 +102,7 @@ services:
       - PGID=1000
       - POSTGRES_PASSWORD=${AUTHENTIK_DB_PASSWORD} # Database user password (secured with Variable/Secret).
       - POSTGRES_USER=${AUTHENTIK_DB_USER} # Database user (secured with Variable/Secret).
-      - POSTGRES_DB=authentik # Database name.
+      - POSTGRES_DB=${POSTGRES_DB:-authentik} # Database name.
       - AUTHENTIK_SECRET_KEY=${AUTHENTIK_SECRET_KEY} # Secret key for Authentik cookie signing and user IDs (secured with Variable/Secret).
     networks:
       - authentik # Authentik service docker network.
