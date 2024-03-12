@@ -12,6 +12,7 @@ services:
     volumes:
       - /mnt/gluster/containers/nginx-proxy-manager/:/data # Location for config files.
       - /mnt/gluster/containers/nginx-proxy-manager/certificates/:/etc/letsencrypt # Location for Letsencrypt Certificates.
+      - /mnt/gluster/containers/nginx-proxy-manager/css/:/app/frontend/css/ # Location for Custom CSS files for Dark Mode on the WebUI.
     environment:
       - DISABLE_IPV6=true
       - X_FRAME_OPTIONS=sameorigin
