@@ -11,7 +11,7 @@ services:
       - WATCHTOWER_CLEANUP=true # Remove old/unused images once containers have been updated.
       - WATCHTOWER_INCLUDE_STOPPED=true # Include stopped containers in the update process.
       - WATCHTOWER_REVIVE_STOPPED=false # Do not start updated containers if they were stopped before updating.
-      - WATCHTOWER_POLL_INTERVAL=86400 # Check for container updates every 24 hours.
+      - WATCHTOWER_SCHEDULE=@daily # Check for container updates every 24 hours.
       - WATCHTOWER_NOTIFICATIONS=shoutrrr # Enable notifications via built-in Shoutrrr service.
       - WATCHTOWER_NOTIFICATIONS_LEVEL=info # Notify for all events.
       - WATCHTOWER_NOTIFICATION_REPORT=true # Use a report notification at update cycle completion rather than individual notifications per service.
@@ -28,6 +28,12 @@ services:
     image: tecnativa/docker-socket-proxy:latest
     restart: unless-stopped
     privileged: true # Container needs privileged access to expose the docker socket over secure external connection.
+    healthcheck:
+      test: wget --spider http://localhost:2375/version || exit 1
+      interval: "29s"
+      timeout: "5s"
+      retries: 3
+      start_period: "21s"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock # Bind to local docker socket.
     environment:

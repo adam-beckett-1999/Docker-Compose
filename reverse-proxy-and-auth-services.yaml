@@ -14,14 +14,14 @@ services:
       - /mnt/gluster/containers/nginx-proxy-manager/certificates/:/etc/letsencrypt # Location for Letsencrypt Certificates.
       - /mnt/gluster/containers/nginx-proxy-manager/theme/98-themepark-npm:/etc/cont-init.d/99-themepark # Theme.park custom script for Dark Mode on the WebUI.
     environment:
-      - DISABLE_IPV6=true
+      - DISABLE_IPV6=true # Disable IPV6 support.
       - X_FRAME_OPTIONS=sameorigin
     ports:
       - 80:80 # HTTP
       - 443:443 # HTTPS
       - 81:81 # NGINX-Proxy-Manager Dashboard
     networks:
-      - nginx-proxy # Docker network for Traefik to watch for container labels.
+      - nginx-proxy # NGINX-Proxy-Manager service docker network.
 ###
   goaccess-npm:
     container_name: Goaccess-NPM
@@ -36,9 +36,9 @@ services:
       - KEEP_LAST=30 # Keep the last specified number of days in storage.
       - PROCESSING_THREADS=2
     volumes:
-      - /mnt/gluster/containers/nginx-proxy-manager/logs:/opt/log
+      - /mnt/gluster/containers/nginx-proxy-manager/logs:/opt/log # Location of log files output from NGINX Proxy Manager.
     networks:
-      - nginx-proxy
+      - nginx-proxy # NGINX-Proxy-Manager service docker network.
 ###
   authentik_server:
     container_name: Authentik-Server
