@@ -1,0 +1,70 @@
+version: '3.8'
+services:
+  influxdb:
+    image: influxdb:2.5.1-alpine
+    container_name: InfluxDB
+    restart: unless-stopped
+    networks:
+      - grafana-stack
+    environment:
+      - INFLUXDB_HTTP_AUTH_ENABLED=false
+    ports:
+      - 8086:8086
+    volumes:
+      - /var/lib/influxdb:/var/lib/influxdb2
+  prometheus:
+    image: prom/prometheus
+    container_name: Prometheus
+    volumes:
+      - /etc/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    networks:
+      - grafana-stack
+    ports:
+      - 9090:9090
+  grafana:
+    image: grafana/grafana
+    container_name: Grafana
+    restart: unless-stopped
+    networks:
+      - grafana-stack
+    depends_on:
+      - influxdb
+    environment:
+      # Basic configuration options:
+      - GF_APP_MODE=production
+      - GF_INSTANCE_NAME=Hyvecloud Grafana # Name of the server instance.
+      - GF_SERVER_ROOT_URL=${GRAFANA_ROOT_URL} # Root URL for grafana server (externally accessible URL).
+      - GF_NEWS_NEWS_FEED_ENABLED=false # Disable the news feed.
+      - GF_HELP_ENABLED=false # Disable the help pages.
+      - GF_EXPLORE_ENABLED=false # Disable the explore page.
+
+      # Standard user permission configuration/disable standard authentication:
+      - GF_USERS_ALLOW_ORG_CREATE=false # Disallow non-admin users from creating organisations.
+      - GF_USERS_ALLOW_SIGN_UP=false # Disallow sign-ups using standard authentication.
+      - GF_USERS_AUTO_ASSIGN_ORG=true # Auto assign the default organisation
+      - GF_USERS_AUTO_ASSIGN_ORG_ID=1 # ID of the organisation to auto assign.
+      - GF_USERS_AUTO_ASSIGN_ORG_ROLE=Viewer # Default role of all users, overridden by OAuth_role_attribute_path.
+
+      # OAuth configuration:
+      - GF_AUTH_OAUTH_AUTO_LOGIN=false # Disable auto-login with OAuth provider, force users to click 'Login with Authentik' from the grafana login page.
+      - GF_AUTH_DISABLE_LOGIN_FORM=true # Disable the default login form.
+      - GF_AUTH_DISABLE_LOGIN=true # Disable the default login.
+      - GF_AUTH_GENERIC_OAUTH_ENABLED=true # Enable OAuth authentication.
+      - GF_AUTH_GENERIC_OAUTH_NAME=Authentik # Name of the OAuth provider.
+      - GF_AUTH_GENERIC_OAUTH_ALLOW_SIGN_UP=true # Allow creation of new users with OAuth credentials provided by Authentik.
+      - GF_AUTH_GENERIC_OAUTH_CLIENT_ID=${GRAFANA_OAUTH_CLIENT_ID} # OAuth client-id.
+      - GF_AUTH_GENERIC_OAUTH_CLIENT_SECRET=${GRAFANA_OAUTH_CLIENT_SECRET} # OAuth client-secret.
+      - GF_AUTH_GENERIC_OAUTH_SCOPES=openid email profile # OAuth scopes.
+      - GF_AUTH_GENERIC_OAUTH_AUTH_URL=${GRAFANA_OAUTH_AUTH_URL} # URL provided by Authentik.
+      - GF_AUTH_GENERIC_OAUTH_TOKEN_URL=${GRAFANA_OAUTH_TOKEN_URL} # URL provided by Authentik.
+      - GF_AUTH_GENERIC_OAUTH_API_URL=${GRAFANA_OAUTH_API_URL} # URL provided by Authentik.
+      - GF_AUTH_GENERIC_OAUTH_SIGNOUT_REDIRECT_URL=${GRAFANA_SIGNOUT_REDIRECT_URL} # URL provided by Authentik.
+      - GF_AUTH_GENERIC_OAUTH_ROLE_ATTRIBUTE_PATH=contains(groups, 'Grafana Admins') && 'Admin' || contains(groups, 'Grafana Editors') && 'Editor' || 'Viewer' # Match users to roles based on groups in Authentik.
+    links:
+      - influxdb
+    ports:
+      - 3000:3000
+    volumes:
+      - /var/lib/grafana:/var/lib/grafana   
+networks:
+  grafana-stack:
