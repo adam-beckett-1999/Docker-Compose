@@ -37,6 +37,7 @@ services:
       - PROCESSING_THREADS=2
     volumes:
       - /mnt/gluster/containers/nginx-proxy-manager/logs:/opt/log # Location of log files output from NGINX Proxy Manager.
+      - /mnt/gluster/containers/goaccess-npm/custom:/opt/custom # Location of custom log files that Goaccess can use.
     networks:
       - nginx-proxy # NGINX-Proxy-Manager service docker network.
 ###
@@ -117,6 +118,8 @@ services:
       interval: 30s
       retries: 5
       timeout: 3s
+    volumes:
+      - /mnt/gluster/containers/authentik/redis:/data
     networks:
       - authentik # Authentik service docker network.
 ###
