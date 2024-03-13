@@ -12,15 +12,11 @@ services:
       - DOCKER_MODS=ghcr.io/themepark-dev/theme.park:tautulli
       - TP_THEME=nord
     volumes:
-      - /glusterfs/bricks/gv0/containers/tautulli:/config
+      - /mnt/gluster/containers/tautulli:/config
     ports:
       - 8181:8181
     networks:
-      - proxy
-    labels:
-      - traefik.enable=true
-      - traefik.http.routers.tautulli.entryPoints=https
-      - kop.bind.ip=192.168.10.162
+      - media-management
 ###
   overseerr:
     container_name: Overseerr
@@ -33,16 +29,11 @@ services:
       - DOCKER_MODS=ghcr.io/themepark-dev/theme.park:overseerr
       - TP_THEME=nord
     volumes:
-      - /glusterfs/bricks/gv0/containers/overseerr:/config
+      - /mnt/gluster/containers/overseerr:/config
     ports:
       - 5055:5055
     networks:
-      - proxy
-    labels:
-      - traefik.enable=true
-      - traefik.http.routers.overseerr.entryPoints=https
-      - traefik.http.routers.overseerr.rule=Host(`request.hyvecloud.dev`)
-      - kop.bind.ip=192.168.10.162
+      - media-management
 ###
   plex-meta-manager:
     container_name: Plex-Meta-Manager
@@ -55,127 +46,7 @@ services:
       - PMM_CONFIG=/config/config.yml
       - PMM_TIME=00:00
     volumes:
-      - /glusterfs/bricks/gv0/containers/plex-meta-manager:/config
-###
-  prowlarr:
-    container_name: Prowlarr
-    image: lscr.io/linuxserver/prowlarr:latest
-    restart: unless-stopped
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=Europe/London
-      - DOCKER_MODS=ghcr.io/themepark-dev/theme.park:prowlarr
-      - TP_THEME=nord
-    volumes:
-      - /glusterfs/bricks/gv0/containers/prowlarr:/config
-    ports:
-      - 9696:9696
-    networks:
-      - proxy
-    labels:
-      - traefik.enable=true
-      - traefik.http.routers.prowlarr.entryPoints=https
-      - traefik.http.routers.prowlarr.middlewares=middlewares-authentik@file
-      - kop.bind.ip=192.168.10.162
-###
-  sonarr:
-    container_name: Sonarr
-    image: lscr.io/linuxserver/sonarr:latest
-    restart: unless-stopped
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=Europe/London
-      - DOCKER_MODS=ghcr.io/themepark-dev/theme.park:sonarr
-      - TP_THEME=nord
-    volumes:
-      - /glusterfs/bricks/gv0/containers/sonarr:/config
-      - /mnt/nas-01/TV Shows:/tv
-      - /mnt/nas-01/Downloads:/downloads
-    ports:
-      - 8989:8989
-    networks:
-      - proxy
-    labels:
-      - traefik.enable=true
-      - traefik.http.routers.sonarr.entryPoints=https
-      - traefik.http.routers.sonarr.middlewares=middlewares-authentik@file
-      - kop.bind.ip=192.168.10.162
-###
-  radarr:
-    container_name: Radarr
-    image: lscr.io/linuxserver/radarr:latest
-    restart: unless-stopped
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=Europe/London
-      - DOCKER_MODS=ghcr.io/themepark-dev/theme.park:radarr
-      - TP_THEME=nord
-    volumes:
-      - /glusterfs/bricks/gv0/containers/radarr:/config
-      - /mnt/nas-01/Movies:/movies
-      - /mnt/nas-01/Downloads:/downloads
-    ports:
-      - 7878:7878
-    networks:
-      - proxy
-    labels:
-      - traefik.enable=true
-      - traefik.http.routers.radarr.entryPoints=https
-      - traefik.http.routers.radarr.middlewares=middlewares-authentik@file
-      - kop.bind.ip=192.168.10.162
-###
-  sabnzbd:
-    container_name: SABnzbd
-    image: lscr.io/linuxserver/sabnzbd:latest
-    restart: unless-stopped
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=Europe/London
-      - DOCKER_MODS=ghcr.io/themepark-dev/theme.park:sabnzbd
-      - TP_THEME=nord
-    volumes:
-      - /glusterfs/bricks/gv0/containers/sabnzbd:/config
-      - /mnt/nas-01/Downloads:/downloads
-      - /mnt/nas-01/Downloads/Incomplete:/incomplete-downloads
-    ports:
-      - 8080:8080
-    networks:
-      - proxy
-    labels:
-      - traefik.enable=true
-      - traefik.http.routers.sabnzbd.entryPoints=https
-      - traefik.http.routers.sabnzbd.middlewares=middlewares-authentik@file
-      - kop.bind.ip=192.168.10.162
-###
-  qbittorrent:
-    container_name: qBittorrent
-    image: ghcr.io/hotio/qbittorrent:latest
-    restart: unless-stopped
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - UMASK=002
-      - TZ=Europe/London
-    volumes:
-      - /glusterfs/bricks/gv0/containers/qbittorrent:/config
-      - /mnt/nas-01/Downloads:/downloads
-      - /mnt/nas-01/Downloads/Incomplete:/incomplete-downloads
-    ports:
-      - 8082:8080
-      - 6881:6881
-      - 6881:6881/udp
-    networks:
-      - proxy
-    labels:
-      - traefik.enable=true
-      - traefik.http.routers.qbittorrent.entryPoints=https
-      - traefik.http.routers.qbittorrent.middlewares=middlewares-authentik@file
-      - traefik.http.services.qbittorrent.loadbalancer.server.port=8082
-      - kop.bind.ip=192.168.10.162
+      - /mnt/gluster/containers/plex-meta-manager:/config
 ###
   youtubedl:
     container_name: YoutubeDL
@@ -188,14 +59,8 @@ services:
     ports:
       - 8081:8081
     networks:
-      - proxy
-    labels:
-      - traefik.enable=true
-      - traefik.http.routers.youtubedl.entryPoints=https
-      - traefik.http.routers.youtubedl.middlewares=middlewares-authentik@file
-      - kop.bind.ip=192.168.10.162
+      - media-management
 ###
 networks:
-  proxy:
+  media-management:
     driver: bridge
-    external: true

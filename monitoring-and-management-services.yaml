@@ -6,17 +6,12 @@ services:
     image: louislam/uptime-kuma:latest
     restart: unless-stopped
     volumes:
-      - /glusterfs/bricks/gv0/containers/uptime-kuma:/app/data
+      - /mnt/gluster/containers/uptime-kuma:/app/data
       - /var/run/docker.sock:/var/run/docker.sock
     ports:
       - 3001:3001
     networks:
-      - proxy
-    labels:
-      - traefik.enable=true
-      - traefik.http.routers.uptime-kuma.entryPoints=https
-      - traefik.http.routers.uptime-kuma.middlewares=middlewares-authentik@file
-      - kop.bind.ip=192.168.10.164
+      - monitoring-services
 ###
   speedtest-tracker:
     container_name: Speedtest-Tracker
@@ -35,14 +30,10 @@ services:
       - DB_USERNAME=${SPEEDTEST_TRACKER_DB_USER}
       - DB_PASSWORD=${SPEEDTEST_TRACKER_DB_PASSWORD}
     volumes:
-      - /glusterfs/bricks/gv0/containers/speedtest-tracker:/config
+      - /mnt/gluster/containers/speedtest-tracker:/config
     networks:
-      - proxy
+      - monitoring-services
       - speedtest-tracker
-    labels:
-      - traefik.enable=true
-      - traefik.http.routers.speedtest-tracker.entryPoints=https
-      - kop.bind.ip=192.168.10.164
     depends_on:
       - speedtest-db
   speedtest-db:
@@ -55,9 +46,9 @@ services:
       - MARIADB_PASSWORD=${DB_PASSWORD}
       - MARIADB_RANDOM_ROOT_PASSWORD=true
     volumes:
-      - /glusterfs/bricks/gv0/containers/speedtest-tracker/db:/var/lib/mysql
+      - /mnt/gluster/containers/speedtest-tracker/db:/var/lib/mysql
     networks:
-      - proxy
+      - monitoring-services
       - speedtest-tracker
 ###
   dozzle:
@@ -73,17 +64,12 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     environment:
-      - DOZZLE_REMOTE_HOST="tcp://192.168.0.161:2375|VM-DOCKER-SERVER-01,tcp://192.168.0.162:2375|VM-DOCKER-SERVER-02,tcp://192.168.0.163:2375|VM-DOCKER-SERVER-03"
-      - DOZZLE_HOSTNAME="VM-DOCKER-SERVER-04"
+      - DOZZLE_REMOTE_HOST="tcp://192.168.10.161:2375|VM-DOCKER-PROXY,tcp://192.168.10.163:2375|VM-DOCKER-MEDIA,tcp://192.168.10.164:2375|VM-DOCKER-SERVICES"
+      - DOZZLE_HOSTNAME="VM-DOCKER-MANAGEMENT"
     ports:
       - 9999:8080
     networks:
-      - proxy
-    labels:
-      - traefik.enable=true
-      - traefik.http.routers.dozzle.entryPoints=https
-      - traefik.http.routers.dozzle.middlewares=middlewares-authentik@file
-      - kop.bind.ip=192.168.10.164
+      - management-services
 ###
   filebrowser:
     container_name: Filebrowser
@@ -95,18 +81,13 @@ services:
       - TZ=Europe/London
       - FB_NOAUTH=noauth
     volumes:
-      - /glusterfs/bricks/gv0/containers/file-browser:/config
-      - /glusterfs/bricks/gv0/containers/file-browser/branding:/branding
-      - /glusterfs/bricks/gv0/containers:/data
+      - /mnt/gluster/containers/file-browser:/config
+      - /mnt/gluster/containers/file-browser/branding:/branding
+      - /mnt/gluster/containers:/data
     ports:
       - 9898:8080
     networks:
-      - proxy
-    labels:
-      - traefik.enable=true
-      - traefik.http.routers.file-browser.entryPoints=https
-      - traefik.http.routers.file-browser.middlewares=middlewares-authentik@file
-      - kop.bind.ip=192.168.10.164
+      - management-services
 ###
   guacamole:
     container_name: Guacamole
@@ -118,16 +99,12 @@ services:
       - TZ=Europe/London
       - EXTENSIONS=auth-sso-openid
     volumes:
-      - /glusterfs/bricks/gv0/containers/guacamole:/config
+      - /mnt/gluster/containers/guacamole:/config
       - /etc/localtime:/etc/localtime:ro
     ports:
       - 9797:8080
     networks:
-      - proxy
-    labels:
-      - traefik.enable=true
-      - traefik.http.routers.guacamole.entryPoints=https
-      - kop.bind.ip=192.168.10.164
+      - management-services
 ###
   upsnap:
     container_name: Upsnap
@@ -141,35 +118,25 @@ services:
       - TZ=Europe/London
       - UPSNAP_WEBSITE_TITLE=Hyvecloud Host Management
     volumes:
-      - /glusterfs/bricks/gv0/containers/upsnap:/app/pb_data
+      - /mnt/gluster/containers/upsnap:/app/pb_data
     network_mode: host
-    labels:
-      - traefik.enable=true
-      - traefik.http.routers.upsnap.entryPoints=https
-      - traefik.http.routers.upsnap.middlewares=middlewares-authentik@file
-      - traefik.http.services.upsnap.loadbalancer.server.port=5001
-      - kop.bind.ip=192.168.10.164
 ###
   homepage:
     container_name: Homepage
     image: ghcr.io/gethomepage/homepage:latest
     restart: unless-stopped
     volumes:
-      - /glusterfs/bricks/gv0/containers/homepage:/app/config
-      - /glusterfs/bricks/gv0/containers/homepage/images:/app/public/images
-      - /glusterfs/bricks/gv0/containers/homepage/icons:/app/public/icons
+      - /mnt/gluster/containers/homepage:/app/config
+      - /mnt/gluster/containers/homepage/images:/app/public/images
+      - /mnt/gluster/containers/homepage/icons:/app/public/icons
     ports:
       - 3000:3000
     networks:
-      - proxy
-    labels:
-      - traefik.enable=true
-      - traefik.http.routers.homepage.entryPoints=https
-      - traefik.http.routers.homepage.middlewares=middlewares-authentik@file
-      - kop.bind.ip=192.168.10.164
+      - management-services
 ###
 networks:
-  proxy:
+  monitoring-services:
     driver: bridge
-    external: true
+  management-services:
+    driver: bridge
   speedtest-tracker:

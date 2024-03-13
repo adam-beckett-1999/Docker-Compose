@@ -15,17 +15,12 @@ services:
       - DB_PASS=${BOOKSTACK_DB_PASSWORD}
       - DB_DATABASE=bookstackapp
     volumes:
-      - /glusterfs/bricks/gv0/containers/bookstack:/config
+      - /mnt/gluster/containers/bookstack:/config
     ports:
       - 8001:80
     networks:
-      - proxy
+      - services
       - bookstack
-    labels:
-      - traefik.enable=true
-      - traefik.http.routers.bookstack.entryPoints=https
-      - traefik.http.routers.bookstack.rule=Host(`wiki.${DOMAIN}`)
-      - kop.bind.ip=192.168.10.163
     depends_on:
       - bookstack_db
   bookstack_db:
@@ -42,9 +37,8 @@ services:
       - MYSQL_PASSWORD=${BOOKSTACK_DB_PASSWORD}
       - MYSQL_TCP_PORT=3307
     volumes:
-      - /glusterfs/bricks/gv0/containers/bookstack/db_data:/config
+      - /mnt/gluster/containers/bookstack/db_data:/config
     networks:
-      - proxy
       - bookstack
 ###
   planka:
@@ -74,21 +68,16 @@ services:
       - OIDC_NAME_ATTRIBUTE=name
       - OIDC_USERNAME_ATTRIBUTE=preferred_username
     volumes:
-      - /glusterfs/bricks/gv0/containers/planka/user-avatars:/app/public/user-avatars
-      - /glusterfs/bricks/gv0/containers/planka/project-background-images:/app/public/project-background-images
-      - /glusterfs/bricks/gv0/containers/planka/attachments:/app/private/attachments
+      - /mnt/gluster/containers/planka/user-avatars:/app/public/user-avatars
+      - /mnt/gluster/containers/planka/project-background-images:/app/public/project-background-images
+      - /mnt/gluster/containers/planka/attachments:/app/private/attachments
     ports:
       - 1337:1337
     networks:
-      - proxy
+      - services
       - planka
-    labels:
-      - traefik.enable=true
-      - traefik.http.routers.planka.entryPoints=https
-      - traefik.http.routers.planka.rule=Host(`board.${DOMAIN}`)
-      - kop.bind.ip=192.168.10.163
     depends_on:
-      - postgres
+      - planka-db
   planka-db:
     container_name: Planka-DB
     image: postgres:14-alpine
@@ -97,12 +86,11 @@ services:
       - POSTGRES_DB=planka
       - POSTGRES_HOST_AUTH_METHOD=trust
     volumes:
-      - /glusterfs/bricks/gv0/containers/planka/db:/var/lib/postgresql/data
+      - /mnt/gluster/containers/planka/db:/var/lib/postgresql/data
     networks:
-      - proxy
       - planka
 ###
-  paperless_ngx:
+  paperless-ngx:
     container_name: Paperless-NGX
     image: paperlessngx/paperless-ngx:latest
     restart: unless-stopped
@@ -121,34 +109,27 @@ services:
       - PAPERLESS_TIKA_GOTENBERG_ENDPOINT=http://paperless_ngx_gotenberg:3000
       - PAPERLESS_TIKA_ENDPOINT=http://paperless_ngx_tika:9998
     volumes:
-      - /glusterfs/bricks/gv0/containers/paperless-ngx/config:/config
-      - /glusterfs/bricks/gv0/containers/paperless-ngx/data:/data
+      - /mnt/gluster/containers/paperless-ngx/config:/config
+      - /mnt/gluster/containers/paperless-ngx/data:/data
     ports:
       - 8000:8000
     networks:
-      - proxy
+      - services
       - paperless-ngx
-    labels:
-      - traefik.enable=true
-      - traefik.http.routers.paperless-ngx.entryPoints=https
-      - traefik.http.routers.paperless-ngx.middlewares=middlewares-authentik@file
-      - traefik.http.routers.paperless-ngx.rule=Host(`docs.${DOMAIN}`)
-      - kop.bind.ip=192.168.10.163
     depends_on:
-      - paperless_ngx_redis
-      - paperless_ngx_db
-      - paperless_ngx_gotenberg
-      - paperless_ngx_tika
-  paperless_ngx_redis:
+      - paperless-ngx-redis
+      - paperless-ngx-db
+      - paperless-ngx-gotenberg
+      - paperless-ngx-tika
+  paperless-ngx-redis:
     container_name: Paperless-NGX-REDIS
     image: redis
     restart: unless-stopped
     ports:
       - 6379:6379
     networks:
-      - proxy
       - paperless-ngx
-  paperless_ngx_db:
+  paperless-ngx-db:
     container_name: Paperless-NGX-DB
     image: docker.io/library/postgres:15
     restart: unless-stopped
@@ -159,11 +140,10 @@ services:
       - POSTGRES_USER=paperless
       - POSTGRES_PASSWORD=${DB_PASS}
     volumes:
-      - /glusterfs/bricks/gv0/containers/paperless-ngx/db:/var/lib/postgresql/data
+      - /mnt/gluster/containers/paperless-ngx/db:/var/lib/postgresql/data
     networks:
-      - proxy
       - paperless-ngx
-  paperless_ngx_gotenberg:
+  paperless-ngx-gotenberg:
     container_name: Paperless-NGX-Gotenberg
     image: docker.io/gotenberg/gotenberg:7.8
     restart: unless-stopped
@@ -172,14 +152,12 @@ services:
       - "--chromium-disable-javascript=true"
       - "--chromium-allow-list=file:///tmp/.*"
     networks:
-      - proxy
       - paperless-ngx
-  paperless_ngx_tika:
+  paperless-ngx-tika:
     container_name: Paperless-NGX-Tika
     image: ghcr.io/paperless-ngx/tika:latest
     restart: unless-stopped
     networks:
-      - proxy
       - paperless-ngx
 ###
   excalidraw:
@@ -199,13 +177,8 @@ services:
     ports:
       - 8002:80
     networks:
-      - proxy
+      - services
       - excalidraw
-    labels:
-      - traefik.enable=true
-      - traefik.http.routers.excalidraw.entryPoints=https
-      - traefik.http.routers.excalidraw.middlewares=middlewares-authentik@file
-      - kop.bind.ip=192.168.10.163
     depends_on:
       - excalidraw_storage_backend
       - excalidraw_room
@@ -219,7 +192,6 @@ services:
     ports:
       - 8383:8080
     networks:
-      - proxy
       - excalidraw
   excalidraw_room:
     container_name: Excalidraw-Room
@@ -228,7 +200,6 @@ services:
     ports:
       - 8003:80
     networks:
-      - proxy
       - excalidraw
   excalidraw_redis:
     container_name: Excalidraw-REDIS
@@ -237,13 +208,11 @@ services:
     ports:
       - 6380:6379
     networks:
-      - proxy
       - excalidraw
 ###
 networks:
-  proxy:
+  services:
     driver: bridge
-    external: true
   bookstack:
   planka:
   paperless-ngx:
