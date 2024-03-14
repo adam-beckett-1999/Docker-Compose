@@ -91,9 +91,9 @@ As an example, i'll include how to setup OAuth SSO in Portainer:
 5. Now you can save and test. You should get a 'Login with OAuth' option on the Portainer login screen.
 
 #### Access restrictions with Groups and Policies
-Its possible to restrict access to certain services using Groups and Policies defined in Authentik. Some examples of groups and their configurations are below:
+Its possible to restrict access to certain services using Groups and Policies defined in Authentik.
 
-Group and Expression Policy:
+**Group and Expression Policy:**
 1. Under 'Directory' in the side-bar, click on 'Groups' and 'Create' a new group from here.
 2. Specify a name. In my case, I have groups for access to my media-server utilities (sonarr, radarr etc), and a privileged access group for services that only I need access to (useful in my case as I have authentik users who are setup just for access to certain services).
 3. In the 'Attributes', you can specify a set of custom attributes which can be passed through to services using HTTP basic authentication. For example, I have sonarr configured to use basic auth with a preset username and password, and in the attributes section of my group, I have 'media_management_user' and 'media_management_password' with the credentials. This is then configured through my provider for Sonarr, under 'Authentication settings', enable 'Send HTTP-Basic Authentication' and put the variables you added to the group in 'HTTP-Basic Username Key' and 'HTTP-Basic Password Key'. If using multiple services, you can configure basic auth with the same credentials in all of them and add the Basic_auth attributes in their Providers.
@@ -108,10 +108,18 @@ Group and Expression Policy:
   if is_permitted:
     return True
   ```
-  
+
 6. Now all that is needed is to add the policy to the services you want restricted. Go to 'Applications' and select your service, in the top menu go to 'Policy/Group/User Bindings' and click 'Bind existing policy' on this page. In the create binding window, select your policy and leave all other settings as default. Click 'create' and now you should be able to test whether your policy is working correctly.
 
 For users in the group, they should be automatically authenticated into the service. Anyone not in the group will be taken to an Access Denied page.
+
+**Using service based matching:**
+1. Create a group like above. Ignore the attributes section and instead leave it empty.
+2. If your service supports it, you can use its built in groups and match them against Authentik groups. An example would be Grafana. By specifying a custom attribute path (using the GENERIC_OAUTH_ROLE_ATTRIBUTE_PATH= variable), you can tell it to assign permissions to users based on the groups they are in in Authentik. I have my Grafana instance configured using Authentik OAuth, and the following variable configured in the docker environment variables:
+  ```
+  GF_AUTH_GENERIC_OAUTH_ROLE_ATTRIBUTE_PATH=contains(groups, 'Grafana Admins') && 'Admin' || contains(groups, 'Grafana Editors') && 'Editor' || 'Viewer'
+  ```
+3. When a user logs into the service, as long as they are in the correct group and the service is configured to allow new users to be added from Authentik, then they should be assigned the correct roles and permissions on first login.
 
 ### **Goaccess for NPM**
 
