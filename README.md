@@ -3,6 +3,8 @@
 
 ### Docker compose files for use in my Homelab, deployed and auto-updated using Portainer stacks.
 
+Below I have detailed configuration options for all of my running services and containers.
+
 ---
 ## Reverse-Proxy & Authentication Services:
 
@@ -40,9 +42,9 @@ To setup an SSL certificate to use with your services, I prefer to assign a wild
 Once Authentik is installed, navigate to the link below to begin the configuration stage:
 http://{ip_of_your_docker_host}:9000/if/flow/initial-setup/ 
 
-### Initial Configuration
+### Initial Configuration and Customisation
 - Create the admin user, and you will be redirected to the homepage showing 'My Applications'. Go to the 'Admin Interface' and you can start to customise your install.
-- To change the branding of Authentik, there are two areas which need to be modified. Under 'System', navigate to 'Tenants' and click the 'Edit' button under the 'Actions' header for the authentik-default domain. From there you can change the title, logo and favicon for your authentication page. The files used here are stored in the '/media' directory within the container, which is mapped to '/mnt/gluster/containers/authentik/media' on the docker host. Make sure your files are in there so they are loaded correctly. If you go to the 'Other Global Settings' dropdown, you can also use custom attributes to change how Authentik behaves. I like to add the below attribute to force dark mode on every device regardless of the local settings of the user.
+- To change the branding of Authentik, there are two areas which need to be modified. Under 'System', navigate to 'Brands' and click the 'Edit' button under the 'Actions' header for the authentik-default domain. From there you can change the title, logo and favicon for your authentication page, as well as set your domain URL. The files used here are stored in the '/media' directory within the container, which is mapped to '/your_path/media' on the docker host. Make sure your files are in there so they are loaded correctly. If you go to the 'Other Global Settings' dropdown, you can also use custom attributes to change how Authentik behaves. I like to add the below attribute to force dark mode on every device regardless of the local settings of the user.
 
 ``` title:custom-attributes
 settings:
@@ -50,7 +52,7 @@ settings:
     base: dark
 ```
 
-- To customise the layout and background of authentication pages, you can do that individually for each type of auth-flow. Under 'Flows & Stages', click on 'Flows' and from there, click 'edit' under the actions column for the flow you wish to customise. Here you can change the text that appears on auth pages, and under the 'Appearance Settings' dropdown, you can change the layout of the auth page (which changes the appearance of the elements on the page to be centred, left or right, and with different styles) as well as set a background image.
+- To customise the layout and background of authentication pages, you can do that individually for each type of auth-flow. Under 'Flows & Stages', click on 'Flows' and from there, click 'edit' under the actions column for the flow you wish to customise. Here you can change the text that appears on auth pages, and under the 'Appearance Settings' dropdown, you can change the layout of the auth page (which changes the appearance of the elements on the page to be centred, left or right, and with different styles) as well as set a background image. 
 
 ---
 ### Monitoring & Management Services:
