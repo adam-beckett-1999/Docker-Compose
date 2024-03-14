@@ -89,11 +89,33 @@ As an example, i'll include how to setup OAuth SSO in Portainer:
 4. The user identifier will need to be 'email', and the scopes need to be set as 'email openid profile'. This is the only combination of options that has worked for me. Ensure that when putting the scopes in, you don't follow the formatting shown as an example in the box, copy as exactly as specified above.
 5. Now you can save and test. You should get a 'Login with OAuth' option on the Portainer login screen.
 
+#### Access restrictions with Groups and Policies
+Its possible to restrict access to certain services using Groups and Policies defined in Authentik. Some examples of groups and their configurations are below:
+
+Group and Expression Policy:
+1. Under 'Directory' in the side-bar, click on 'Groups' and 'Create' a new group from here.
+2. Specify a name. In my case, I have groups for access to my media-server utilities (sonarr, radarr etc), and a privileged access group for services that only I need access to (useful in my case as I have authentik users who are setup just for access to certain services).
+3. In the 'Attributes', you can specify a set of custom attributes which can be passed through to services using HTTP basic authentication. For example, I have sonarr configured to use basic auth with a preset username and password, and in the attributes section of my group, I have 'media_management_user' and 'media_management_password' with the credentials. This is then configured through my provider for Sonarr, under 'Authentication settings', enable 'Send HTTP-Basic Authentication' and put the variables you added to the group in 'HTTP-Basic Username Key' and 'HTTP-Basic Password Key'. If using multiple services, you can configure basic auth with the same credentials in all of them and add the Basic_auth attributes in their Providers.
+4. For the next step, go to 'Customisation' and 'Policies' in the side-bar. Create a new policy, and select 'Expression Policy'.
+5. Give the policy a name, and in the 'Expression' code block, you can use something similar to this to restrict access to the services based on group membership:
+  ```
+  is_permitted = ak_is_group_member(request.user, name="{name_of_group}")
+  if not is_permitted:
+    ak_message("Access Denied")
+    return False
+  if is_permitted:
+    return True
+  ```
+There are plenty of expressions available for use, there's a link at the bottom of this configurator that will take you to the documentation. This is just a basic script to do what I need.
+6. Now all that is needed is to add the policy to the services you want restricted. Go to 'Applications' and select your service, in the top menu go to 'Policy/Group/User Bindings' and click 'Bind existing policy' on this page. In the create binding window, select your policy and leave all other settings as default. Click 'create' and now you should be able to test whether your policy is working correctly.
+
+For users in the group, they should be automatically authenticated into the service. Anyone not in the group will be taken to an Access Denied page.
+
 ### **Goaccess for NPM**
 
-Once GoAccess is installed there is no extra configuration required, logs and data may take a while to populate as it relies on there being log file available from NGINX Proxy Manager to populate the graphs and metrics correctly.
+Once GoAccess is installed there is no extra configuration required, logs and data may take a while to populate as it relies on there being log files available from NGINX Proxy Manager to populate the graphs and metrics correctly.
 
-- The 'EXCLUDE_IPS' environment variables will force GoAccess to ignore log data corresponding to internal requests, instead only showing service access from external IP's. This can be set to ignore any range of IPs you choose, in this case, I have it set to exclude 127.0.0.1 which is equivalent to 'localhost' and my internal IP ranges (192.168.0.0/24) etc.
+- The 'EXCLUDE_IPS' environment variable will force GoAccess to ignore log data corresponding to internal requests, instead only showing service access from external IP's. This can be set to ignore any range of IPs you choose, in this case, I have it set to exclude 127.0.0.1 which is equivalent to 'localhost' and my internal IP ranges (192.168.0.0/24) etc.
 
 ---
 ### Monitoring & Management Services:
