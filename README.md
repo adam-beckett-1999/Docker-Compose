@@ -12,10 +12,10 @@ Below I have detailed configuration options for all of my running services and c
 
 Once the container is started, navigate to http://{ip_of_your_docker_host}:81/ where you will need to login for the first time with the default credentials:
 
-``` default-login
-Email: admin@example.com
-Password: changeme
-```
+  ``` default-login
+  Email: admin@example.com
+  Password: changeme
+  ```
 
 When you have logged in you will be prompted to change the default login credentials, you can then begin adding services to be reverse proxied.
 
@@ -50,11 +50,12 @@ To change the branding of Authentik, there are two areas which need to be modifi
 
 1. Under 'System', navigate to 'Brands' and click the 'Edit' button under the 'Actions' header for the authentik-default domain. From there you can change the title, logo and favicon for your authentication page, as well as set your domain URL. The files used here are stored in the '/media' directory within the container, which is mapped to '/your_path/media' on the docker host. Make sure your files are in there so they are loaded correctly. If you go to the 'Other Global Settings' dropdown, you can also use custom attributes to change how Authentik behaves. I like to add the below attribute to force dark mode on every device regardless of the local settings of the user.
 
-``` title:custom-attributes
-settings:
-  theme:
-    base: dark
-```
+  ``` title:custom-attributes
+  settings:
+    theme:
+      base: dark
+  ```
+
 2. To customise the layout and background of authentication pages, you can do that individually for each type of auth-flow. Under 'Flows & Stages', click on 'Flows' and from there, click 'edit' under the actions column for the flow you wish to customise. Here you can change the text that appears on auth pages, and under the 'Appearance Settings' dropdown, you can change the layout of the auth page (which changes the appearance of the elements on the page to be centred, left or right, and with different styles) as well as set a background image.
 
 #### Authentication for services without OAuth & OpenID support (Proxy Provider)
@@ -98,6 +99,7 @@ Group and Expression Policy:
 3. In the 'Attributes', you can specify a set of custom attributes which can be passed through to services using HTTP basic authentication. For example, I have sonarr configured to use basic auth with a preset username and password, and in the attributes section of my group, I have 'media_management_user' and 'media_management_password' with the credentials. This is then configured through my provider for Sonarr, under 'Authentication settings', enable 'Send HTTP-Basic Authentication' and put the variables you added to the group in 'HTTP-Basic Username Key' and 'HTTP-Basic Password Key'. If using multiple services, you can configure basic auth with the same credentials in all of them and add the Basic_auth attributes in their Providers.
 4. For the next step, go to 'Customisation' and 'Policies' in the side-bar. Create a new policy, and select 'Expression Policy'.
 5. Give the policy a name, and in the 'Expression' code block, you can use something similar to this to restrict access to the services based on group membership:
+
   ```
   is_permitted = ak_is_group_member(request.user, name="{name_of_group}")
   if not is_permitted:
@@ -106,6 +108,7 @@ Group and Expression Policy:
   if is_permitted:
     return True
   ```
+  
 6. Now all that is needed is to add the policy to the services you want restricted. Go to 'Applications' and select your service, in the top menu go to 'Policy/Group/User Bindings' and click 'Bind existing policy' on this page. In the create binding window, select your policy and leave all other settings as default. Click 'create' and now you should be able to test whether your policy is working correctly.
 
 For users in the group, they should be automatically authenticated into the service. Anyone not in the group will be taken to an Access Denied page.
