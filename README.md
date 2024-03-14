@@ -42,17 +42,37 @@ To setup an SSL certificate to use with your services, I prefer to assign a wild
 Once Authentik is installed, navigate to the link below to configure your install:
 http://{ip_of_your_docker_host}:9000/if/flow/initial-setup/ 
 
-#### Initial Configuration and Customisation
-- Create the admin user, and you will be redirected to the homepage showing 'My Applications'. Go to the 'Admin Interface' and you can start to customise your install.
-- To change the branding of Authentik, there are two areas which need to be modified. Under 'System', navigate to 'Brands' and click the 'Edit' button under the 'Actions' header for the authentik-default domain. From there you can change the title, logo and favicon for your authentication page, as well as set your domain URL. The files used here are stored in the '/media' directory within the container, which is mapped to '/your_path/media' on the docker host. Make sure your files are in there so they are loaded correctly. If you go to the 'Other Global Settings' dropdown, you can also use custom attributes to change how Authentik behaves. I like to add the below attribute to force dark mode on every device regardless of the local settings of the user.
+#### Initial Configuration
+1. Create the admin user, and you will be redirected to the homepage showing 'My Applications'. Go to the 'Admin Interface' and you can start to customise your install.
+
+#### Branding & Customisation
+To change the branding of Authentik, there are two areas which need to be modified.
+
+1. Under 'System', navigate to 'Brands' and click the 'Edit' button under the 'Actions' header for the authentik-default domain. From there you can change the title, logo and favicon for your authentication page, as well as set your domain URL. The files used here are stored in the '/media' directory within the container, which is mapped to '/your_path/media' on the docker host. Make sure your files are in there so they are loaded correctly. If you go to the 'Other Global Settings' dropdown, you can also use custom attributes to change how Authentik behaves. I like to add the below attribute to force dark mode on every device regardless of the local settings of the user.
 
 ``` title:custom-attributes
 settings:
   theme:
     base: dark
 ```
+2. To customise the layout and background of authentication pages, you can do that individually for each type of auth-flow. Under 'Flows & Stages', click on 'Flows' and from there, click 'edit' under the actions column for the flow you wish to customise. Here you can change the text that appears on auth pages, and under the 'Appearance Settings' dropdown, you can change the layout of the auth page (which changes the appearance of the elements on the page to be centred, left or right, and with different styles) as well as set a background image.
 
-- To customise the layout and background of authentication pages, you can do that individually for each type of auth-flow. Under 'Flows & Stages', click on 'Flows' and from there, click 'edit' under the actions column for the flow you wish to customise. Here you can change the text that appears on auth pages, and under the 'Appearance Settings' dropdown, you can change the layout of the auth page (which changes the appearance of the elements on the page to be centred, left or right, and with different styles) as well as set a background image. 
+#### Authentication for services without OAuth & OpenID support (Proxy Provider)
+I typically use Authentiks 'Transparent Reverse Proxy' provider for applications that don't have OAuth and OpenID SSO support. This also makes configuring in NPM much easier. To secure an application using this provider, you need to do the following:
+
+1. Under the 'Applications' dropdown in the side-bar, click on the 'Applications' sub-menu and click the 'Create With Wizard' button at the top of the page to simplify the process. You can create the application and provider seperately, but this isn't necessary.
+2. Specify a name for your application, this can just be the name of the service you are adding authentication to. The 'slug' field should auto populate. Under 'UI Settings' you can also specify the external URL for the service for the link that will be created on the Authentik dashboard, which would be: https://{service}.domain.tld/. Click 'next'.
+3. On the 'Provider Type' page, select 'Transparent Reverse Proxy' and click next.
+4. Now we need to configure out Proxy Provider. The name will auto populate, so move on to selecting an authorization flow. I typically use the 'authorization-explicit-consent' which upon logging into the service for the first time, will prompt the user to allow the service access to the data provided by Authentik for the authentication process. If you don't want this prompt then select the 'implicit-consent' option.
+5. Specify your external host URL, again this will be the same as before: https://{service}.domain.tld/
+6. Specify your internal host URL, this will be the IP/hostname and port of the service that you access internally, eg. http://{ip_or_hostname}:8181/
+7. Click next, and if Authentik is happy it will show a green tick and allow you to click 'Finish'. If you get an error, you will have to go back and make changes to your configuration.
+8. The last step within Authentik is to go to assign the provider to your Proxy outpost. Under 'Applications' in the side-bar, click 'Outposts' and click the 'edit' button under the 'Actions' column on the Embedded Authentik outpost. From here, click on the service you just added under 'Available Applications' and use the arrow to move it to the 'Selected Applications' group, and click 'update'.
+9. Now that the authentication is setup in Authentik, you can follow the instructions for adding the Proxy Host in NPM. However, when adding the host, the destination/forward address will be the URL for your Authentik server, as Authentik will be handling the forwarding to the service internally after the authentication flow has run. The external domain name must also match what you have specified in Authentik, so that the forwarding rule matches correctly.
+
+As an extra configuration option, you can add an icon for the service in the Authentik dashboard by going to 'Applications', clicking the 'edit' button under the 'actions' column, and opening the 'UI settings' dropdown in the menu. From here you can upload an icon and specify a service publisher and description.
+
+#### Authentication for services with OAuth & OpenID support
 
 ### **Goaccess for NPM**
 
