@@ -106,7 +106,6 @@ Group and Expression Policy:
   if is_permitted:
     return True
   ```
-There are plenty of expressions available for use, there's a link at the bottom of this configurator that will take you to the documentation. This is just a basic script to do what I need.
 6. Now all that is needed is to add the policy to the services you want restricted. Go to 'Applications' and select your service, in the top menu go to 'Policy/Group/User Bindings' and click 'Bind existing policy' on this page. In the create binding window, select your policy and leave all other settings as default. Click 'create' and now you should be able to test whether your policy is working correctly.
 
 For users in the group, they should be automatically authenticated into the service. Anyone not in the group will be taken to an Access Denied page.
