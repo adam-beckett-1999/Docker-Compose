@@ -37,9 +37,9 @@ To setup an SSL certificate to use with your services, I prefer to assign a wild
 3. The last step is to click on the SSL tab within the new proxy host window and click the SSL certificate dropdown and select the cert you created earlier. You can also click on the toggles below here as well (if your site experiences any errors once setup, try disabling some of these options to see if that resolves it). Once done, click save.
 4. The service should now be available to access through the domain you have assigned it, if NPM detects that there is an error in the proxy configuration it will indicate it on the right under the 'status' column as 'offline'. This isn't always an indicator that the site works however, as there could be a configuration error within the service itself to allow forwarding through a reverse-proxy.
 
-### **Authentik (Server, Worker, DB & REDIS)**
+### **Authentik**
 
-Once Authentik is installed, navigate to the link below to begin the configuration stage:
+Once Authentik is installed, navigate to the link below to configure your install:
 http://{ip_of_your_docker_host}:9000/if/flow/initial-setup/ 
 
 ### Initial Configuration and Customisation
@@ -53,6 +53,12 @@ settings:
 ```
 
 - To customise the layout and background of authentication pages, you can do that individually for each type of auth-flow. Under 'Flows & Stages', click on 'Flows' and from there, click 'edit' under the actions column for the flow you wish to customise. Here you can change the text that appears on auth pages, and under the 'Appearance Settings' dropdown, you can change the layout of the auth page (which changes the appearance of the elements on the page to be centred, left or right, and with different styles) as well as set a background image. 
+
+### **Goaccess for NPM**
+
+Once GoAccess is installed there is no extra configuration required, logs and data may take a while to populate as it relies on there being log file available from NGINX Proxy Manager to populate the graphs and metrics correctly.
+
+- The 'EXCLUDE_IPS' environment variables will force GoAccess to ignore log data corresponding to internal requests, instead only showing service access from external IP's. This can be set to ignore any range of IPs you choose, in this case, I have it set to exclude 127.0.0.1 which is equivalent to 'localhost' and my internal IP ranges (192.168.0.0/24) etc.
 
 ---
 ### Monitoring & Management Services:
