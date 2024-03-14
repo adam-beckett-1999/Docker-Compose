@@ -19,19 +19,19 @@ Password: changeme
 
 When you have logged in you will be prompted to change the default login credentials, you can then begin adding services to be reverse proxied.
 
-### SSL Certificate
+#### SSL Certificate
 To setup an SSL certificate to use with your services, I prefer to assign a wildcard cert to make the process easier. 
 1. To setup, go to the 'SSL Certificates' tab and click 'Add SSL Certificate'.
 2. Enter your domain, your email address, and click the 'Use a DNS Challenge' toggle.
 3. You need to select your DNS provider (in my case it's Cloudflare) which will show a box where you will need to enter a Cloudflare API key (instructions below).
 4. Once you have the API key copied, click the 'I Agree to the Let's Encrypt Terms of Service' toggle and save. It could take a minute or two for the SSL cert to be registered and go through.
 
-### Cloudflare API Key
+#### Cloudflare API Key
 1. Login to your Cloudflare account and navigate to the section for the domain, in the sidebar to the right should be a section titled 'API'.
 2. From there, click the 'Get your API token' link and create a new token.
 3. Use the 'Edit zone DNS' template, you don't need to change any of the options, and continue to summary where you will get a copy of your API key which you need to enter into the box within NPM.
 
-### Creating a Proxy Host
+#### Creating a Proxy Host
 1. Navigate to the 'Hosts' tab and click 'proxy hosts' from the dropdown.
 2. Click 'Add Proxy Host' in the top right corner and enter the domain you wish to use for the service (e.g. plex.domain.tld), the hostname/ip where the service is running from and the port of the service. It is usually worth clicking the toggles below to 'Cache Assets', 'Block Common Exploits' and enable 'Websockets Support' to ensure sites load correctly once proxied.
 3. The last step is to click on the SSL tab within the new proxy host window and click the SSL certificate dropdown and select the cert you created earlier. You can also click on the toggles below here as well (if your site experiences any errors once setup, try disabling some of these options to see if that resolves it). Once done, click save.
@@ -42,7 +42,7 @@ To setup an SSL certificate to use with your services, I prefer to assign a wild
 Once Authentik is installed, navigate to the link below to configure your install:
 http://{ip_of_your_docker_host}:9000/if/flow/initial-setup/ 
 
-### Initial Configuration and Customisation
+#### Initial Configuration and Customisation
 - Create the admin user, and you will be redirected to the homepage showing 'My Applications'. Go to the 'Admin Interface' and you can start to customise your install.
 - To change the branding of Authentik, there are two areas which need to be modified. Under 'System', navigate to 'Brands' and click the 'Edit' button under the 'Actions' header for the authentik-default domain. From there you can change the title, logo and favicon for your authentication page, as well as set your domain URL. The files used here are stored in the '/media' directory within the container, which is mapped to '/your_path/media' on the docker host. Make sure your files are in there so they are loaded correctly. If you go to the 'Other Global Settings' dropdown, you can also use custom attributes to change how Authentik behaves. I like to add the below attribute to force dark mode on every device regardless of the local settings of the user.
 
