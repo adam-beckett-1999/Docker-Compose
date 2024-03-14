@@ -73,6 +73,21 @@ I typically use Authentiks 'Transparent Reverse Proxy' provider for applications
 As an extra configuration option, you can add an icon for the service in the Authentik dashboard by going to 'Applications', clicking the 'edit' button under the 'actions' column, and opening the 'UI settings' dropdown in the menu. From here you can upload an icon and specify a service publisher and description.
 
 #### Authentication for services with OAuth & OpenID support
+This process is similar to that of the Proxy Provider. However it will require configuring authentik as an SSO provider in your service once the Application/Provider is created.
+
+1. Under the 'Applications' dropdown in the side-bar, click on the 'Applications' sub-menu and click the 'Create With Wizard' button at the top of the page to simplify the process. You can create the application and provider seperately, but this isn't necessary.
+2. Specify a name for your application, this can just be the name of the service you are adding authentication to. The 'slug' field should auto populate. Under 'UI Settings' you can also specify the external URL for the service for the link that will be created on the Authentik dashboard, which would be: https://{service}.domain.tld/. Click 'next'.
+3. On the 'Provider Type' page, select 'OAuth2/OIDC' and click next.
+4. The name will auto populate, so move on to selecting an authorization flow. I typically use the 'authorization-explicit-consent' which upon logging into the service for the first time, will prompt the user to allow the service access to the data provided by Authentik for the authentication process. If you don't want this prompt then select the 'implicit-consent' option.
+5. Under 'Protocol settings', select either 'Confidential' or 'Public' as your 'client type' depending on what the service asks for in its configuration. Most services want a Client ID and Client Secret from their OAuth/OpenID provider, so use 'Confidential'. If you're unsure of what you should be configuring your service with, check its documentation. You will need to save this Client ID and Secret for later. You shouldn't need to change any of the other options. Click 'Next' and 'Finish'.
+6. With the Application and Provider created, you will want to grab the rest of the details to use in your service configuration. These can be found in the provider you just created. Under 'Providers', navigate to the new provider and you will see that Authentik has created some URLs for you to copy during the setup in your service. The 'OpenID Configuration URL' will be used in some services that are able to auto-discover the relevant information from the SSO provider. Others will require you to specify the specific URLs for each role.
+
+As an example, i'll include how to setup OAuth SSO in Portainer:
+1. With a provider already created, go to the Portainer webUI and go to 'Settings' in the side-bar, and click 'Authentication'.
+2. Under 'Authentication Method', select OAuth and click the slider for 'Use SSO' under 'Single Sign-On'. You should also click the slider for 'Automatic user provisioning' to ensure that Portainer creates users automatically for anyone that signs in using Authentik. (I've also found that Portainer doesn't like to match Authentik usernames to Portainer ones when logging in, which leads to errors. So enabling this option will allow users to be created using email addresses that it gets from Authentik.)
+3. Under the 'Provider' section, select 'Custom' and here you will see what details Portainer needs to correctly configure your SSO provider. Copy and paste in your Client ID, Client Secret, and URLs for 'Authorization', 'Access', 'Resource' (which is userinfo) and 'Logout'. The Redirect URL will be the URL you use to access the service through the reverse proxy, so https://portainer.domain.tld/ or something similar.
+4. The user identifier will need to be 'email', and the scopes need to be set as 'email openid profile'. This is the only combination of options that has worked for me. Ensure that when putting the scopes in, you don't follow the formatting shown as an example in the box, copy as exactly as specified above.
+5. Now you can save and test. You should get a 'Login with OAuth' option on the Portainer login screen.
 
 ### **Goaccess for NPM**
 
