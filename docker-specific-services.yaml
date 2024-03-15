@@ -17,6 +17,7 @@ services:
       - WATCHTOWER_NOTIFICATION_REPORT=true # Use a report notification at update cycle completion rather than individual notifications per service.
       - WATCHTOWER_NOTIFICATION_URL=${WATCHTOWER_NOTIFICATIONS} # Notification URL in the format specified in the Shoutrrr documentation.
       - WATCHTOWER_HTTP_API_METRICS=true # Expose the watchtower API for metrics collection
+      - WATCHTOWER_HTTP_API_TOKEN=${WATCHTOWER_API_TOKEN} # Token for metrics API.
     ports:
       - 8888:8080
     networks:
