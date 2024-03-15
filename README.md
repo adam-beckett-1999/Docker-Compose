@@ -19,6 +19,9 @@ Below I have detailed configuration options for all of my running services and c
     - [Authentication for services without OAuth & OpenID support (Proxy Provider)](https://github.com/adam-beckett-1999/Docker-Compose?tab=readme-ov-file#authentication-for-services-without-oauth--openid-support-proxy-provider "Authentik: Authentication for services without OAuth & OpenID support (Proxy Provider)")
     - [Authentication for services with OAuth & OpenID support](https://github.com/adam-beckett-1999/Docker-Compose?tab=readme-ov-file#authentication-for-services-with-oauth--openid-support "Authentik: Authentication for services with OAuth & OpenID support")
 4. [Access restrictions with Groups and Policies](https://github.com/adam-beckett-1999/Docker-Compose?tab=readme-ov-file#access-restrictions-with-groups-and-policies "Authentik: Access restrictions with Groups and Policies")
+    - [Group and Expression Policy](https://github.com/adam-beckett-1999/Docker-Compose?tab=readme-ov-file#access-restrictions-with-groups-and-policies "Authentik: Group and Expression Policy")
+    - [Using service based matching](https://github.com/adam-beckett-1999/Docker-Compose?tab=readme-ov-file#access-restrictions-with-groups-and-policies "Authentik: Using service based matching")
+5. [Goaccess for NPM](https://github.com/adam-beckett-1999/Docker-Compose?tab=readme-ov-file#goaccess-for-npm "Goaccess for NPM")
 
 ### **NGINX Proxy Manager**
 
@@ -114,7 +117,7 @@ Its possible to restrict access to certain services using Groups and Policies de
 
 ---
 
-**Group and Expression Policy:**
+#### **Group and Expression Policy:**
 1. Under 'Directory' in the side-bar, click on 'Groups' and 'Create' a new group from here.
 2. Specify a name. In my case, I have groups for access to my media-server utilities (sonarr, radarr etc), and a privileged access group for services that only I need access to (useful in my case as I have authentik users who are setup just for access to certain services).
 3. In the 'Attributes', you can specify a set of custom attributes which can be passed through to services using HTTP basic authentication. For example, I have sonarr configured to use basic auth with a preset username and password, and in the attributes section of my group, I have 'media_management_user' and 'media_management_password' with the credentials. This is then configured through my provider for Sonarr, under 'Authentication settings', enable 'Send HTTP-Basic Authentication' and put the variables you added to the group in 'HTTP-Basic Username Key' and 'HTTP-Basic Password Key'. If using multiple services, you can configure basic auth with the same credentials in all of them and add the Basic_auth attributes in their Providers.
@@ -134,7 +137,7 @@ Its possible to restrict access to certain services using Groups and Policies de
 
 For users in the group, they should be automatically authenticated into the service. Anyone not in the group will be taken to an Access Denied page.
 
-**Using service based matching:**
+#### **Using service based matching:**
 1. Create a group like above. Ignore the attributes section and instead leave it empty.
 2. If your service supports it, you can use its built in groups and match them against Authentik groups. An example would be Grafana. By specifying a custom attribute path (using the GENERIC_OAUTH_ROLE_ATTRIBUTE_PATH= variable), you can tell it to assign permissions to users based on the groups they are in in Authentik. I have my Grafana instance configured using Authentik OAuth, and the following variable configured in the docker environment variables:
   ```
