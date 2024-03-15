@@ -13,6 +13,10 @@ Below I have detailed configuration options for all of my running services and c
 - [Creating a Proxy Host](https://github.com/adam-beckett-1999/Docker-Compose?tab=readme-ov-file#creating-a-proxy-host "NGINX Proxy Manager: Creating a Proxy Host")
 
 [Authentik](https://github.com/adam-beckett-1999/Docker-Compose?tab=readme-ov-file#authentik "Authentik Configuration")
+- [Initial Configuration](https://github.com/adam-beckett-1999/Docker-Compose?tab=readme-ov-file#initial-configuration "Authentik: Initial Configuration")
+- [Branding & Customisation](https://github.com/adam-beckett-1999/Docker-Compose?tab=readme-ov-file#branding--customisation "Authentik: Branding & Customisation")
+..* [Authentication for services without OAuth & OpenID support (Proxy Provider)](https://github.com/adam-beckett-1999/Docker-Compose?tab=readme-ov-file#authentication-for-services-without-oauth--openid-support-proxy-provider "Authentik: Authentication for services without OAuth & OpenID support (Proxy Provider)")
+..* [Authentication for services with OAuth & OpenID support](https://github.com/adam-beckett-1999/Docker-Compose?tab=readme-ov-file#authentication-for-services-with-oauth--openid-support "Authentik: Authentication for services with OAuth & OpenID support")
 
 ### **NGINX Proxy Manager**
 
@@ -66,6 +70,11 @@ To change the branding of Authentik, there are two areas which need to be modifi
 
 2. To customise the layout and background of authentication pages, you can do that individually for each type of auth-flow. Under 'Flows & Stages', click on 'Flows' and from there, click 'edit' under the actions column for the flow you wish to customise. Here you can change the text that appears on auth pages, and under the 'Appearance Settings' dropdown, you can change the layout of the auth page (which changes the appearance of the elements on the page to be centred, left or right, and with different styles) as well as set a background image.
 
+#### Authentication Methods (Providers)
+There are different methods of authenticating with services through Authentik, it allows you to put an authentication prompt in front of services that don't have built in auth of their own (Proxy Provider), as well as working with multiple forms of different authentication systems for SSO. The ones I use regularly are below, with details of how I set them up for each service I run and expose publicly.
+
+---
+
 #### Authentication for services without OAuth & OpenID support (Proxy Provider)
 I typically use Authentiks 'Transparent Reverse Proxy' provider for applications that don't have OAuth and OpenID SSO support. This also makes configuring in NPM much easier. To secure an application using this provider, you need to do the following:
 
@@ -100,6 +109,8 @@ As an example, i'll include how to setup OAuth SSO in Portainer:
 
 #### Access restrictions with Groups and Policies
 Its possible to restrict access to certain services using Groups and Policies defined in Authentik.
+
+---
 
 **Group and Expression Policy:**
 1. Under 'Directory' in the side-bar, click on 'Groups' and 'Create' a new group from here.
