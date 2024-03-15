@@ -8,15 +8,17 @@ Below I have detailed configuration options for all of my running services and c
 ---
 ## Reverse-Proxy & Authentication Services:
 [NGINX Proxy Manager](https://github.com/adam-beckett-1999/Docker-Compose?tab=readme-ov-file#nginx-proxy-manager "NGINX Proxy Manager Configuration")
-- [Cloudflare API Key](https://github.com/adam-beckett-1999/Docker-Compose?tab=readme-ov-file#cloudflare-api-key "NGINX Proxy Manager: Cloudflare API Key")
-- [SSL Certificates](https://github.com/adam-beckett-1999/Docker-Compose?tab=readme-ov-file#ssl-certificate "NGINX Proxy Manager: SSL Certificates")
-- [Creating a Proxy Host](https://github.com/adam-beckett-1999/Docker-Compose?tab=readme-ov-file#creating-a-proxy-host "NGINX Proxy Manager: Creating a Proxy Host")
+1. [Cloudflare API Key](https://github.com/adam-beckett-1999/Docker-Compose?tab=readme-ov-file#cloudflare-api-key "NGINX Proxy Manager: Cloudflare API Key")
+2. [SSL Certificates](https://github.com/adam-beckett-1999/Docker-Compose?tab=readme-ov-file#ssl-certificate "NGINX Proxy Manager: SSL Certificates")
+3. [Creating a Proxy Host](https://github.com/adam-beckett-1999/Docker-Compose?tab=readme-ov-file#creating-a-proxy-host "NGINX Proxy Manager: Creating a Proxy Host")
 
 [Authentik](https://github.com/adam-beckett-1999/Docker-Compose?tab=readme-ov-file#authentik "Authentik Configuration")
-- [Initial Configuration](https://github.com/adam-beckett-1999/Docker-Compose?tab=readme-ov-file#initial-configuration "Authentik: Initial Configuration")
-- [Branding & Customisation](https://github.com/adam-beckett-1999/Docker-Compose?tab=readme-ov-file#branding--customisation "Authentik: Branding & Customisation")
-..* [Authentication for services without OAuth & OpenID support (Proxy Provider)](https://github.com/adam-beckett-1999/Docker-Compose?tab=readme-ov-file#authentication-for-services-without-oauth--openid-support-proxy-provider "Authentik: Authentication for services without OAuth & OpenID support (Proxy Provider)")
-..* [Authentication for services with OAuth & OpenID support](https://github.com/adam-beckett-1999/Docker-Compose?tab=readme-ov-file#authentication-for-services-with-oauth--openid-support "Authentik: Authentication for services with OAuth & OpenID support")
+1. [Initial Configuration](https://github.com/adam-beckett-1999/Docker-Compose?tab=readme-ov-file#initial-configuration "Authentik: Initial Configuration")
+2. [Branding & Customisation](https://github.com/adam-beckett-1999/Docker-Compose?tab=readme-ov-file#branding--customisation "Authentik: Branding & Customisation")
+3. [Authentication Methods (Providers)](https://github.com/adam-beckett-1999/Docker-Compose?tab=readme-ov-file#authentication-methods-providers "Authentik: Authentication Methods (Providers)")
+⋅⋅* [Authentication for services without OAuth & OpenID support (Proxy Provider)](https://github.com/adam-beckett-1999/Docker-Compose?tab=readme-ov-file#authentication-for-services-without-oauth--openid-support-proxy-provider "Authentik: Authentication for services without OAuth & OpenID support (Proxy Provider)")
+⋅⋅* [Authentication for services with OAuth & OpenID support](https://github.com/adam-beckett-1999/Docker-Compose?tab=readme-ov-file#authentication-for-services-with-oauth--openid-support "Authentik: Authentication for services with OAuth & OpenID support")
+4. [Access restrictions with Groups and Policies](https://github.com/adam-beckett-1999/Docker-Compose?tab=readme-ov-file#access-restrictions-with-groups-and-policies "Authentik: Access restrictions with Groups and Policies")
 
 ### **NGINX Proxy Manager**
 
