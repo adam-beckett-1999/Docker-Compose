@@ -7,6 +7,7 @@ Below I have detailed configuration options for all of my running services and c
 
 ---
 ## Reverse-Proxy & Authentication Services:
+[NGINX Proxy Manager](https://github.com/adam-beckett-1999/Docker-Compose?tab=readme-ov-file#nginx-proxy-manager "NGINX Proxy Manager Configuration")
 
 ### **NGINX Proxy Manager**
 
