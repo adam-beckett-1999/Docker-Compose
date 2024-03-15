@@ -21,7 +21,8 @@ Below I have detailed configuration options for all of my running services and c
 4. [Access restrictions with Groups and Policies](https://github.com/adam-beckett-1999/Docker-Compose?tab=readme-ov-file#access-restrictions-with-groups-and-policies "Authentik: Access restrictions with Groups and Policies")
     - [Group and Expression Policy](https://github.com/adam-beckett-1999/Docker-Compose?tab=readme-ov-file#group-and-expression-policy "Authentik: Group and Expression Policy")
     - [Using service based matching](https://github.com/adam-beckett-1999/Docker-Compose?tab=readme-ov-file#using-service-based-matching "Authentik: Using service based matching")
-5. [Goaccess for NPM](https://github.com/adam-beckett-1999/Docker-Compose?tab=readme-ov-file#goaccess-for-npm "Goaccess for NPM")
+
+[Goaccess for NPM](https://github.com/adam-beckett-1999/Docker-Compose?tab=readme-ov-file#goaccess-for-npm "Goaccess for NPM")
 
 ---
 
@@ -81,10 +82,9 @@ To change the branding of Authentik, there are two areas which need to be modifi
 
 2. To customise the layout and background of authentication pages, you can do that individually for each type of auth-flow. Under 'Flows & Stages', click on 'Flows' and from there, click 'edit' under the actions column for the flow you wish to customise. Here you can change the text that appears on auth pages, and under the 'Appearance Settings' dropdown, you can change the layout of the auth page (which changes the appearance of the elements on the page to be centred, left or right, and with different styles) as well as set a background image.
 
-#### Authentication Methods (Providers)
-There are different methods of authenticating with services through Authentik, it allows you to put an authentication prompt in front of services that don't have built in auth of their own (Proxy Provider), as well as working with multiple forms of different authentication systems for SSO. The ones I use regularly are below, with details of how I set them up for each service I run and expose publicly.
-
 ---
+### Authentication Methods (Providers)
+There are different methods of authenticating with services through Authentik, it allows you to put an authentication prompt in front of services that don't have built in auth of their own (Proxy Provider), as well as working with multiple forms of different authentication systems for SSO. The ones I use regularly are below, with details of how I set them up for each service I run and expose publicly.
 
 #### Authentication for services without OAuth & OpenID support (Proxy Provider)
 I typically use Authentiks 'Transparent Reverse Proxy' provider for applications that don't have OAuth and OpenID SSO support. This also makes configuring in NPM much easier. To secure an application using this provider, you need to do the following:
@@ -118,10 +118,9 @@ As an example, i'll include how to setup OAuth SSO in Portainer:
 4. The user identifier will need to be 'email', and the scopes need to be set as 'email openid profile'. This is the only combination of options that has worked for me. Ensure that when putting the scopes in, you don't follow the formatting shown as an example in the box, copy as exactly as specified above.
 5. Now you can save and test. You should get a 'Login with OAuth' option on the Portainer login screen.
 
+---
 #### Access restrictions with Groups and Policies
 Its possible to restrict access to certain services using Groups and Policies defined in Authentik.
-
----
 
 #### **Group and Expression Policy:**
 1. Under 'Directory' in the side-bar, click on 'Groups' and 'Create' a new group from here.
@@ -151,6 +150,7 @@ For users in the group, they should be automatically authenticated into the serv
   ```
 3. When a user logs into the service, as long as they are in the correct group and the service is configured to allow new users to be added from Authentik, then they should be assigned the correct roles and permissions on first login.
 
+---
 ### **Goaccess for NPM**
 
 Once GoAccess is installed there is no extra configuration required, logs and data may take a while to populate as it relies on there being log files available from NGINX Proxy Manager to populate the graphs and metrics correctly.
