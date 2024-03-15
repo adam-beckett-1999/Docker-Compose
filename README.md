@@ -8,7 +8,10 @@ Below I have detailed configuration options for all of my running services and c
 ---
 ## Reverse-Proxy & Authentication Services:
 [NGINX Proxy Manager](https://github.com/adam-beckett-1999/Docker-Compose?tab=readme-ov-file#nginx-proxy-manager "NGINX Proxy Manager Configuration")
+- [Cloudflare API Key](https://github.com/adam-beckett-1999/Docker-Compose?tab=readme-ov-file#cloudflare-api-key "NGINX Proxy Manager: Cloudflare API Key")
 - [SSL Certificates](https://github.com/adam-beckett-1999/Docker-Compose?tab=readme-ov-file#ssl-certificate "NGINX Proxy Manager: SSL Certificates")
+- [Creating a Proxy Host](https://github.com/adam-beckett-1999/Docker-Compose?tab=readme-ov-file#creating-a-proxy-host "NGINX Proxy Manager: Creating a Proxy Host")
+
 [Authentik](https://github.com/adam-beckett-1999/Docker-Compose?tab=readme-ov-file#authentik "Authentik Configuration")
 
 ### **NGINX Proxy Manager**
@@ -22,17 +25,19 @@ Once the container is started, navigate to http://{ip_of_your_docker_host}:81/ w
 
 When you have logged in you will be prompted to change the default login credentials, you can then begin adding services to be reverse proxied.
 
+#### Cloudflare API Key
+In order to create SSL certificates from within NPM, you need to do some setup to ensure DNS challenges will work. I use cloudflare as my registrar and DNS provider, so will need an API key in order to successfully generate certs with Letsencrypt.
+
+1. Login to your Cloudflare account and navigate to the section for the domain you wish to use, in the sidebar to the right should be a section titled 'API'.
+2. From there, click the 'Get your API token' link and create a new token.
+3. Use the 'Edit zone DNS' template, you don't need to change any of the options, and continue to summary where you will get a copy of your API key which you need to copy into NPM.
+
 #### SSL Certificate
-To setup an SSL certificate to use with your services, I prefer to assign a wildcard cert to make the process easier. 
+To setup an SSL certificate to use with your services, I prefer to assign a wildcard certificate to make the process easier. 
 1. To setup, go to the 'SSL Certificates' tab and click 'Add SSL Certificate'.
 2. Enter your domain, your email address, and click the 'Use a DNS Challenge' toggle.
-3. You need to select your DNS provider (in my case it's Cloudflare) which will show a box where you will need to enter a Cloudflare API key (instructions below).
+3. You need to select your DNS provider (in my case it's Cloudflare) which will show a box where you will need to enter a Cloudflare API key (explained in the section above).
 4. Once you have the API key copied, click the 'I Agree to the Let's Encrypt Terms of Service' toggle and save. It could take a minute or two for the SSL cert to be registered and go through.
-
-#### Cloudflare API Key
-1. Login to your Cloudflare account and navigate to the section for the domain, in the sidebar to the right should be a section titled 'API'.
-2. From there, click the 'Get your API token' link and create a new token.
-3. Use the 'Edit zone DNS' template, you don't need to change any of the options, and continue to summary where you will get a copy of your API key which you need to enter into the box within NPM.
 
 #### Creating a Proxy Host
 1. Navigate to the 'Hosts' tab and click 'proxy hosts' from the dropdown.
