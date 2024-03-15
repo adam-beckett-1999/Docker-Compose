@@ -19,9 +19,11 @@ Below I have detailed configuration options for all of my running services and c
     - [Authentication for services without OAuth & OpenID support (Proxy Provider)](https://github.com/adam-beckett-1999/Docker-Compose?tab=readme-ov-file#authentication-for-services-without-oauth--openid-support-proxy-provider "Authentik: Authentication for services without OAuth & OpenID support (Proxy Provider)")
     - [Authentication for services with OAuth & OpenID support](https://github.com/adam-beckett-1999/Docker-Compose?tab=readme-ov-file#authentication-for-services-with-oauth--openid-support "Authentik: Authentication for services with OAuth & OpenID support")
 4. [Access restrictions with Groups and Policies](https://github.com/adam-beckett-1999/Docker-Compose?tab=readme-ov-file#access-restrictions-with-groups-and-policies "Authentik: Access restrictions with Groups and Policies")
-    - [Group and Expression Policy](https://github.com/adam-beckett-1999/Docker-Compose?tab=readme-ov-file#access-restrictions-with-groups-and-policies "Authentik: Group and Expression Policy")
-    - [Using service based matching](https://github.com/adam-beckett-1999/Docker-Compose?tab=readme-ov-file#access-restrictions-with-groups-and-policies "Authentik: Using service based matching")
+    - [Group and Expression Policy](https://github.com/adam-beckett-1999/Docker-Compose?tab=readme-ov-file#group-and-expression-policy "Authentik: Group and Expression Policy")
+    - [Using service based matching](https://github.com/adam-beckett-1999/Docker-Compose?tab=readme-ov-file#using-service-based-matching "Authentik: Using service based matching")
 5. [Goaccess for NPM](https://github.com/adam-beckett-1999/Docker-Compose?tab=readme-ov-file#goaccess-for-npm "Goaccess for NPM")
+
+---
 
 ### **NGINX Proxy Manager**
 
@@ -34,6 +36,7 @@ Once the container is started, navigate to http://{ip_of_your_docker_host}:81/ w
 
 When you have logged in you will be prompted to change the default login credentials, you can then begin adding services to be reverse proxied.
 
+---
 #### Cloudflare API Key
 In order to create SSL certificates from within NPM, you need to do some setup to ensure DNS challenges will work. I use cloudflare as my registrar and DNS provider, so will need an API key in order to successfully generate certs with Letsencrypt.
 
@@ -54,11 +57,14 @@ To setup an SSL certificate to use with your services, I prefer to assign a wild
 3. The last step is to click on the SSL tab within the new proxy host window and click the SSL certificate dropdown and select the cert you created earlier. You can also click on the toggles below here as well (if your site experiences any errors once setup, try disabling some of these options to see if that resolves it). Once done, click save.
 4. The service should now be available to access through the domain you have assigned it, if NPM detects that there is an error in the proxy configuration it will indicate it on the right under the 'status' column as 'offline'. This isn't always an indicator that the site works however, as there could be a configuration error within the service itself to allow forwarding through a reverse-proxy.
 
+---
+
 ### **Authentik**
 
 Once Authentik is installed, navigate to the link below to configure your install:
 http://{ip_of_your_docker_host}:9000/if/flow/initial-setup/ 
 
+---
 #### Initial Configuration
 1. Create the admin user, and you will be redirected to the homepage showing 'My Applications'. Go to the 'Admin Interface' and you can start to customise your install.
 
