@@ -43,7 +43,7 @@ services:
     environment:
       - MARIADB_DATABASE=speedtest_tracker
       - MARIADB_USER=speedy
-      - MARIADB_PASSWORD=${DB_PASSWORD}
+      - MARIADB_PASSWORD=${SPEEDTEST_TRACKER_DB_PASSWORD}
       - MARIADB_RANDOM_ROOT_PASSWORD=true
     volumes:
       - /mnt/gluster/containers/speedtest-tracker/db:/var/lib/mysql
