@@ -42,7 +42,7 @@ services:
     restart: unless-stopped
     environment:
       - MARIADB_DATABASE=speedtest_tracker
-      - MARIADB_USER=speedy
+      - MARIADB_USER=${SPEEDTEST_TRACKER_DB_USER}
       - MARIADB_PASSWORD=${SPEEDTEST_TRACKER_DB_PASSWORD}
       - MARIADB_RANDOM_ROOT_PASSWORD=true
     volumes:
