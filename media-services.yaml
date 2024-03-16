@@ -54,6 +54,8 @@ services:
     restart: unless-stopped
     environment:
       - TZ=Europe/London
+      - DEFAULT_THEME=dark
+      - DELETE_FILE_ON_TRASHCAN=true
     volumes:
       - /mnt/nas-01/Downloads/Youtube:/downloads
     ports:
