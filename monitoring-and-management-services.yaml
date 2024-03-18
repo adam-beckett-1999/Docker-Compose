@@ -13,43 +13,43 @@ services:
     networks:
       - monitoring-services
 ###
-  speedtest-tracker:
-    container_name: Speedtest-Tracker
-    image: ghcr.io/alexjustesen/speedtest-tracker:latest
-    restart: unless-stopped
-    ports:
-      - 180:80
-      - 1443:443
-    environment:
-      PUID: 1000
-      PGID: 1000
-      DB_CONNECTION: "mysql"
-      DB_HOST: "speedtest-db"
-      DB_PORT: "3306"
-      DB_DATABASE: "speedtest_tracker"
-      DB_USERNAME: "speedy"
-      DB_PASSWORD: "${SPEEDTEST_TRACKER_DB_PASSWORD}"
-    volumes:
-      - /mnt/gluster/containers/speedtest-tracker:/config
-    networks:
-      - monitoring-services
-      - speedtest-tracker
-    depends_on:
-      - speedtest-db
-  speedtest-db:
-    container_name: Speedtest-Tracker-DB
-    image: mariadb:10
-    restart: unless-stopped
-    environment:
-      MARIADB_DATABASE: "speedtest_tracker"
-      MARIADB_USER: "speedy"
-      MARIADB_PASSWORD: "${SPEEDTEST_TRACKER_DB_PASSWORD}"
-      MARIADB_RANDOM_ROOT_PASSWORD: true
-    volumes:
-      - /mnt/gluster/containers/speedtest-tracker/db:/var/lib/mysql
-    networks:
-      - monitoring-services
-      - speedtest-tracker
+#  speedtest-tracker:
+#    container_name: Speedtest-Tracker
+#    image: ghcr.io/alexjustesen/speedtest-tracker:latest
+#    restart: unless-stopped
+#    ports:
+#      - 180:80
+#      - 1443:443
+#    environment:
+#      PUID: 1000
+#      PGID: 1000
+#      DB_CONNECTION: "mysql"
+#      DB_HOST: "speedtest-db"
+#      DB_PORT: "3306"
+#      DB_DATABASE: "speedtest_tracker"
+#      DB_USERNAME: "speedy"
+#      DB_PASSWORD: "${SPEEDTEST_TRACKER_DB_PASSWORD}"
+#    volumes:
+#      - /mnt/gluster/containers/speedtest-tracker:/config
+#    networks:
+#      - monitoring-services
+#      - speedtest-tracker
+#    depends_on:
+#      - speedtest-db
+#  speedtest-db:
+#    container_name: Speedtest-Tracker-DB
+#    image: mariadb:10
+#    restart: unless-stopped
+#    environment:
+#      MARIADB_DATABASE: "speedtest_tracker"
+#      MARIADB_USER: "speedy"
+#      MARIADB_PASSWORD: "${SPEEDTEST_TRACKER_DB_PASSWORD}"
+#      MARIADB_RANDOM_ROOT_PASSWORD: true
+#    volumes:
+#      - /mnt/gluster/containers/speedtest-tracker/db:/var/lib/mysql
+#    networks:
+#      - monitoring-services
+#      - speedtest-tracker
 ###
   dozzle:
     container_name: Dozzle
@@ -139,4 +139,4 @@ networks:
     driver: bridge
   management-services:
     driver: bridge
-  speedtest-tracker:
+#  speedtest-tracker:
