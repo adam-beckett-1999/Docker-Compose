@@ -23,6 +23,17 @@ services:
     networks:
       - nginx-proxy # NGINX-Proxy-Manager service docker network.
 ###
+  nginx-lb:
+    container_name: NGINX-Loadbalancer
+    image: nginx:latest
+    restart: unless-stopped
+    volumes:
+      - /mnt/gluster/containers/nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+    ports:
+      - 8006:8006
+    networks:
+      - nginx-lb # NGINX-Loadbalancer service docker network.
+###
   goaccess-npm:
     container_name: Goaccess-NPM
     image: xavierh/goaccess-for-nginxproxymanager:latest
@@ -127,4 +138,6 @@ networks:
   nginx-proxy: # NGINX-Proxy-Manager service docker network.
     driver: bridge
   authentik: # Authentik service docker network.
+    driver: bridge
+  nginx-lb: # NGINX-Loadbalancer service docker network.
     driver: bridge
