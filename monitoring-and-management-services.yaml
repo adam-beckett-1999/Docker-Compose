@@ -21,14 +21,14 @@ services:
       - 180:80
       - 1443:443
     environment:
-      - PUID=1000
-      - PGID=1000
-      - DB_CONNECTION=mysql
-      - DB_HOST=speedtest-db
-      - DB_PORT=3306
-      - DB_DATABASE=speedtest_tracker
-      - DB_USERNAME=${SPEEDTEST_TRACKER_DB_USER}
-      - DB_PASSWORD=${SPEEDTEST_TRACKER_DB_PASSWORD}
+      PUID: 1000
+      PGID: 1000
+      DB_CONNECTION: "mysql"
+      DB_HOST: "speedtest-db"
+      DB_PORT: "3306"
+      DB_DATABASE: "speedtest_tracker"
+      DB_USERNAME: "speedy"
+      DB_PASSWORD: "${SPEEDTEST_TRACKER_DB_PASSWORD}"
     volumes:
       - /mnt/gluster/containers/speedtest-tracker:/config
     networks:
@@ -41,10 +41,10 @@ services:
     image: mariadb:10
     restart: unless-stopped
     environment:
-      - MARIADB_DATABASE=speedtest_tracker
-      - MARIADB_USER=${SPEEDTEST_TRACKER_DB_USER}
-      - MARIADB_PASSWORD=${SPEEDTEST_TRACKER_DB_PASSWORD}
-      - MARIADB_RANDOM_ROOT_PASSWORD=true
+      MARIADB_DATABASE: "speedtest_tracker"
+      MARIADB_USER: "speedy"
+      MARIADB_PASSWORD: "${SPEEDTEST_TRACKER_DB_PASSWORD}"
+      MARIADB_RANDOM_ROOT_PASSWORD: true
     volumes:
       - /mnt/gluster/containers/speedtest-tracker/db:/var/lib/mysql
     networks:
