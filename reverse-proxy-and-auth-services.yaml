@@ -28,7 +28,7 @@ services:
     image: nginx:latest
     restart: unless-stopped
     volumes:
-      - /mnt/gluster/containers/nginx/:/etc/nginx/conf.d/
+      - /mnt/gluster/containers/nginx/:/etc/nginx/
     ports:
       - 8006:8006
     networks:
