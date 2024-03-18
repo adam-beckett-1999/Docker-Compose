@@ -23,12 +23,12 @@ services:
     networks:
       - nginx-proxy # NGINX-Proxy-Manager service docker network.
 ###
-  nginx-lb:
-    container_name: NGINX-Loadbalancer
+  nginx-lb-pve:
+    container_name: NGINX-Loadbalancer-PVE
     image: nginx:latest
     restart: unless-stopped
     volumes:
-      - /mnt/gluster/containers/nginx/:/etc/nginx/
+      - /mnt/gluster/containers/nginx-pve/:/etc/nginx/
     ports:
       - 8006:443
     networks:
