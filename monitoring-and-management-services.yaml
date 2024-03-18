@@ -89,22 +89,22 @@ services:
     networks:
       - management-services
 ###
-  guacamole:
-    container_name: Guacamole
-    image: abesnier/guacamole:latest
-    restart: unless-stopped
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=Europe/London
-      - EXTENSIONS=auth-sso-openid
-    volumes:
-      - /mnt/gluster/containers/guacamole:/config
-      - /etc/localtime:/etc/localtime:ro
-    ports:
-      - 9797:8080
-    networks:
-      - management-services
+#  guacamole:
+#    container_name: Guacamole
+#    image: abesnier/guacamole:latest
+#    restart: unless-stopped
+#    environment:
+#      - PUID=1000
+#      - PGID=1000
+#      - TZ=Europe/London
+#      - EXTENSIONS=auth-sso-openid
+#    volumes:
+#      - /mnt/gluster/containers/guacamole:/config
+#      - /etc/localtime:/etc/localtime:ro
+#    ports:
+#      - 9797:8080
+#    networks:
+#      - management-services
 ###
   upsnap:
     container_name: Upsnap
