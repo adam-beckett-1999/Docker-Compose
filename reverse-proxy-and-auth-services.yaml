@@ -30,7 +30,7 @@ services:
     volumes:
       - /mnt/gluster/containers/nginx/:/etc/nginx/
     ports:
-      - 8006:8006
+      - 8006:80
     networks:
       - nginx-lb # NGINX-Loadbalancer service docker network.
 ###
