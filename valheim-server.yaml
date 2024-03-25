@@ -1,0 +1,20 @@
+version: "3"
+services: 
+  valheim-server: 
+    image: ghcr.io/lloesche/valheim-server
+    container_name: Valheim-Server
+    cap_add:
+      - sys_nice
+    volumes: 
+      - /mnt/gluster/containers/valheim-server/config:/config
+      - /mnt/gluster/containers/valheim-server/data:/opt/valheim
+    ports: 
+      - 2456-2458:2456-2458
+    environment:
+      - PUID: 1000
+      - PGID: 1000
+      - TZ: Europe/London
+      - SERVER_NAME: "BCloud Valheim"
+      - SERVER_PASS: 
+    restart: always
+    stop_grace_period: 2m
