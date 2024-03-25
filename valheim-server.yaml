@@ -10,6 +10,7 @@ services:
       - /mnt/gluster/containers/valheim-server/data:/opt/valheim
     ports: 
       - 2456:2456/udp
+      - 2457:2457/udp
       - 9010:9010
     environment:
       - PUID=1000
