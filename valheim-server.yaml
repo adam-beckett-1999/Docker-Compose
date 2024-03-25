@@ -9,12 +9,22 @@ services:
       - /mnt/gluster/containers/valheim-server/config:/config
       - /mnt/gluster/containers/valheim-server/data:/opt/valheim
     ports: 
-      - 2456-2458:2456-2458
+      - 2456:2456
+      - 9010:9010
     environment:
-      - PUID: 1000
-      - PGID: 1000
-      - TZ: Europe/London
-      - SERVER_NAME: "BCloud Valheim"
-      - SERVER_PASS: 
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/London
+      - SERVER_NAME="Alex's Possy - Valheim"
+      - SERVER_PORT=2456
+      - SERVER_PASS=${VALHEIM_SERVER_PASSWORD}
+      - SERVER_PUBLIC=false
+      - BACKUPS=true
+      - BACKUPS_DIRECTORY=/config/backups
+      - BEPINEX=true
+      - SUPERVISOR_HTTP=true
+      - SUPERVISOR_HTTP_PORT=9010
+      - SUPERVISOR_HTTP_USER=${VALHEIM_ADMIN_USER}
+      - SUPERVISOR_HTTP_PASS=${VALHEIM_ADMIN_PASSWORD}
     restart: always
     stop_grace_period: 2m
