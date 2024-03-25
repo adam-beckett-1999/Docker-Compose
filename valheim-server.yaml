@@ -18,6 +18,7 @@ services:
       - SERVER_NAME="Alex's Possy - Valheim"
       - SERVER_PORT=2456
       - SERVER_PASS=${VALHEIM_SERVER_PASSWORD}
+      - WORLD_NAME=TheShadowLand
       - SERVER_PUBLIC=false
       - BACKUPS=true
       - BACKUPS_DIRECTORY=/config/backups
