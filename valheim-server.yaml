@@ -21,7 +21,6 @@ services:
       - SERVER_PUBLIC=false
       - BACKUPS=true
       - BACKUPS_DIRECTORY=/config/backups
-      - BEPINEX=true
       - SUPERVISOR_HTTP=true
       - SUPERVISOR_HTTP_PORT=9010
       - SUPERVISOR_HTTP_USER=${VALHEIM_ADMIN_USER}
