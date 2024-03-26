@@ -16,7 +16,7 @@ services:
       - PUID=1000
       - PGID=1000
       - TZ=Europe/London
-      - SERVER_NAME="TheRedshift - Valheim"
+      - SERVER_NAME=TheRedshift - Valheim
       - SERVER_PORT=2456
       - SERVER_PASS=${VALHEIM_SERVER_PASSWORD}
       - WORLD_NAME=TheShadowLand
